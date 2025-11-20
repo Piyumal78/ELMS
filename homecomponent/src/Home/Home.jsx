@@ -1,10 +1,11 @@
 import { Button } from "../components/ui/button";
 import Features from "./Features";
 import { useState } from "react";
+import HomeDashboard from "./HomeDashboard";
 const Home = () => {
     const [scrolled, setScrolled] = useState(false);
     return (
-        <div className="flex flex-col bg-slate-900 text-white p-8 gap-4">
+        <div className="flex flex-col bg-slate-900 text-white p-8 gap-4 border-b border-slate-800">
             <div className="text-8xl font-bold flex flex-col justify-center items-center mt-28">
                 <span className="">Streamline Your Lab</span>
                 <span className="bg-gradient-to-r from-teal-400 to-blue-500 bg-clip-text text-transparent">Operations Effortlessly</span>
@@ -16,8 +17,9 @@ const Home = () => {
                     Get Started
                 </Button>
             </div>
-            <div>
+            <div className="mb-20">
                 <Features />
+                <HomeDashboard />
             </div>
         </div>
     );
