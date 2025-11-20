@@ -23,7 +23,7 @@ public class Student extends User{
     private List<CourseEnrollment> courseEnrollments;
 
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
-    private List<SessionEnrolment> sessionEnrolments;
+    private List<SessionEnrollment> sessionEnrollments;
 
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
     private List<ReportSubmission> reportSubmissions;
