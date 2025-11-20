@@ -49,7 +49,7 @@ public class Session {
     private List<ReportSubmission> reportSubmissions;
 
     @OneToMany(mappedBy = "session", cascade = CascadeType.ALL)
-    private List<SessionEnrolment> sessionEnrolments;
+    private List<SessionEnrollment> sessionEnrollments;
 
     @CreatedDate
     @Column(name = "created_at", updatable = false, nullable = false)

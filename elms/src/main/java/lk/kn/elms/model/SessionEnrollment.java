@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @ToString(exclude = {"session", "student"})
 @EntityListeners(AuditingEntityListener.class)
-public class SessionEnrolment {
+public class SessionEnrollment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
