@@ -1,6 +1,6 @@
 package lk.kn.elms.exception;
 
-import lk.kn.elms.dto.ErrorResponseDto;
+import lk.kn.elms.dto.response.ErrorResponseDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
