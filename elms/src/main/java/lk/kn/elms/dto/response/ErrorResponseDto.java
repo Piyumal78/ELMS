@@ -1,4 +1,4 @@
-package lk.kn.elms.dto;
+package lk.kn.elms.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
