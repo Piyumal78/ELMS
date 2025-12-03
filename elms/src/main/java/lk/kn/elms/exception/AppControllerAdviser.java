@@ -18,4 +18,9 @@ public class AppControllerAdviser {
     public ResponseEntity<ErrorResponseDto> handleResourceNotFound(ResourceNotFoundException ex) {
         return new ResponseEntity<>(new ErrorResponseDto(ex.getMessage()), HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(ResourceInsufficientException.class)
+    public ResponseEntity<ErrorResponseDto> handleResourceInsufficientException(ResourceInsufficientException ex){
+        return new ResponseEntity<>(new ErrorResponseDto(ex.getMessage()), HttpStatus.INSUFFICIENT_STORAGE);
+    }
 }

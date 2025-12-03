@@ -17,7 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 @ToString(exclude = {"session", "component", "componentHandovers"})
 @EntityListeners(AuditingEntityListener.class)
-public class ExperimentComponent {
+public class SessionComponent {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,7 +26,7 @@ public class ExperimentComponent {
     @Column(name = "quantity",nullable = false)
     private Integer quantity;
 
-    @OneToMany(mappedBy = "experimentComponent", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "session_component", cascade = CascadeType.ALL)
     private List<ComponentHandover> componentHandovers;
 
     @ManyToOne

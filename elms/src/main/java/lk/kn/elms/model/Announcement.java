@@ -22,8 +22,12 @@ public class Announcement {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "note")
-    private String note;
+    @Column(name = "content", nullable = false)
+    private String content;
+
+    @ManyToOne
+    @JoinColumn(name = "course_id", nullable = false)
+    private Course course;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)

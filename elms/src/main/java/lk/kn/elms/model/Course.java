@@ -42,6 +42,9 @@ public class Course {
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
     private List<LabManual> labManuals;
 
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
+    private List<Announcement> announcements;
+
     @CreatedDate
     @Column(name = "created_at", updatable = false, nullable = false)
     private LocalDateTime createdAt;
