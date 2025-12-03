@@ -1,11 +1,11 @@
 package lk.kn.elms.controller;
 
+import jakarta.validation.Valid;
 import lk.kn.elms.dto.request.AnnouncementRequestDto;
 import lk.kn.elms.dto.response.AnnouncementResponseDto;
 import lk.kn.elms.exception.ResourceNotFoundException;
 import lk.kn.elms.service.AnnouncementService;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +21,7 @@ public class AnnouncementController {
     private AnnouncementService announcementService;
 
     @PostMapping(value = "/announcements")
-    public ResponseEntity<AnnouncementResponseDto> createAnnouncement(@RequestBody AnnouncementRequestDto announcementRequestDto)
+    public ResponseEntity<AnnouncementResponseDto> createAnnouncement(@Valid @RequestBody AnnouncementRequestDto announcementRequestDto)
             throws ResourceNotFoundException {
 
         AnnouncementResponseDto responseDto = announcementService.createAnnouncement(announcementRequestDto);
