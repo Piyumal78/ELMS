@@ -7,31 +7,30 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "experiment_components")
+@Table(name = "session_component_items")
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString(exclude = {"session", "sessionComponentItems", "componentHandovers"})
+@ToString(exclude = {"component", "sessionComponent"})
 @EntityListeners(AuditingEntityListener.class)
-public class SessionComponent {
+public class SessionComponentItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(mappedBy = "sessionComponent", cascade = CascadeType.ALL)
-    private List<ComponentHandover> componentHandovers;
+    private Integer quantity;
 
     @ManyToOne
-    @JoinColumn(name = "session_id", nullable = false)
-    private Session session;
+    @JoinColumn(name = "component_id")
+    private Component component;
 
-    @OneToMany(mappedBy = "sessionComponent", cascade = CascadeType.ALL)
-    private List<SessionComponentItem> sessionComponentItems;
+    @ManyToOne
+    @JoinColumn(name = "session_component_id")
+    private SessionComponent sessionComponent;
 
     @CreatedDate
     @Column(name = "created_at", updatable = false, nullable = false)

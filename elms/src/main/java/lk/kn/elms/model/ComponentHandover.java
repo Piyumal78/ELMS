@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @Table(name = "component_handovers")
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString(exclude = {"student", "experimentComponent"})
+@ToString(exclude = {"student", "sessionComponent"})
 @EntityListeners(AuditingEntityListener.class)
 public class ComponentHandover {
 
