@@ -29,15 +29,15 @@ public class Course {
     @Column(name = "course_name",nullable = false)
     private String courseName;
 
+    @ManyToOne
+    @JoinColumn(name = "lecturer_id", nullable = false)
+    private Lecturer lecturer;
+
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
     private List<CourseEnrollment> courseEnrollments;
 
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
     private List<Session> sessions;
-
-    @ManyToOne
-    @JoinColumn(name = "lecturer_id", nullable = false)
-    private Lecturer lecturer;
 
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
     private List<LabManual> labManuals;

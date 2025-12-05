@@ -87,7 +87,7 @@ public class ComponentHandoverServiceImpl implements ComponentHandoverService {
     private ComponentHandoverResponseDto mapEntityToResponseDto(ComponentHandover componentHandover) {
 
         ComponentHandoverResponseDto dto = new ComponentHandoverResponseDto();
-        dto.setId(componentHandover.getId());
+        dto.setComponentHandoverId(componentHandover.getId());
         dto.setSessionComponentId(componentHandover.getSessionComponent().getId());
         dto.setRegistrationNumber(componentHandover.getStudent().getRegistrationNumber());
         dto.setReturnStatus(componentHandover.getReturnStatus().name());

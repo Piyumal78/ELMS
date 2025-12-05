@@ -19,6 +19,8 @@ public interface ComponentService {
 
     List<ComponentResponseDto> getComponentByName(String componentName) throws ResourceNotFoundException;
 
+    ComponentResponseDto getComponentByNameAndType(String componentName, String type) throws ResourceNotFoundException;
+
     ComponentResponseDto getComponentById(Long id) throws ResourceNotFoundException;
 
     void deleteComponent(Long id) throws ResourceNotFoundException;

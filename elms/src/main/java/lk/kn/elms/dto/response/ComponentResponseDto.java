@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class ComponentResponseDto {
 
-    private Long id;
+    private Long componentId;
     private String componentName;
     private String type;
     private Integer quantity;

@@ -9,12 +9,12 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ComponentHandoverResponseDto {
+public class DemonstratorResponseDto {
 
-    private Long componentHandoverId;
-    private Long sessionComponentId;
+    private Long demonstratorId;
     private String registrationNumber;
-    private String returnStatus;
-    private LocalDateTime handedOverDate;
-
+    private String name;
+    private String email;
+    private LocalDateTime createdDate;
+    private LocalDateTime updatedDate;
 }
