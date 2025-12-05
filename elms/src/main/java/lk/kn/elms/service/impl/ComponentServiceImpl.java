@@ -121,6 +121,17 @@ public class ComponentServiceImpl implements ComponentService {
     }
 
     @Override
+    public ComponentResponseDto getComponentByNameAndType(String componentName, String type) throws ResourceNotFoundException {
+
+        ComponentName compName = ComponentName.valueOf(componentName);
+        Component component = componentRepository
+                .findByComponentNameAndType(compName, type).orElseThrow(()->
+                        new ResourceNotFoundException("There is no such a component"));
+
+        return mapEntityToResponseDto(component);
+    }
+
+    @Override
     public ComponentResponseDto getComponentById(Long id) throws ResourceNotFoundException {
 
         Component component = componentRepository
@@ -144,7 +155,7 @@ public class ComponentServiceImpl implements ComponentService {
     private ComponentResponseDto mapEntityToResponseDto(Component component){
 
         ComponentResponseDto componentResponseDto = new ComponentResponseDto();
-        componentResponseDto.setId(component.getId());
+        componentResponseDto.setComponentId(component.getId());
         componentResponseDto.setComponentName(component.getComponentName().toString());
         componentResponseDto.setType(component.getType());
         componentResponseDto.setQuantity(component.getQuantity());

@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class SessionComponentItemResponseDto {
 
-    private Long id;
+    private Long sessionComponentItemId;
     private Integer quantity;
     private String componentName;
     private String type;

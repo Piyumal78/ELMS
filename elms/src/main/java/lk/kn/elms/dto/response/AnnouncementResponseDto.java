@@ -2,7 +2,6 @@ package lk.kn.elms.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
@@ -12,7 +11,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class AnnouncementResponseDto {
 
-    private Long id;
+    private Long announcementId;
     private String content;
     private String courseCode;
     private String courseTitle;

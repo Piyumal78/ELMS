@@ -11,7 +11,6 @@ import lk.kn.elms.repository.CourseRepository;
 import lk.kn.elms.repository.UserRepository;
 import lk.kn.elms.service.AnnouncementService;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -96,7 +95,7 @@ public class AnnouncementServiceImpl implements AnnouncementService {
 
     private AnnouncementResponseDto mapEntityToResponseDto(Announcement announcement) {
         AnnouncementResponseDto responseDto = new AnnouncementResponseDto();
-        responseDto.setId(announcement.getId());
+        responseDto.setAnnouncementId(announcement.getId());
         responseDto.setContent(announcement.getContent());
         responseDto.setCourseCode(announcement.getCourse().getCourseCode());
         responseDto.setCourseTitle(announcement.getCourse().getCourseName());
@@ -112,7 +111,7 @@ public class AnnouncementServiceImpl implements AnnouncementService {
         for (Announcement announcement : announcements){
 
             AnnouncementResponseDto responseDto = new AnnouncementResponseDto();
-            responseDto.setId(announcement.getId());
+            responseDto.setAnnouncementId(announcement.getId());
             responseDto.setContent(announcement.getContent());
             responseDto.setCourseCode(announcement.getCourse().getCourseCode());
             responseDto.setCourseTitle(announcement.getCourse().getCourseName());

@@ -120,7 +120,7 @@ public class SessionComponentServiceImpl implements SessionComponentService {
         List<SessionComponentItemResponseDto> sessionComponentItemResponseDtoList = new ArrayList<>();
         for(SessionComponentItem sessionComponentItem : sessionComponent.getSessionComponentItems()){
             SessionComponentItemResponseDto itemResponseDto = new SessionComponentItemResponseDto();
-            itemResponseDto.setId(sessionComponentItem.getId());
+            itemResponseDto.setSessionComponentItemId(sessionComponentItem.getId());
             itemResponseDto.setQuantity(sessionComponentItem.getQuantity());
             itemResponseDto.setComponentName(sessionComponentItem.getComponent().getComponentName().name());
             itemResponseDto.setType(sessionComponentItem.getComponent().getType());
@@ -130,7 +130,7 @@ public class SessionComponentServiceImpl implements SessionComponentService {
     }
 
         SessionComponentResponseDto responseDto = new SessionComponentResponseDto();
-        responseDto.setId(sessionComponent.getId());
+        responseDto.setSessionComponentId(sessionComponent.getId());
         responseDto.setSessionId(sessionComponent.getSession().getId());
         responseDto.setSessionComponentItems(sessionComponentItemResponseDtoList);
         responseDto.setCreatedDate(sessionComponent.getCreatedAt());

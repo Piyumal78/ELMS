@@ -54,6 +54,14 @@ public class ComponentController {
         return ResponseEntity.status(HttpStatus.OK).body(componentResponseDtoList);
     }
 
+    @GetMapping(value = "/components/name/{componentName}/type/{type}")
+    public ResponseEntity<ComponentResponseDto> getComponentByNameAndType(
+            @PathVariable String componentName,
+            @PathVariable String type) throws ResourceNotFoundException {
+        ComponentResponseDto responseDto = componentService.getComponentByNameAndType(componentName, type);
+        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
+    }
+
     @GetMapping(value = "/components/{id}")
     public ResponseEntity<ComponentResponseDto> getComponentById(@PathVariable Long id) throws ResourceNotFoundException{
         ComponentResponseDto responseDto = componentService.getComponentById(id);

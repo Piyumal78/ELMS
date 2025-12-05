@@ -12,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 public class SessionComponentResponseDto {
 
-    private Long id;
+    private Long sessionComponentId;
     private Long sessionId;
     private List<SessionComponentItemResponseDto> sessionComponentItems;
     private LocalDateTime createdDate;
