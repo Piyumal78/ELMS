@@ -3,9 +3,12 @@ package lk.kn.elms.model;
 import jakarta.persistence.*;
 import lk.kn.elms.model.enums.ReservationStatus;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Getter
@@ -36,9 +39,17 @@ public class LabReservation {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "reservation_status")
-    private ReservationStatus Reservationstatus;
+    private ReservationStatus reservationStatus;
 
     @ManyToOne
     @JoinColumn(name = "student_id", nullable = false)
     private Student student;
+
+    @CreatedDate
+    @Column(name = "created_at", updatable = false, nullable = false)
+    private LocalDateTime createdAt;
+
+    @LastModifiedDate
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 }

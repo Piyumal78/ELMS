@@ -1,0 +1,26 @@
+package lk.kn.elms.dto.response;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class LabReservationResponseDto {
+
+    private Long reservationId;
+    private LocalDate reservationDate;
+    private LocalTime startTime;
+    private LocalTime endTime;
+    private String purpose;
+    private String reservationStatus;
+    private Long studentId;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+
+}
