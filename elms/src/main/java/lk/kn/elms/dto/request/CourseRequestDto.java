@@ -26,6 +26,14 @@ public class CourseRequestDto {
     )
     private String courseName;
 
+    @NotBlank(message = "Academic year is required")
+    @Pattern(
+            regexp = "^(20\\d{2})/(20\\d{2})$",
+            message = "Academic year must be in the format YYYY/YYYY (e.g., 2023/2024)"
+    )
+    private String academicYear;
+
+
     @NotNull(message = "Lecturer ID is required")
     private Long lecturerId;
 }

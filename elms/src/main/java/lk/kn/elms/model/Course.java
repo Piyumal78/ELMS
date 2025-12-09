@@ -29,6 +29,9 @@ public class Course {
     @Column(name = "course_name",nullable = false)
     private String courseName;
 
+    @Column(name = "academic_year", nullable = false)
+    private String academicYear;
+
     @ManyToOne
     @JoinColumn(name = "lecturer_id", nullable = false)
     private Lecturer lecturer;
@@ -39,8 +42,8 @@ public class Course {
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
     private List<Session> sessions;
 
-    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
-    private List<LabManual> labManuals;
+//    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
+//    private List<LabManual> labManuals;
 
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
     private List<Announcement> announcements;

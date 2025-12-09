@@ -5,6 +5,7 @@ import lk.kn.elms.dto.response.LecturerResponseDto;
 import lk.kn.elms.exception.ResourceAlreadyExistsException;
 import lk.kn.elms.exception.ResourceNotFoundException;
 import lk.kn.elms.model.Lecturer;
+import lk.kn.elms.model.enums.UserRole;
 import lk.kn.elms.repository.LecturerRepository;
 import lk.kn.elms.service.LecturerService;
 import lombok.AllArgsConstructor;
@@ -26,11 +27,16 @@ public class LecturerServiceImpl implements LecturerService {
             throw new ResourceAlreadyExistsException("Lecturer with registration number " +
                     lecturerRequestDto.getRegistrationNumber() + " already exists.");
         }
+        if(lecturerRepository.existsByEmail(lecturerRequestDto.getEmail())) {
+            throw new ResourceAlreadyExistsException("Lecturer with email " +
+                    lecturerRequestDto.getEmail() + " already exists.");
+        }
 
         Lecturer lecturer = new Lecturer();
         lecturer.setRegistrationNumber(lecturerRequestDto.getRegistrationNumber());
         lecturer.setName(lecturerRequestDto.getName());
         lecturer.setEmail(lecturerRequestDto.getEmail());
+        lecturer.setRole(UserRole.ROLE_LECTURER);
         lecturerRepository.save(lecturer);
 
         return mapEntityToResponseDto(lecturer);

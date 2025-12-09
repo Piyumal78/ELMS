@@ -4,4 +4,10 @@ import lk.kn.elms.model.Staff;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface StaffRepository extends JpaRepository<Staff, Long> {
+
+    boolean existsByRegistrationNumber(String registrationNumber);
+
+    boolean existsByEmail(String email);
+
+    boolean existsByPhoneNumber(String phoneNumber);
 }
