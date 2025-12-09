@@ -1,12 +1,11 @@
 package lk.kn.elms.service;
 
-import lk.kn.elms.model.Student;
-import java.util.List;
+import lk.kn.elms.dto.request.StudentRequestDto;
+import lk.kn.elms.dto.response.StudentCreateResponseDto;
+import lk.kn.elms.exception.ResourceAlreadyExistsException;
 
 public interface StudentService {
-    Student saveStudent(Student student);
-    Student updateStudentByRegistaionNumber(Student student, String registrationNumber);
-    void deleteStudent(String registrationNumber);
-    Student getStudentRegistrationNumber(String registrationNumber);
-    List<Student> getAllStudent();
+
+    StudentCreateResponseDto createStudent(StudentRequestDto studentRequestDto) throws ResourceAlreadyExistsException;
+
 }

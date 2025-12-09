@@ -5,6 +5,7 @@ import lk.kn.elms.dto.response.DemonstratorResponseDto;
 import lk.kn.elms.exception.ResourceAlreadyExistsException;
 import lk.kn.elms.exception.ResourceNotFoundException;
 import lk.kn.elms.model.Demonstrator;
+import lk.kn.elms.model.enums.UserRole;
 import lk.kn.elms.repository.DemonstratorRepository;
 import lk.kn.elms.service.DemonstratorService;
 import lombok.AllArgsConstructor;
@@ -26,11 +27,16 @@ public class DemonstratorServiceImpl implements DemonstratorService {
             throw new ResourceAlreadyExistsException("Demonstrator with registration number " +
                     demonstratorRequestDto.getRegistrationNumber() + " already exists.");
         }
+        if(demonstratorRepository.existsByEmail(demonstratorRequestDto.getEmail())){
+            throw new ResourceAlreadyExistsException("Demonstrator with email " +
+                    demonstratorRequestDto.getEmail() + " already exists.");
+        }
 
         Demonstrator demonstrator = new Demonstrator();
         demonstrator.setRegistrationNumber(demonstratorRequestDto.getRegistrationNumber());
         demonstrator.setName(demonstratorRequestDto.getName());
         demonstrator.setEmail(demonstratorRequestDto.getEmail());
+        demonstrator.setRole(UserRole.ROLE_DEMONSTRATOR);
         demonstratorRepository.save(demonstrator);
 
         return mapEntityToResponseDto(demonstrator);

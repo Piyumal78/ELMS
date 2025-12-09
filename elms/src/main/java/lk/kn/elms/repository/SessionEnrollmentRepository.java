@@ -4,4 +4,6 @@ import lk.kn.elms.model.SessionEnrollment;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface SessionEnrollmentRepository extends JpaRepository<SessionEnrollment, Long> {
+
+    boolean existsByStudentIdAndSessionId(Long studentId, Long SessionId);
 }

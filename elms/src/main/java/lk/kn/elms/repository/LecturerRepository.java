@@ -10,5 +10,7 @@ public interface LecturerRepository extends JpaRepository<Lecturer, Long> {
 
     boolean existsByRegistrationNumber(String registrationNumber);
 
+    boolean existsByEmail(String email);
+
     Optional<Lecturer> findByRegistrationNumber(String registrationNumber);
 }

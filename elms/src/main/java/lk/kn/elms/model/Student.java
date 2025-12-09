@@ -11,7 +11,7 @@ import java.util.List;
 @Table(name = "students")
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString(exclude = {"componentHandovers", "courseEnrollments", "sessionEnrolments", "reportSubmissions", "labReservations"})
+@ToString(exclude = {"componentHandovers", "courseEnrollments", "sessionEnrollments", "reportSubmissions", "labReservations"})
 @DiscriminatorValue("STUDENT")
 @PrimaryKeyJoinColumn(name = "id")
 public class Student extends User{
