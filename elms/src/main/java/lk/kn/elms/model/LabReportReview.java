@@ -1,6 +1,7 @@
 package lk.kn.elms.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lk.kn.elms.model.enums.Grade;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -39,8 +40,9 @@ public class LabReportReview {
     private ReportSubmission reportSubmission;
 
     @CreatedDate
-    @Column(name = "created_at", updatable = false, nullable = false)
-    private LocalDateTime createdAt;
+    @NotNull
+    @Column(name = "reviewed_at", updatable = false, nullable = false)
+    private LocalDateTime reviewedAt;
 
     @LastModifiedDate
     @Column(name = "updated_at")
