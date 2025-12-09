@@ -25,9 +25,9 @@ public class SessionRequestDto {
     private LocalTime endTime;
 
     @NotNull(message = "Course ID is required")
-    private String courseId;
+    private Long courseId;
 
     @NotNull(message = "User ID is required")
-    private String userId;
+    private Long userId;
 
 }

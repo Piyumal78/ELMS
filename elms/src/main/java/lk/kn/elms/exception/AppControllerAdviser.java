@@ -1,5 +1,6 @@
 package lk.kn.elms.exception;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lk.kn.elms.dto.response.ErrorResponseDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,19 @@ public class AppControllerAdviser {
     @ExceptionHandler(ResourceInsufficientException.class)
     public ResponseEntity<ErrorResponseDto> handleResourceInsufficientException(ResourceInsufficientException ex){
         return new ResponseEntity<>(new ErrorResponseDto(ex.getMessage()), HttpStatus.INSUFFICIENT_STORAGE);
+    }
+
+    @ExceptionHandler(FileUploadingException.class)
+    public ResponseEntity<ErrorResponseDto> handleFileUploadingException(FileUploadingException ex) {
+        return new ResponseEntity<>(new ErrorResponseDto(ex.getMessage()), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(JsonProcessingException.class)
+    public ResponseEntity<ErrorResponseDto> handleJsonProcessingException(JsonProcessingException ex) {
+        return new ResponseEntity<>(
+                new ErrorResponseDto("Invalid JSON format: " + ex.getOriginalMessage()),
+                HttpStatus.BAD_REQUEST
+        );
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

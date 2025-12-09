@@ -25,8 +25,8 @@ public class ReportSubmission {
     @Column(name = "file_url")
     private String fileUrl;
 
-    @OneToOne(mappedBy = "reportSubmission", cascade = CascadeType.ALL)
-    private LabReportReview labReportReview;
+    @Column(name = "file_public_id")
+    private String filePublicId;
 
     @ManyToOne
     @JoinColumn(name = "session_id", nullable = false)
@@ -36,9 +36,12 @@ public class ReportSubmission {
     @JoinColumn(name = "student_id", nullable = false)
     private Student student;
 
+    @OneToOne(mappedBy = "reportSubmission", cascade = CascadeType.ALL)
+    private LabReportReview labReportReview;
+
     @CreatedDate
-    @Column(name = "created_at", updatable = false, nullable = false)
-    private LocalDateTime createdAt;
+    @Column(name = "submitted_at", updatable = false, nullable = false)
+    private LocalDateTime submittedAt;
 
     @LastModifiedDate
     @Column(name = "updated_at")
