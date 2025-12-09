@@ -4,7 +4,6 @@ import jakarta.validation.Valid;
 import lk.kn.elms.dto.request.StudentRequestDto;
 import lk.kn.elms.dto.response.StudentCreateResponseDto;
 import lk.kn.elms.exception.ResourceAlreadyExistsException;
-import lk.kn.elms.exception.ResourceNotFoundException;
 import lk.kn.elms.service.StudentService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
