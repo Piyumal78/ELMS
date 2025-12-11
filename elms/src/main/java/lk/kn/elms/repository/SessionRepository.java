@@ -23,4 +23,6 @@ public interface SessionRepository extends JpaRepository<Session, Long> {
             @Param("endTime") LocalTime endTime
     );
 
+    boolean existsByCourseIdAndExperimentNumber(Long courseId, Integer experimentNumber);
+
 }

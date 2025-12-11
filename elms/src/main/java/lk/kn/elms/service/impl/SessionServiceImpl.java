@@ -116,6 +116,10 @@ public class SessionServiceImpl implements SessionService {
             throw new ResourceAlreadyExistsException("There is already an existing session on this date and time");
         }
 
+        if (sessionRepository.existsByCourseIdAndExperimentNumber(sessionRequestDto.getCourseId(), sessionRequestDto.getExperimentNumber())) {
+            throw new ResourceAlreadyExistsException("Experiment number " + sessionRequestDto.getExperimentNumber() + "  already exists for this session");
+        }
+
         User user = userRepository.findById(sessionRequestDto.getUserId())
                 .orElseThrow(() -> new ResourceNotFoundException("There is no user with user id " + sessionRequestDto.getUserId()));
 
