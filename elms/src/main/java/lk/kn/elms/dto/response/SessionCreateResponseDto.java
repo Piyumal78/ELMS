@@ -17,11 +17,12 @@ public class SessionCreateResponseDto {
     private LocalDate date;
     private LocalTime startTime;
     private LocalTime endTime;
-    private String fileUrl;
-    private String filePublicId;
+    private String title;
+    private Integer experimentNumber;
     private Long courseId;
     private String courseCode;
     private String courseName;
+    private Long createdUserId;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

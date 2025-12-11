@@ -3,6 +3,7 @@ package lk.kn.elms.dto.request;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
+import lk.kn.elms.validation.ValidAcademicYear;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -31,8 +32,8 @@ public class CourseRequestDto {
             regexp = "^(20\\d{2})/(20\\d{2})$",
             message = "Academic year must be in the format YYYY/YYYY (e.g., 2023/2024)"
     )
+    @ValidAcademicYear
     private String academicYear;
-
 
     @NotNull(message = "Lecturer ID is required")
     private Long lecturerId;

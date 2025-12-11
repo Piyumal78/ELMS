@@ -32,6 +32,7 @@ public class StaffRequestDto {
     @Size(max = 100, message = "Email cannot exceed 100 characters")
     private String email;
 
+    @NotBlank(message = "Phone number is required")
     @Pattern(
             regexp = "^(?:0|\\+94|94)?7[0-9]{8}$",
             message = "Invalid Sri Lankan phone number"

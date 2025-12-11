@@ -9,7 +9,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface SessionService {
 
-    SessionCreateResponseDto createSession(SessionRequestDto sessionRequestDto, MultipartFile file)
-            throws FileUploadingException, ResourceAlreadyExistsException, ResourceNotFoundException;
+//    SessionCreateResponseDto createSession(SessionRequestDto sessionRequestDto, MultipartFile file)
+//            throws FileUploadingException, ResourceAlreadyExistsException, ResourceNotFoundException;
+
+    SessionCreateResponseDto createSession(SessionRequestDto sessionRequestDto) throws ResourceAlreadyExistsException, ResourceNotFoundException;
 
 }

@@ -1,4 +1,4 @@
-package lk.kn.elms.Configuration;
+package lk.kn.elms.configuration;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
