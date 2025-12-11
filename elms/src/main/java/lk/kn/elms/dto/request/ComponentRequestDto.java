@@ -20,11 +20,6 @@ public class ComponentRequestDto {
     )
     private String componentName;
 
-    @NotBlank(message = "Component name is required")
-    @Pattern(
-            regexp = "^[A-Z_ ]+$",
-            message = "Component name must be in capital letters only"
-    )
     private String type;
 
     @Min(value = 0, message = "Quantity cannot be negative")

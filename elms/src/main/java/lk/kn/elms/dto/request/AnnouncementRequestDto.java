@@ -1,6 +1,7 @@
 package lk.kn.elms.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Data
@@ -8,10 +9,10 @@ import lombok.*;
 @NoArgsConstructor
 public class AnnouncementRequestDto {
 
-    @NotBlank(message = "Course ID is required!")
+    @NotNull(message = "Course ID is required!")
     private Long courseId;
 
-    @NotBlank(message = "User ID is required!")
+    @NotNull(message = "User ID is required!")
     private Long userId;
 
     @NotBlank(message = "Announcement content is required!")

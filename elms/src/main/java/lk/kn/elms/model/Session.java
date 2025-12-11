@@ -17,7 +17,7 @@ import java.util.List;
 @Table(name = "sessions")
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString(exclude = {"course", "createdUser", "labManual", "reportSubmissions", "sessionEnrollments"})
+@ToString(exclude = {"course", "createdUser", "reportSubmissions", "labManual","sessionEnrollments"})
 @EntityListeners(AuditingEntityListener.class)
 public class Session {
 
@@ -34,11 +34,11 @@ public class Session {
     @Column(name = "end_time")
     private LocalTime endTime;
 
-    @Column(name = "file_url")
-    private String fileUrl;
+    @Column(name = "title")
+    private String title;
 
-    @Column(name = "file_public_id")
-    private String filePublicId;
+    @Column(name = "experiment_number")
+    private Integer experimentNumber;
 
     @ManyToOne
     @JoinColumn(name = "course_id", nullable = false)
@@ -48,8 +48,8 @@ public class Session {
     @JoinColumn(name = "created_user_id", nullable = false)
     private User createdUser;
 
-//    @OneToOne(mappedBy = "session", cascade = CascadeType.ALL)
-//    private LabManual labManual;
+    @OneToOne(mappedBy = "session", cascade = CascadeType.ALL)
+    private LabManual labManual;
 
     @OneToMany(mappedBy = "session", cascade = CascadeType.ALL)
     private List<ReportSubmission> reportSubmissions;

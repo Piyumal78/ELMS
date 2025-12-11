@@ -1,7 +1,6 @@
 package lk.kn.elms.dto.request;
 
-import jakarta.validation.constraints.FutureOrPresent;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,6 +22,15 @@ public class SessionRequestDto {
 
     @NotNull(message = "End time is required")
     private LocalTime endTime;
+
+    @NotBlank(message = "Title is required")
+    private String title;
+
+    @NotNull(message = "Experiment number is required")
+    @Min(value = 1, message = "Experiment number must be at least 1")
+    @Max(value = 20, message = "Experiment number must be less than 20")
+    private Integer experimentNumber;
+
 
     @NotNull(message = "Course ID is required")
     private Long courseId;

@@ -15,7 +15,7 @@ import java.util.List;
 @Table(name = "courses")
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString(exclude = {"courseEnrollments", "sessions", "labManuals", "lecturer"})
+@ToString(exclude = {"courseEnrollments", "sessions", "lecturer"})
 @EntityListeners(AuditingEntityListener.class)
 public class Course {
 

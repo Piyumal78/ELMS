@@ -25,7 +25,7 @@ public class AppControllerAdviser {
 
     @ExceptionHandler(ResourceInsufficientException.class)
     public ResponseEntity<ErrorResponseDto> handleResourceInsufficientException(ResourceInsufficientException ex){
-        return new ResponseEntity<>(new ErrorResponseDto(ex.getMessage()), HttpStatus.INSUFFICIENT_STORAGE);
+        return new ResponseEntity<>(new ErrorResponseDto(ex.getMessage()), HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(FileUploadingException.class)
