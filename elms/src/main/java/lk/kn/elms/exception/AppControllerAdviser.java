@@ -4,6 +4,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import lk.kn.elms.dto.response.ErrorResponseDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.LockedException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -50,4 +54,37 @@ public class AppControllerAdviser {
                 .collect(Collectors.joining(", "));
         return new ResponseEntity<>(new ErrorResponseDto(errorMessage), HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ErrorResponseDto> handleBadCredentials(BadCredentialsException ex) {
+        return new ResponseEntity<>(
+                new ErrorResponseDto("Invalid username or password"),
+                HttpStatus.UNAUTHORIZED
+        );
+    }
+
+    @ExceptionHandler(DisabledException.class)
+    public ResponseEntity<ErrorResponseDto> handleDisabledUser(DisabledException ex) {
+        return new ResponseEntity<>(
+                new ErrorResponseDto("User account is disabled"),
+                HttpStatus.FORBIDDEN
+        );
+    }
+
+    @ExceptionHandler(LockedException.class)
+    public ResponseEntity<ErrorResponseDto> handleLockedUser(LockedException ex) {
+        return new ResponseEntity<>(
+                new ErrorResponseDto("User account is locked"),
+                HttpStatus.FORBIDDEN
+        );
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ErrorResponseDto> handleAuthenticationException(AuthenticationException ex) {
+        return new ResponseEntity<>(
+                new ErrorResponseDto("Authentication failed"),
+                HttpStatus.UNAUTHORIZED
+        );
+    }
+
 }

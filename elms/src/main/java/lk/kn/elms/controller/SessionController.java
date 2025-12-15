@@ -2,6 +2,7 @@ package lk.kn.elms.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import lk.kn.elms.dto.request.SessionRequestDto;
 import lk.kn.elms.dto.response.SessionCreateResponseDto;
@@ -38,6 +39,7 @@ public class SessionController {
 //        return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
 //    }
 
+    @RolesAllowed({"DEMONSTRATOR","LECTURER"})
     @PostMapping(value = "/sessions")
     public ResponseEntity<SessionCreateResponseDto> createSession(
             @Valid @RequestBody SessionRequestDto sessionRequestDto) throws ResourceAlreadyExistsException,ResourceNotFoundException{

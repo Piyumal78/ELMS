@@ -1,5 +1,6 @@
 package lk.kn.elms.controller;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import lk.kn.elms.dto.request.LabReportReviewRequestDto;
 import lk.kn.elms.dto.response.LabReportReviewResponseDto;
@@ -19,6 +20,7 @@ public class LabReportReviewController {
 
     private LabReportReviewService labReportReviewService;
 
+    @RolesAllowed({"DEMONSTRATOR","LECTURER"})
     @PostMapping(value = "/report-reviews")
     public ResponseEntity<LabReportReviewResponseDto> reviewLabReport(@Valid @RequestBody LabReportReviewRequestDto labReportReviewRequestDto)
             throws ResourceAlreadyExistsException, ResourceNotFoundException {

@@ -3,7 +3,7 @@ package lk.kn.elms.validation;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
-public class AcademicTearValidator implements ConstraintValidator<ValidAcademicYear, String> {
+public class AcademicYearValidator implements ConstraintValidator<ValidAcademicYear, String> {
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {

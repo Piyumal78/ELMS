@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
 
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = AcademicTearValidator.class)
+@Constraint(validatedBy = AcademicYearValidator.class)
 public @interface ValidAcademicYear {
 
     String message() default "Invalid academic year. The second year must be the first year + 1";

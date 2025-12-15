@@ -1,5 +1,6 @@
 package lk.kn.elms.controller;
 
+import jakarta.annotation.security.RolesAllowed;
 import lk.kn.elms.dto.response.SessionEnrollmentResponseDto;
 import lk.kn.elms.exception.ResourceAlreadyExistsException;
 import lk.kn.elms.exception.ResourceNotFoundException;
@@ -17,6 +18,7 @@ public class SessionEnrollmentController {
 
     private SessionEnrollmentService sessionEnrollmentService;
 
+    @RolesAllowed({"STUDENT"})
     @PostMapping(value = "session-enrollments/student/{studentId}/session/{sessionId}")
     public ResponseEntity<SessionEnrollmentResponseDto> enrollToSession(
             @PathVariable Long studentId,

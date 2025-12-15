@@ -1,5 +1,6 @@
 package lk.kn.elms.controller;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import lk.kn.elms.dto.request.DemonstratorRequestDto;
 import lk.kn.elms.dto.response.DemonstratorResponseDto;
@@ -21,6 +22,7 @@ public class DemonstratorController {
 
     private DemonstratorService demonstratorService;
 
+    @RolesAllowed({"ADMIN"})
     @PostMapping(value = "/demonstrators")
     public ResponseEntity<DemonstratorResponseDto> createDemonstrator(
             @Valid @RequestBody DemonstratorRequestDto demonstratorRequestDto) throws ResourceAlreadyExistsException {
@@ -28,6 +30,7 @@ public class DemonstratorController {
         return ResponseEntity.status(HttpStatus.CREATED).body(demonstratorResponseDto);
     }
 
+    @RolesAllowed({"ADMIN"})
     @PutMapping(value = "/demonstrators/{demonstratorId}")
     public ResponseEntity<DemonstratorResponseDto> updateDemonstrator(
             @PathVariable Long demonstratorId,
@@ -36,6 +39,7 @@ public class DemonstratorController {
         return ResponseEntity.status(HttpStatus.OK).body(demonstratorResponseDto);
     }
 
+    @RolesAllowed({"ADMIN","DEMONSTRATOR","LECTURER"})
     @GetMapping(value = "/demonstrators/registration-number/{registrationNumber}")
     public ResponseEntity<DemonstratorResponseDto> getDemonstratorByRegistrationNumber(
             @PathVariable String registrationNumber) throws ResourceNotFoundException {
@@ -43,6 +47,7 @@ public class DemonstratorController {
         return ResponseEntity.status(HttpStatus.OK).body(demonstratorResponseDto);
     }
 
+    @RolesAllowed({"ADMIN","DEMONSTRATOR","LECTURER"})
     @GetMapping(value = "/demonstrators/{demonstratorId}")
     public ResponseEntity<DemonstratorResponseDto> getDemonstratorById(
             @PathVariable Long demonstratorId) throws ResourceNotFoundException {
@@ -50,12 +55,14 @@ public class DemonstratorController {
         return ResponseEntity.status(HttpStatus.OK).body(demonstratorResponseDto);
     }
 
+    @RolesAllowed({"ADMIN","DEMONSTRATOR","LECTURER"})
     @GetMapping(value = "/demonstrators")
     public ResponseEntity<List<DemonstratorResponseDto>> getAllDemonstrators() throws ResourceNotFoundException {
         List<DemonstratorResponseDto> demonstrators = demonstratorService.getAllDemonstrators();
         return ResponseEntity.status(HttpStatus.OK).body(demonstrators);
     }
 
+    @RolesAllowed({"ADMIN"})
     @DeleteMapping(value = "/demonstrators/{demonstratorId}")
     public ResponseEntity<String> deleteDemonstrator(
             @PathVariable Long demonstratorId) throws ResourceNotFoundException {

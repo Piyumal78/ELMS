@@ -1,5 +1,6 @@
 package lk.kn.elms.controller;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import lk.kn.elms.dto.request.StaffRequestDto;
 import lk.kn.elms.dto.response.StaffCreateResponseDto;
@@ -18,6 +19,7 @@ public class StaffController {
 
     private StaffService staffService;
 
+    @RolesAllowed({"ADMIN"})
     @PostMapping("/staff")
     public ResponseEntity<StaffCreateResponseDto> createStaff(
             @Valid @RequestBody StaffRequestDto staffRequestDto) throws ResourceAlreadyExistsException {

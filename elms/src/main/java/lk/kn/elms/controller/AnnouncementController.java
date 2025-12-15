@@ -1,5 +1,6 @@
 package lk.kn.elms.controller;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import lk.kn.elms.dto.request.AnnouncementRequestDto;
 import lk.kn.elms.dto.response.AnnouncementResponseDto;
@@ -20,6 +21,7 @@ public class AnnouncementController {
 
     private AnnouncementService announcementService;
 
+    @RolesAllowed({"LECTURER","DEMONSTRATOR"})
     @PostMapping(value = "/announcements")
     public ResponseEntity<AnnouncementResponseDto> createAnnouncement(@Valid @RequestBody AnnouncementRequestDto announcementRequestDto)
             throws ResourceNotFoundException {
@@ -28,6 +30,7 @@ public class AnnouncementController {
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 
+    @RolesAllowed({"LECTURER","DEMONSTRATOR","STUDENT"})
     @GetMapping(value = "/courses/{courseId}/announcements")
     public ResponseEntity<List<AnnouncementResponseDto>> getAllAnnouncementsByCourseId(
             @PathVariable Long courseId) throws ResourceNotFoundException{
@@ -36,6 +39,7 @@ public class AnnouncementController {
         return ResponseEntity.status(HttpStatus.OK).body(announcementResponseDtoList);
     }
 
+    @RolesAllowed({"LECTURER","DEMONSTRATOR","STUDENT"})
     @GetMapping(value = "/announcements/{id}")
     public ResponseEntity<AnnouncementResponseDto> getAnnouncementsById(@PathVariable Long id)
             throws ResourceNotFoundException{
@@ -44,6 +48,7 @@ public class AnnouncementController {
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 
+    @RolesAllowed({"LECTURER","DEMONSTRATOR"})
     @PutMapping(value = "/announcements/{id}")
     public ResponseEntity<AnnouncementResponseDto> updateAnnouncements(
             @PathVariable Long id, @RequestBody AnnouncementRequestDto announcementRequestDto) throws ResourceNotFoundException{
@@ -52,6 +57,7 @@ public class AnnouncementController {
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 
+    @RolesAllowed({"LECTURER","DEMONSTRATOR"})
     @DeleteMapping(value = "announcements/{id}")
     public ResponseEntity<String> deleteAnnouncements(@PathVariable Long id) throws ResourceNotFoundException{
 
