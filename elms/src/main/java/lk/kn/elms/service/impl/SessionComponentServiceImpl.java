@@ -4,6 +4,8 @@ import lk.kn.elms.dto.request.SessionComponentItemRequestDto;
 import lk.kn.elms.dto.request.SessionComponentRequestDto;
 import lk.kn.elms.dto.response.SessionComponentItemResponseDto;
 import lk.kn.elms.dto.response.SessionComponentResponseDto;
+import lk.kn.elms.exception.ResourceAlreadyExistsException;
+import lk.kn.elms.exception.ResourceInsufficientException;
 import lk.kn.elms.exception.ResourceNotFoundException;
 import lk.kn.elms.model.Component;
 import lk.kn.elms.model.Session;
@@ -28,10 +30,15 @@ public class SessionComponentServiceImpl implements SessionComponentService {
     private SessionRepository sessionRepository;
 
     @Override
-    public SessionComponentResponseDto createSessionComponent(Long sessionId, SessionComponentRequestDto sessionComponentRequestDto) throws ResourceNotFoundException {
+    public SessionComponentResponseDto createSessionComponent(Long sessionId, SessionComponentRequestDto sessionComponentRequestDto)
+            throws ResourceNotFoundException, ResourceInsufficientException, ResourceAlreadyExistsException {
 
         Session session = sessionRepository.findById(sessionId)
                 .orElseThrow(() -> new ResourceNotFoundException("Session not found with id: " + sessionId));
+
+        if (sessionComponentRepository.existsBySessionId(sessionId)) {
+            throw new ResourceAlreadyExistsException("Session component already exists with session id: " + sessionId);
+        }
 
         List <SessionComponentItem> sessionComponentItems = new ArrayList<>();
         for(SessionComponentItemRequestDto sessionComponentItemRequestDto : sessionComponentRequestDto.getSessionComponentItems()){
@@ -39,14 +46,26 @@ public class SessionComponentServiceImpl implements SessionComponentService {
 
             Component component = componentRepository.findById(sessionComponentItemRequestDto.getComponentId())
                     .orElseThrow(() -> new ResourceNotFoundException("Component not found with id: " + sessionComponentItemRequestDto.getComponentId()));
-            sessionComponentItem.setComponent(component);
+
+            Integer requiredQuantity = sessionComponentItemRequestDto.getQuantity() * sessionComponentRequestDto.getAmount();
+            Integer existingQuantity = component.getQuantity();
+
+            if (existingQuantity < requiredQuantity) {
+                throw new ResourceInsufficientException("Insufficient quantity of " +component.getComponentName());
+            }
             sessionComponentItem.setQuantity(sessionComponentItemRequestDto.getQuantity());
+            sessionComponentItem.setComponent(component);
             sessionComponentItems.add(sessionComponentItem);
         }
 
         SessionComponent sessionComponent = new SessionComponent();
         sessionComponent.setSession(session);
+        sessionComponent.setAmount(sessionComponentRequestDto.getAmount());
         sessionComponent.setSessionComponentItems(sessionComponentItems);
+
+        for(SessionComponentItem sessionComponentItem : sessionComponentItems){
+            sessionComponentItem.setSessionComponent(sessionComponent);
+        }
         sessionComponentRepository.save(sessionComponent);
 
         return mapEntityToResponseDto(sessionComponent);

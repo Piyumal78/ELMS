@@ -2,6 +2,7 @@ package lk.kn.elms.service.impl;
 
 import lk.kn.elms.dto.request.ComponentHandoverRequestDto;
 import lk.kn.elms.dto.response.ComponentHandoverResponseDto;
+import lk.kn.elms.exception.ResourceAlreadyExistsException;
 import lk.kn.elms.exception.ResourceNotFoundException;
 import lk.kn.elms.model.ComponentHandover;
 import lk.kn.elms.model.SessionComponent;
@@ -26,12 +27,17 @@ public class ComponentHandoverServiceImpl implements ComponentHandoverService {
     private SessionComponentRepository sessionComponentRepository;
 
     @Override
-    public ComponentHandoverResponseDto setHandoverComponent(ComponentHandoverRequestDto componentHandoverRequestDto) throws ResourceNotFoundException {
+    public ComponentHandoverResponseDto setHandoverComponent(ComponentHandoverRequestDto componentHandoverRequestDto)
+            throws ResourceNotFoundException, ResourceAlreadyExistsException {
 
         Student student = studentRepository.findById(componentHandoverRequestDto.getStudentId())
                 .orElseThrow(() -> new ResourceNotFoundException("Student not found with ID: " + componentHandoverRequestDto.getStudentId()));
         SessionComponent sessionComponent = sessionComponentRepository.findById(componentHandoverRequestDto.getSessionComponentId())
                 .orElseThrow(() -> new ResourceNotFoundException("Session Component not found with ID: " + componentHandoverRequestDto.getSessionComponentId()));
+
+        if (componentHandoverRepository.existsByStudentIdAndSessionComponentId(student.getId(), sessionComponent.getId())) {
+            throw new ResourceAlreadyExistsException("Session component id " +sessionComponent.getId()+ " has handed over to student id " +student.getId()+ " already");
+        }
 
         ComponentHandover componentHandover = new ComponentHandover();
         componentHandover.setStudent(student);
@@ -44,10 +50,14 @@ public class ComponentHandoverServiceImpl implements ComponentHandoverService {
     }
 
     @Override
-    public ComponentHandoverResponseDto returnHandoverComponent(Long handoverId) throws ResourceNotFoundException {
+    public ComponentHandoverResponseDto returnHandoverComponent(Long handoverId) throws ResourceNotFoundException,ResourceAlreadyExistsException {
 
         ComponentHandover componentHandover = componentHandoverRepository.findById(handoverId)
                 .orElseThrow(() -> new ResourceNotFoundException("Component Handover not found with ID: " + handoverId));
+
+        if(componentHandover.getReturnStatus().equals(ReturnStatus.RETURNED)){
+            throw new ResourceAlreadyExistsException("Session component has already returned");
+        }
 
         componentHandover.setReturnStatus(ReturnStatus.valueOf("RETURNED"));
         componentHandoverRepository.save(componentHandover);

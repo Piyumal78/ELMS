@@ -23,10 +23,13 @@ public class SessionComponent {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "amount")
+    private Integer amount;
+
     @OneToMany(mappedBy = "sessionComponent", cascade = CascadeType.ALL)
     private List<ComponentHandover> componentHandovers;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "session_id", nullable = false)
     private Session session;
 

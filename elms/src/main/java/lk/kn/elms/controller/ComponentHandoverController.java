@@ -3,6 +3,7 @@ package lk.kn.elms.controller;
 import jakarta.validation.Valid;
 import lk.kn.elms.dto.request.ComponentHandoverRequestDto;
 import lk.kn.elms.dto.response.ComponentHandoverResponseDto;
+import lk.kn.elms.exception.ResourceAlreadyExistsException;
 import lk.kn.elms.exception.ResourceNotFoundException;
 import lk.kn.elms.service.ComponentHandoverService;
 import lombok.AllArgsConstructor;
@@ -22,14 +23,14 @@ public class ComponentHandoverController {
 
     @PostMapping(value = "/component-handovers")
     public ResponseEntity<ComponentHandoverResponseDto> setHandoverComponent(
-            @Valid @RequestBody ComponentHandoverRequestDto componentHandoverRequestDto) throws ResourceNotFoundException {
+            @Valid @RequestBody ComponentHandoverRequestDto componentHandoverRequestDto) throws ResourceNotFoundException, ResourceAlreadyExistsException {
         ComponentHandoverResponseDto responseDto = componentHandoverService.setHandoverComponent(componentHandoverRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 
     @PostMapping(value = "/component-handovers/{handoverId}/return")
     public ResponseEntity<ComponentHandoverResponseDto> returnHandoverComponent(
-            @PathVariable Long handoverId) throws ResourceNotFoundException {
+            @PathVariable Long handoverId) throws ResourceNotFoundException, ResourceAlreadyExistsException {
         ComponentHandoverResponseDto responseDto = componentHandoverService.returnHandoverComponent(handoverId);
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }

@@ -2,15 +2,17 @@ package lk.kn.elms.service;
 
 import lk.kn.elms.dto.request.ComponentHandoverRequestDto;
 import lk.kn.elms.dto.response.ComponentHandoverResponseDto;
+import lk.kn.elms.exception.ResourceAlreadyExistsException;
 import lk.kn.elms.exception.ResourceNotFoundException;
 
 import java.util.List;
 
 public interface ComponentHandoverService {
 
-    ComponentHandoverResponseDto setHandoverComponent(ComponentHandoverRequestDto componentHandoverRequestDto) throws ResourceNotFoundException;
+    ComponentHandoverResponseDto setHandoverComponent(ComponentHandoverRequestDto componentHandoverRequestDto)
+            throws ResourceNotFoundException, ResourceAlreadyExistsException;
 
-    ComponentHandoverResponseDto returnHandoverComponent(Long handoverId) throws ResourceNotFoundException;
+    ComponentHandoverResponseDto returnHandoverComponent(Long handoverId) throws ResourceNotFoundException, ResourceAlreadyExistsException;
 
     ComponentHandoverResponseDto getHandoverComponentById(Long handoverId) throws ResourceNotFoundException;
 

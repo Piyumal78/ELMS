@@ -3,6 +3,7 @@ package lk.kn.elms.service.impl;
 import lk.kn.elms.dto.request.CourseEnrollmentRequestDto;
 import lk.kn.elms.dto.response.CourseEnrollmentListResponseDto;
 import lk.kn.elms.dto.response.CourseEnrollmentResponseDto;
+import lk.kn.elms.exception.ResourceAlreadyExistsException;
 import lk.kn.elms.exception.ResourceNotFoundException;
 import lk.kn.elms.model.Course;
 import lk.kn.elms.model.CourseEnrollment;
@@ -26,8 +27,11 @@ public class CourseEnrollmentServiceImpl implements CourseEnrollmentService {
     private CourseRepository courseRepository;
 
     @Override
-    public CourseEnrollmentResponseDto enrollInCourse(CourseEnrollmentRequestDto courseEnrollmentRequestDto) throws ResourceNotFoundException {
+    public CourseEnrollmentResponseDto enrollInCourse(CourseEnrollmentRequestDto courseEnrollmentRequestDto) throws ResourceNotFoundException,ResourceAlreadyExistsException {
 
+        if (courseEnrollmentRepository.existsByStudentIdAndCourseId(courseEnrollmentRequestDto.getStudentId(), courseEnrollmentRequestDto.getCourseId())) {
+            throw new ResourceAlreadyExistsException("Already enrolled");
+        }
         Student student = studentRepository.findById(courseEnrollmentRequestDto.getStudentId())
                 .orElseThrow(() -> new ResourceNotFoundException("Student not found with ID: " + courseEnrollmentRequestDto.getStudentId()));
         Course course = courseRepository.findById(courseEnrollmentRequestDto.getCourseId())
