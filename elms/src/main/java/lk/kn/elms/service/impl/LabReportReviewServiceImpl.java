@@ -23,6 +23,8 @@ public class LabReportReviewServiceImpl implements LabReportReviewService {
     private DemonstratorRepository demonstratorRepository;
     private ReportSubmissionRepository reportSubmissionRepository;
 
+    //*********************************************
+    //Need to set demonstrator from security context
     @Override
     public LabReportReviewResponseDto reviewLabReport(LabReportReviewRequestDto labReportReviewRequestDto)
             throws ResourceAlreadyExistsException, ResourceNotFoundException {

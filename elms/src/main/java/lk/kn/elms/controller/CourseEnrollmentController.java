@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lk.kn.elms.dto.request.CourseEnrollmentRequestDto;
 import lk.kn.elms.dto.response.CourseEnrollmentListResponseDto;
 import lk.kn.elms.dto.response.CourseEnrollmentResponseDto;
+import lk.kn.elms.exception.ResourceAlreadyExistsException;
 import lk.kn.elms.exception.ResourceNotFoundException;
 import lk.kn.elms.service.CourseEnrollmentService;
 import lombok.AllArgsConstructor;
@@ -21,7 +22,8 @@ public class CourseEnrollmentController {
 
     @PostMapping("/enrollments")
     public ResponseEntity<CourseEnrollmentResponseDto> enrollInCourse(
-            @Valid @RequestBody CourseEnrollmentRequestDto courseEnrollmentRequestDto) throws ResourceNotFoundException {
+            @Valid @RequestBody CourseEnrollmentRequestDto courseEnrollmentRequestDto)
+            throws ResourceNotFoundException, ResourceAlreadyExistsException {
         CourseEnrollmentResponseDto responseDto = courseEnrollmentService.enrollInCourse(courseEnrollmentRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }

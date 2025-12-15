@@ -49,6 +49,9 @@ public class Session {
     private User createdUser;
 
     @OneToOne(mappedBy = "session", cascade = CascadeType.ALL)
+    private SessionComponent sessionComponent;
+
+    @OneToOne(mappedBy = "session", cascade = CascadeType.ALL)
     private LabManual labManual;
 
     @OneToMany(mappedBy = "session", cascade = CascadeType.ALL)

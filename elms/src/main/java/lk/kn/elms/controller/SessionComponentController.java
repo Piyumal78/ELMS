@@ -3,6 +3,8 @@ package lk.kn.elms.controller;
 import jakarta.validation.Valid;
 import lk.kn.elms.dto.request.SessionComponentRequestDto;
 import lk.kn.elms.dto.response.SessionComponentResponseDto;
+import lk.kn.elms.exception.ResourceAlreadyExistsException;
+import lk.kn.elms.exception.ResourceInsufficientException;
 import lk.kn.elms.exception.ResourceNotFoundException;
 import lk.kn.elms.service.SessionComponentService;
 import lombok.AllArgsConstructor;
@@ -23,7 +25,8 @@ public class SessionComponentController {
     @PostMapping(value = "/sessions/{sessionId}/session-components")
     public ResponseEntity<SessionComponentResponseDto> createSessionComponent(
             @PathVariable Long sessionId,
-            @RequestBody @Valid SessionComponentRequestDto sessionComponentRequestDto) throws ResourceNotFoundException{
+            @RequestBody @Valid SessionComponentRequestDto sessionComponentRequestDto)
+            throws ResourceNotFoundException, ResourceInsufficientException, ResourceAlreadyExistsException {
 
         SessionComponentResponseDto responseDto = sessionComponentService.createSessionComponent(sessionId, sessionComponentRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
