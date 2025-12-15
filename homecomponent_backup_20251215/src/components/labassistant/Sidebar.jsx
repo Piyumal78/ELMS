@@ -1,9 +1,8 @@
 import React from "react";
-import { ClipboardList, Package, Wrench, ShoppingCart, LayoutDashboard } from "lucide-react";
+import { ClipboardList, Package, Wrench, ShoppingCart } from "lucide-react";
 
 const Sidebar = ({ active, onChangePage }) => {
   const menu = [
-    { name: "Dashboard", key: "dashboard", icon: LayoutDashboard },
     { name: "Inventory", key: "inventory", icon: Package },
     { name: "Requests", key: "requests", icon: ClipboardList },
     { name: "Procurement", key: "procurement", icon: ShoppingCart },

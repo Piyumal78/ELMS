@@ -3,13 +3,6 @@ import axios from "axios";
 
 const API_BASE = "http://localhost:5000/api/labassistant"; // Replace with your backend URL
 
-// ------------------- Dashboard -------------------
-
-export const getDashboardStats = async () => {
-  const res = await axios.get(`${API_BASE}/dashboard/stats`);
-  return res.data;
-};
-
 // ------------------- Inventory -------------------
 
 export const getInventory = async () => {

@@ -14,18 +14,11 @@ import {
   getInventoryAlerts,
   getPendingMaintenance,
   getTodaySchedule,
-  getDashboardStats,
 } from "../../services/labAssistantService";
 
-const DashboardHome = ({ onNavigate }) => {
+const DashboardHome = () => {
   const navigate = useNavigate();
 
-  const [stats, setStats] = useState({
-    totalItems: 0,
-    lowStockCount: 0,
-    pendingRequests: 0,
-    itemsUnderMaintenance: 0
-  });
   const [inventoryAlerts, setInventoryAlerts] = useState([]);
   const [maintenance, setMaintenance] = useState([]);
   const [schedule, setSchedule] = useState([]);
@@ -35,20 +28,6 @@ const DashboardHome = ({ onNavigate }) => {
   }, []);
 
   const loadDashboard = async () => {
-    try {
-      const dashboardStats = await getDashboardStats();
-      setStats(dashboardStats);
-    } catch (error) {
-      console.error("Error fetching dashboard stats:", error);
-      // Fallback/Mock data if API fails
-      setStats({
-        totalItems: 1240,
-        lowStockCount: 5,
-        pendingRequests: 3,
-        itemsUnderMaintenance: 2
-      });
-    }
-
     const inv = await getInventoryAlerts();
     // Normalize inventory items to InventoryAlert shape (try common field names)
     setInventoryAlerts(
@@ -95,44 +74,32 @@ const DashboardHome = ({ onNavigate }) => {
 
       {/* Quick Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div 
-          onClick={() => onNavigate && onNavigate("inventory")}
-          className="bg-white p-5 rounded-lg shadow flex items-center gap-3 cursor-pointer hover:shadow-md transition-shadow"
-        >
+        <div className="bg-white p-5 rounded-lg shadow flex items-center gap-3">
           <Boxes size={28} className="text-blue-600" />
           <div>
             <p className="text-gray-500 text-sm">Total Inventory</p>
-            <p className="text-xl font-bold">{stats.totalItems}</p>
+            <p className="text-xl font-bold">1,240</p>
           </div>
         </div>
-        <div 
-          onClick={() => onNavigate && onNavigate("inventory")}
-          className="bg-white p-5 rounded-lg shadow flex items-center gap-3 cursor-pointer hover:shadow-md transition-shadow"
-        >
+        <div className="bg-white p-5 rounded-lg shadow flex items-center gap-3">
           <AlertTriangle size={28} className="text-red-500" />
           <div>
             <p className="text-gray-500 text-sm">Low Stock Alerts</p>
-            <p className="text-xl font-bold text-red-600">{stats.lowStockCount}</p>
+            <p className="text-xl font-bold text-red-600">{inventoryAlerts.length}</p>
           </div>
         </div>
-        <div 
-          onClick={() => onNavigate && onNavigate("requests")}
-          className="bg-white p-5 rounded-lg shadow flex items-center gap-3 cursor-pointer hover:shadow-md transition-shadow"
-        >
-          <ClipboardList size={28} className="text-green-600" />
-          <div>
-            <p className="text-gray-500 text-sm">Pending Requests</p>
-            <p className="text-xl font-bold text-green-700">{stats.pendingRequests}</p>
-          </div>
-        </div>
-        <div 
-          onClick={() => onNavigate && onNavigate("maintenance")}
-          className="bg-white p-5 rounded-lg shadow flex items-center gap-3 cursor-pointer hover:shadow-md transition-shadow"
-        >
+        <div className="bg-white p-5 rounded-lg shadow flex items-center gap-3">
           <Wrench size={28} className="text-orange-500" />
           <div>
-            <p className="text-gray-500 text-sm">Under Maintenance</p>
-            <p className="text-xl font-bold text-orange-600">{stats.itemsUnderMaintenance}</p>
+            <p className="text-gray-500 text-sm">Pending Maintenance</p>
+            <p className="text-xl font-bold text-orange-600">{maintenance.length}</p>
+          </div>
+        </div>
+        <div className="bg-white p-5 rounded-lg shadow flex items-center gap-3">
+          <Calendar size={28} className="text-green-600" />
+          <div>
+            <p className="text-gray-500 text-sm">Today's Labs</p>
+            <p className="text-xl font-bold text-green-700">{schedule.length}</p>
           </div>
         </div>
       </div>

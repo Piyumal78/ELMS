@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import Sidebar from "./Sidebar";
 import Topbar from "./Topbar";
-import DashboardHome from "../../pages/LabAssistant/DashboardHome";
 import InventoryPage from "../../pages/LabAssistant/InventoryPage";
 import RequestsPage from "../../pages/LabAssistant/RequestsPage";
 import ProcurementPage from "../../pages/LabAssistant/ProcurementPage";
@@ -11,12 +10,10 @@ export const LabAssistantDashboard = ({
   user,
   onLogout,
 }) => {
-  const [activePage, setActivePage] = useState("dashboard");
+  const [activePage, setActivePage] = useState("inventory");
 
   const renderPage = () => {
     switch (activePage) {
-      case "dashboard":
-        return <DashboardHome onNavigate={setActivePage} />;
       case "inventory":
         return <InventoryPage />;
       case "requests":
