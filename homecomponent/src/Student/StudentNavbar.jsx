@@ -27,6 +27,7 @@ import {LogOut} from "lucide-react"
 
 const StudentNavbar = () => {
     return (
+        
         <div className="flex justify-center gap-140 w-full max-w-6xl px-4 ">
             <InputGroup className=" h-12">
                 <InputGroupInput placeholder="Search labs..." />

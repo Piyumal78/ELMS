@@ -10,6 +10,7 @@ import Student from './Student/Student'
 import Lab from './Lab/Lab'
 import LabDetails from './Lab/LabDetail'
 import LabSubmission from './Lab/LabSubmission'
+import LabAssistantDashboard from './components/labassistant/LabAssistantDashboard'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -30,6 +31,7 @@ function App() {
           <Route path='/lab7' element={<Lab />} />
           <Route path='/submission' element={<LabSubmission />} />
         </Route>
+        <Route path='/lab-assistant' element={<LabAssistantDashboard user={{name: "Lab Assistant"}} onLogout={() => window.location.href='/'} />} />
       </Routes>
     </BrowserRouter>
   )
