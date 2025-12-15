@@ -27,8 +27,8 @@ import {LogOut} from "lucide-react"
 
 const StudentNavbar = () => {
     return (
-        <div className="flex justify-center gap-140 w-full max-w-6xl px-4">
-            <InputGroup className="border-2 border-black hover:border-4 border-gray-700/80 focus-within:border-primary/50 h-12">
+        <div className="flex justify-center gap-140 w-full max-w-6xl px-4 ">
+            <InputGroup className=" h-12">
                 <InputGroupInput placeholder="Search labs..." />
                 <InputGroupAddon >
                     <SearchIcon />

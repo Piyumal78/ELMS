@@ -83,16 +83,16 @@ export default function PersistentDrawerLeft() {
   const handleDrawerClose = () => setOpen(false);
 
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box sx={{ display: 'flex',flexDirection:'column',backgroundColor:'#f1f5f9' }}>
       <CssBaseline />
-      <AppBar position="fixed" open={open} sx={{bgcolor:"#f1f5f9",backdropFilter: 'blur(10px)',}}>
+      <AppBar  open={open} sx={{bgcolor:"#f1f5f9",position:'static',height:65,marginBottom:0}}>
         <Toolbar>
           <IconButton
             color="inherit"
             aria-label="open drawer"
             onClick={handleDrawerOpen}
             edge="start"
-            sx={{ mr: 2, ...(open && { display: 'none' }) ,bgcolor:"black"}}
+            sx={{ mr: 2, ...(open && { display: 'none' }) ,bgcolor:"blue"}}
           >
             <MenuIcon />
           </IconButton>
@@ -142,11 +142,9 @@ export default function PersistentDrawerLeft() {
         <Divider />
       </Drawer>
 
-      <Main open={open} sx={{}}>
+      <Main open={open} sx={{marginLeft:10}}>
         <DrawerHeader />
-        <Box sx={{ display: 'flex',alignItems:"flex-start",justifyContent:"flex-start", bgcolor: '#f1f5f9', padding: 2, borderRadius: 2 }}>
           <StudentDetails />
-        </Box>
       </Main>
     </Box>
   );
