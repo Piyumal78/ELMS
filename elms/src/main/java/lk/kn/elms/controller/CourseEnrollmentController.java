@@ -1,5 +1,6 @@
 package lk.kn.elms.controller;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import lk.kn.elms.dto.request.CourseEnrollmentRequestDto;
 import lk.kn.elms.dto.response.CourseEnrollmentListResponseDto;
@@ -20,6 +21,7 @@ public class CourseEnrollmentController {
 
     private CourseEnrollmentService courseEnrollmentService;
 
+    @RolesAllowed({"STUDENT"})
     @PostMapping("/enrollments")
     public ResponseEntity<CourseEnrollmentResponseDto> enrollInCourse(
             @Valid @RequestBody CourseEnrollmentRequestDto courseEnrollmentRequestDto)
@@ -28,12 +30,14 @@ public class CourseEnrollmentController {
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 
+    @RolesAllowed({"STUDENT"})
     @DeleteMapping("/enrollments/{enrollmentId}")
     public ResponseEntity<String> unEnrollFromCourse(@PathVariable Long enrollmentId) throws ResourceNotFoundException {
         courseEnrollmentService.unEnrollFromCourse(enrollmentId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Unenrolled successfully");
     }
 
+    @RolesAllowed({"STUDENT"})
     @GetMapping("/enrollments/{enrollmentId}")
     public ResponseEntity<CourseEnrollmentResponseDto> getEnrollmentByEnrollmentId(
             @PathVariable Long enrollmentId) throws ResourceNotFoundException {
@@ -41,6 +45,7 @@ public class CourseEnrollmentController {
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 
+    @RolesAllowed({"STUDENT"})
     @GetMapping("/enrollments/students/{studentId}")
     public ResponseEntity<CourseEnrollmentListResponseDto> getAllEnrollmentsByStudentId(
             @PathVariable Long studentId) throws ResourceNotFoundException {
@@ -48,6 +53,7 @@ public class CourseEnrollmentController {
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 
+    @RolesAllowed({"STUDENT","DEMONSTRATOR","LECTURER"})
     @GetMapping("/enrollments/courses/{courseId}")
     public ResponseEntity<CourseEnrollmentListResponseDto> getAllEnrollmentsByCourseId(
             @PathVariable Long courseId) throws ResourceNotFoundException {

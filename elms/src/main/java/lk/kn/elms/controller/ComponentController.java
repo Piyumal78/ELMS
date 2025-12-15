@@ -1,5 +1,6 @@
 package lk.kn.elms.controller;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import lk.kn.elms.dto.request.ComponentRequestDto;
 import lk.kn.elms.dto.response.ComponentResponseDto;
@@ -21,12 +22,14 @@ public class ComponentController {
 
     private ComponentService componentService;
 
+    @RolesAllowed({"STAFF"})
     @PostMapping(value = "/components/additions")
     public ResponseEntity<ComponentResponseDto> addComponent(@Valid @RequestBody ComponentRequestDto componentRequestDto) {
         ComponentResponseDto responseDto = componentService.addComponent(componentRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 
+    @RolesAllowed({"STAFF"})
     @PostMapping(value = "/components/deductions")
     public ResponseEntity<ComponentResponseDto> deductComponent(@Valid @RequestBody ComponentRequestDto componentRequestDto)
             throws ResourceNotFoundException, ResourceInsufficientException {
@@ -34,6 +37,7 @@ public class ComponentController {
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 
+    @RolesAllowed({"STAFF"})
     @PutMapping(value = "/components")
     public ResponseEntity<ComponentResponseDto> updateComponent(@Valid @RequestBody ComponentRequestDto componentRequestDto)
             throws ResourceNotFoundException {
@@ -41,12 +45,14 @@ public class ComponentController {
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 
+    @RolesAllowed({"STAFF"})
     @GetMapping(value = "/components")
     public ResponseEntity<List<ComponentResponseDto>> getAllComponents() throws ResourceNotFoundException {
         List<ComponentResponseDto> componentResponseDtoList = componentService.getAllComponents();
         return ResponseEntity.status(HttpStatus.OK).body(componentResponseDtoList);
     }
 
+    @RolesAllowed({"STAFF"})
     @GetMapping(value = "/components/name/{componentName}")
     public ResponseEntity<List<ComponentResponseDto>> getComponentByName(@PathVariable String componentName)
             throws ResourceNotFoundException {
@@ -54,6 +60,7 @@ public class ComponentController {
         return ResponseEntity.status(HttpStatus.OK).body(componentResponseDtoList);
     }
 
+    @RolesAllowed({"STAFF"})
     @GetMapping(value = "/components/name/{componentName}/type/{type}")
     public ResponseEntity<ComponentResponseDto> getComponentByNameAndType(
             @PathVariable String componentName,
@@ -62,12 +69,14 @@ public class ComponentController {
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 
+    @RolesAllowed({"STAFF"})
     @GetMapping(value = "/components/{id}")
     public ResponseEntity<ComponentResponseDto> getComponentById(@PathVariable Long id) throws ResourceNotFoundException{
         ComponentResponseDto responseDto = componentService.getComponentById(id);
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 
+    @RolesAllowed({"STAFF"})
     @DeleteMapping(value = "/components/{id}")
     public ResponseEntity<String> deleteComponent(@PathVariable Long id) throws ResourceNotFoundException{
         componentService.deleteComponent(id);

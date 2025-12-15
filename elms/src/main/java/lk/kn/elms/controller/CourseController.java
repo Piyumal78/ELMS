@@ -1,5 +1,6 @@
 package lk.kn.elms.controller;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import lk.kn.elms.dto.request.CourseRequestDto;
 import lk.kn.elms.dto.response.CourseCreateResponseDto;
@@ -19,6 +20,7 @@ public class CourseController {
 
     private CourseService courseService;
 
+    @RolesAllowed({"LECTURER"})
     @PostMapping("/courses")
     public ResponseEntity<CourseCreateResponseDto> createCourse(
             @Valid @RequestBody CourseRequestDto courseRequestDto) throws ResourceAlreadyExistsException, ResourceNotFoundException{

@@ -1,5 +1,6 @@
 package lk.kn.elms.controller;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import lk.kn.elms.dto.request.SessionComponentRequestDto;
 import lk.kn.elms.dto.response.SessionComponentResponseDto;
@@ -22,25 +23,26 @@ public class SessionComponentController {
 
     private SessionComponentService sessionComponentService;
 
+    @RolesAllowed({"STAFF","LECTURER","DEMONSTRATOR"})
     @PostMapping(value = "/sessions/{sessionId}/session-components")
     public ResponseEntity<SessionComponentResponseDto> createSessionComponent(
             @PathVariable Long sessionId,
             @RequestBody @Valid SessionComponentRequestDto sessionComponentRequestDto)
             throws ResourceNotFoundException, ResourceInsufficientException, ResourceAlreadyExistsException {
-
         SessionComponentResponseDto responseDto = sessionComponentService.createSessionComponent(sessionId, sessionComponentRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 
+    @RolesAllowed({"STAFF","LECTURER","DEMONSTRATOR"})
     @PutMapping(value = "/sessions/{sessionId}/session-components")
     public ResponseEntity<SessionComponentResponseDto> updateSessionComponent(
             @PathVariable Long sessionId,
             @RequestBody @Valid SessionComponentRequestDto sessionComponentRequestDto) throws ResourceNotFoundException{
-
         SessionComponentResponseDto responseDto = sessionComponentService.updateSessionComponent(sessionId, sessionComponentRequestDto);
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 
+    @RolesAllowed({"STAFF","LECTURER","DEMONSTRATOR"})
     @GetMapping(value = "/sessions/{sessionId}/session-components")
     public ResponseEntity<SessionComponentResponseDto> getSessionComponentBySessionId(
             @PathVariable Long sessionId) throws ResourceNotFoundException{
@@ -48,16 +50,16 @@ public class SessionComponentController {
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 
+    @RolesAllowed({"STAFF","LECTURER","DEMONSTRATOR"})
     @GetMapping(value = "/session-components")
     public ResponseEntity<List<SessionComponentResponseDto>> getAllSessionComponents() throws ResourceNotFoundException{
-
         List<SessionComponentResponseDto> responseDtoList = sessionComponentService.getAllSessionComponents();
         return ResponseEntity.status(HttpStatus.OK).body(responseDtoList);
     }
 
+    @RolesAllowed({"STAFF","LECTURER","DEMONSTRATOR"})
     @DeleteMapping(value = "/sessions/{sessionId}/session-components")
     public ResponseEntity<String> deleteSessionComponent(@PathVariable Long sessionId) throws ResourceNotFoundException {
-
         sessionComponentService.deleteSessionComponent(sessionId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("SessionComponent deleted successfully for session id: " + sessionId);
     }

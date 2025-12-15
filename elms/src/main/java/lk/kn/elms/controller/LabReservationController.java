@@ -1,5 +1,6 @@
 package lk.kn.elms.controller;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import lk.kn.elms.dto.request.LabReservationRequestDto;
 import lk.kn.elms.dto.response.LabReservationResponseDto;
@@ -22,6 +23,7 @@ public class LabReservationController {
 
     private LabReservationService labReservationService;
 
+    @RolesAllowed({"STUDENT"})
     @PostMapping("/lab-reservations")
     public ResponseEntity<LabReservationResponseDto> createLabReservation(
             @Valid @RequestBody LabReservationRequestDto labReservationRequestDto) throws ResourceAlreadyExistsException, ResourceNotFoundException {
@@ -30,6 +32,7 @@ public class LabReservationController {
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 
+    @RolesAllowed({"STUDENT"})
     @PutMapping("/lab-reservations/{reservationId}")
     public ResponseEntity<LabReservationResponseDto> updateLabReservation(
             @PathVariable Long reservationId,
@@ -38,55 +41,64 @@ public class LabReservationController {
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 
+    @RolesAllowed({"LECTURER"})
     @PostMapping("/lab-reservations/{reservationId}/approve")
     public ResponseEntity<LabReservationResponseDto> approveLabReservation(@PathVariable Long reservationId) throws ResourceNotFoundException {
         LabReservationResponseDto responseDto = labReservationService.approveLabReservation(reservationId);
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 
+    @RolesAllowed({"LECTURER"})
     @PostMapping("/lab-reservations/{reservationId}/reject")
     public ResponseEntity<LabReservationResponseDto> rejectLabReservation(@PathVariable Long reservationId) throws ResourceNotFoundException {
         LabReservationResponseDto responseDto = labReservationService.rejectLabReservation(reservationId);
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 
+    @RolesAllowed({"STUDENT"})
     @PostMapping("/lab-reservations/{reservationId}/cancel")
     public ResponseEntity<LabReservationResponseDto> cancelLabReservation(@PathVariable Long reservationId) throws ResourceNotFoundException {
         LabReservationResponseDto responseDto = labReservationService.cancelLabReservation(reservationId);
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 
+    @RolesAllowed({"STAFF"})
     @PostMapping("/lab-reservations/{reservationId}/complete")
     public ResponseEntity<LabReservationResponseDto> completeLabReservation(@PathVariable Long reservationId) throws ResourceNotFoundException {
         LabReservationResponseDto responseDto = labReservationService.completeLabReservation(reservationId);
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 
+    @RolesAllowed({"STAFF","STUDENT","LECTURER"})
     @GetMapping("/lab-reservations/{reservationId}")
     public ResponseEntity<LabReservationResponseDto> getLabReservationById(@PathVariable Long reservationId) throws ResourceNotFoundException {
         LabReservationResponseDto responseDto = labReservationService.getLabReservationById(reservationId);
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 
+    @RolesAllowed({"LECTURER"})
     @GetMapping("/lab-reservations/pending")
     public ResponseEntity<List<LabReservationResponseDto>> getAllPendingLabReservations() throws ResourceNotFoundException {
         List<LabReservationResponseDto> responseDtoList = labReservationService.getAllPendingLabReservations();
         return ResponseEntity.status(HttpStatus.OK).body(responseDtoList);
     }
 
+    @RolesAllowed({"LECTURER","STAFF"})
     @GetMapping("/lab-reservations/approved")
     public ResponseEntity<List<LabReservationResponseDto>> getAllApprovedLabReservations() throws ResourceNotFoundException {
         List<LabReservationResponseDto> responseDtoList = labReservationService.getAllApprovedLabReservations();
         return ResponseEntity.status(HttpStatus.OK).body(responseDtoList);
     }
 
+    @RolesAllowed({"LECTURER","STAFF"})
     @GetMapping("/lab-reservations/date/{reservationDate}")
     public ResponseEntity<List<LabReservationResponseDto>> getLabReservationsByDate(@PathVariable LocalDate reservationDate) throws ResourceNotFoundException {
         List<LabReservationResponseDto> responseDtoList = labReservationService.getLabReservationsByDate(reservationDate);
         return ResponseEntity.status(HttpStatus.OK).body(responseDtoList);
     }
 
-    @GetMapping("/lab-reservations/{reservationId}/delete")
+    @RolesAllowed({"ADMIN","STAFF"})
+    @DeleteMapping("/lab-reservations/{reservationId}/delete")
     public ResponseEntity<String> deleteLabReservation(@PathVariable Long reservationId) throws ResourceNotFoundException {
         labReservationService.deleteLabReservation(reservationId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Lab reservation deleted successfully.");

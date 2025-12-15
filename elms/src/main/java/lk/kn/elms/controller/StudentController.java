@@ -1,5 +1,6 @@
 package lk.kn.elms.controller;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import lk.kn.elms.dto.request.StudentRequestDto;
 import lk.kn.elms.dto.response.StudentCreateResponseDto;
@@ -18,6 +19,7 @@ public class StudentController {
 
     private StudentService studentService;
 
+    @RolesAllowed({"ADMIN"})
     @PostMapping("/students")
     public ResponseEntity<StudentCreateResponseDto> createStudent(@Valid @RequestBody StudentRequestDto studentRequestDto) throws ResourceAlreadyExistsException {
         StudentCreateResponseDto responseDto = studentService.createStudent(studentRequestDto);

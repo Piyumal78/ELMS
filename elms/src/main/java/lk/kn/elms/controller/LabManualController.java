@@ -1,5 +1,6 @@
 package lk.kn.elms.controller;
 
+import jakarta.annotation.security.RolesAllowed;
 import lk.kn.elms.dto.response.LabManualCreateResponseDto;
 import lk.kn.elms.exception.FileUploadingException;
 import lk.kn.elms.exception.ResourceAlreadyExistsException;
@@ -20,6 +21,7 @@ public class LabManualController {
 
     private LabManualService labManualService;
 
+    @RolesAllowed({"DEMONSTRATOR","LECTURER"})
     @PostMapping(value = "/lab-manuals/session/{sessionId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<LabManualCreateResponseDto> uploadLabManual(
             @PathVariable Long sessionId,

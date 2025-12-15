@@ -39,7 +39,7 @@ public class User {
     private String password;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "role")
+    @Column(name = "role", length = 32)
     private UserRole role;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)

@@ -1,5 +1,6 @@
 package lk.kn.elms.controller;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import lk.kn.elms.dto.request.LecturerRequestDto;
 import lk.kn.elms.dto.response.LecturerResponseDto;
@@ -21,6 +22,7 @@ public class LecturerController {
 
     private LecturerService lecturerService;
 
+    @RolesAllowed({"ADMIN"})
     @PostMapping("/lecturers")
     public ResponseEntity<LecturerResponseDto> createLecturer(
             @Valid @RequestBody LecturerRequestDto lecturerRequestDto) throws ResourceAlreadyExistsException {
@@ -28,6 +30,7 @@ public class LecturerController {
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 
+    @RolesAllowed({"ADMIN"})
     @PutMapping("/lecturers/{lecturerId}")
     public ResponseEntity<LecturerResponseDto> updateLecturer(
             @PathVariable Long lecturerId,
@@ -36,6 +39,7 @@ public class LecturerController {
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 
+    @RolesAllowed({"ADMIN","LECTURER"})
     @GetMapping("/lecturers/registration-number/{registrationNumber}")
     public ResponseEntity<LecturerResponseDto> getLecturerByRegistrationNumber(
             @PathVariable String registrationNumber) throws ResourceNotFoundException {
@@ -43,6 +47,7 @@ public class LecturerController {
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 
+    @RolesAllowed({"ADMIN","LECTURER"})
     @GetMapping("/lecturers/{lecturerId}")
     public ResponseEntity<LecturerResponseDto> getLecturerById(
             @PathVariable Long lecturerId) throws ResourceNotFoundException {
@@ -50,12 +55,14 @@ public class LecturerController {
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 
+    @RolesAllowed({"ADMIN","LECTURER"})
     @GetMapping("/lecturers")
     public ResponseEntity<List<LecturerResponseDto>> getAllLecturers() throws ResourceNotFoundException {
         List<LecturerResponseDto> responseDtos = lecturerService.getAllLecturers();
         return ResponseEntity.status(HttpStatus.OK).body(responseDtos);
     }
 
+    @RolesAllowed({"ADMIN"})
     @DeleteMapping("/lecturers/{lecturerId}")
     public ResponseEntity<String> deleteLecturer(
             @PathVariable Long lecturerId) throws ResourceNotFoundException {
