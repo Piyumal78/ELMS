@@ -1,8 +1,13 @@
 import Lab from "../../assets/lab.jpg";
 import { useNavigate } from "react-router-dom"; 
+import { useState } from "react";
+import { Input } from "@/components/ui/input";
+import { Search } from "lucide-react";
 
 const StudentDetails = () => {
   const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState("");
+
   const labdetails = [
     { semeter: "1st Semester", name: "BECS202 - Data Structures Lab", path: "/lab1" },
     { semeter: "1st Semester", name: "BECS200 - Programming Fundamentals Lab", path: "/lab2" },
@@ -14,20 +19,34 @@ const StudentDetails = () => {
     { semeter: "6th Semester", name: "BECS212 - Database Systems Lab", path: "/lab7" }, 
   ];
 
+  const filteredLabs = labdetails.filter((lab) =>
+    lab.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    lab.semeter.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div className="w-full px-4">
       <div className="flex flex-col mb-4">
         <span className="text-2xl sm:text-4xl font-semibold">
           Welcome Back, Lahiru Sanjana! 👋
         </span>
-        <span className="text-sm text-gray-600">
+        <span className="text-sm text-gray-600 mb-4">
           Here's what's happening with your labs this semester
         </span>
+        <div className="relative w-full max-w-md">
+          <Search className="absolute left-2 top-2.5 h-4 w-4 text-gray-500" />
+          <Input
+            placeholder="Search labs by name or semester..."
+            className="pl-8 bg-white"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
       </div>
 
       <div className="w-full max-w-auto max-h-auto mx-auto flex items-center justify-center">
         <div className="grid grid-cols-2 gap-4 w-[1200px] pr-2">
-          {labdetails.map((lab, index) => {
+          {filteredLabs.map((lab, index) => {
             return (
               <div
                 key={index}

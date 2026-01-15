@@ -27,12 +27,12 @@ function App() {
           <Route path='/signup' element={<SignUp />} />
           <Route path='/student' element={<Student />} />
           <Route path='/lab1' element={<LabDetails />} />
-          <Route path='/lab2' element={<Lab />} />
-          <Route path='/lab3' element={<Lab />} />
-          <Route path='/lab4' element={<Lab />} />
-          <Route path='/lab5' element={<Lab />} />
-          <Route path='/lab6' element={<Lab />} />
-          <Route path='/lab7' element={<Lab />} />
+          <Route path='/lab2' element={<LabDetails />} />
+          <Route path='/lab3' element={<LabDetails />} />
+          <Route path='/lab4' element={<LabDetails />} />
+          <Route path='/lab5' element={<LabDetails />} />
+          <Route path='/lab6' element={<LabDetails />} />
+          <Route path='/lab7' element={<LabDetails />} />
           <Route path='/submission' element={<LabSubmission />} />
           <Route path="/dashboard" element={<LabAssistantDashboard />} />
           <Route path="/inventory" element={<InventoryPage />} />

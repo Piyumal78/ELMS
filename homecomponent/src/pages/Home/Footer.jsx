@@ -1,5 +1,5 @@
 import React from 'react';
-import { Beaker, Github, Twitter, Linkedin, Mail } from 'lucide-react';
+import { Beaker, Github, Twitter, Linkedin, Mail,CircuitBoard } from 'lucide-react';
 
 const Footer = () => {
   const footerLinks = {
@@ -23,10 +23,10 @@ const Footer = () => {
           <div className="lg:col-span-2">
             <div className="flex items-center space-x-2 mb-4">
               <div className="bg-gradient-to-br from-cyan-500 to-blue-600 p-2 rounded-lg">
-                <Beaker className="w-6 h-6 text-white" />
+                <CircuitBoard className="w-6 h-6 text-white" />
               </div>
               <span className="text-xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
-                LabFlow
+                ELMS
               </span>
             </div>
             <p className="text-slate-400 mb-4 max-w-sm">
@@ -62,7 +62,7 @@ const Footer = () => {
         </div>
         <div className="pt-8 border-t border-slate-800">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-            <p className="text-slate-500 text-sm">© 2025 LabFlow. All rights reserved.</p>
+            <p className="text-slate-500 text-sm">© 2025 ELMS. All rights reserved.</p>
             <div className="flex items-center space-x-6 text-sm">
               <a href="#" className="text-slate-500 hover:text-cyan-400 transition-colors">Privacy</a>
               <a href="#" className="text-slate-500 hover:text-cyan-400 transition-colors">Terms</a>

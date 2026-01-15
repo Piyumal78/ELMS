@@ -2,9 +2,9 @@ import { Microscope, Beaker, Lock } from "lucide-react";
 
 const StaffSubRole = ({ staffRole, setStaffRole }) => {
   const options = [
-    { id: "lecturer", label: "Lecturer", icon: Microscope },
-    { id: "lab", label: "Lab Assistant", icon: Beaker },
-    { id: "admin", label: "Administrator", icon: Lock },
+    { id: "Lecturer", label: "Lecturer", icon: Microscope },
+    { id: "Lab", label: "Lab Assistant", icon: Beaker },
+    { id: "Demonstrator", label: "Demonstrator", icon: Lock },
   ];
 
   return (

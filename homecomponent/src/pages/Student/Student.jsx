@@ -85,7 +85,7 @@ export default function PersistentDrawerLeft() {
   return (
     <Box sx={{ display: 'flex',flexDirection:'column',backgroundColor:'#f1f5f9' }}>
       <CssBaseline />
-      <AppBar  open={open} sx={{bgcolor:"#f1f5f9",position:'static',height:65,marginBottom:0}}>
+      <AppBar  open={open} sx={{bgcolor:"#1e293b",position:'static',height:65,marginBottom:0}}>
         <Toolbar>
           <IconButton
             color="inherit"
@@ -115,7 +115,7 @@ export default function PersistentDrawerLeft() {
         anchor="left"
         open={open}
       >
-        <DrawerHeader>
+        <DrawerHeader >
           <div className="flex p-2 px-4 gap-3 items-center">
             <CircuitBoard size={32} className="text-white bg-gradient-to-r from-teal-400 to-blue-500 rounded-sm p-1" />
             <span className="bg-gradient-to-r from-teal-400 to-blue-500 bg-clip-text text-transparent text-2xl font-bold">

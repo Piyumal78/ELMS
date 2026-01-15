@@ -29,10 +29,10 @@ const SignUpForm = () => {
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
 
           <div>
-            <label className="text-gray-700 font-medium">Email</label>
+            <label className="text-gray-700 font-medium">Username</label>
             <input
-              type="email"
-              placeholder="staff@university.edu"
+                type="email"
+                placeholder="user-ec030"
               {...register("email")}
               className="w-full mt-2 p-3 rounded-xl bg-gray-100 border"
             />

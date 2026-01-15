@@ -24,48 +24,63 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import {LogOut} from "lucide-react"
+import { Link } from "react-router-dom"
 
 const StudentNavbar = () => {
+    const [search, setSearch] = React.useState(""); 
+    const filteredLabs = [];
+
     return (
         
-        <div className="flex justify-center gap-140 w-full max-w-6xl px-4 ">
-            <InputGroup className=" h-12">
+        <div className="flex justify-center gap-100 w-full max-w-6xl px-200 ">
+            {/* <InputGroup className=" h-12">
                 <InputGroupInput placeholder="Search labs..." />
                 <InputGroupAddon >
                     <SearchIcon />
                 </InputGroupAddon>
-            </InputGroup>
-            <Button className="flex items-center gap-2 p-3 bg-slate-100 hover:bg-gray-300 border-0 focus:ring-0 h-12">
+            </InputGroup> */}
+            <div className="flex gap-5  font-medium text-lg mt-2">
+                <Link to="/" >
+                    Home
+                </Link>
+                <Link to="/">
+                    Dashbord
+                </Link>
+                <Link to="/student">
+                    My Labs
+                </Link>
+            </div>
+            <Button className="flex items-center gap-2 p-3 bg-slate-800 hover:bg-gray-900 border-0 focus:ring-0 h-12">
                 <div className="flex flex-row gap-4">
                     <div className="rounded-full bg-blue-600 h-9 w-9 flex items-center justify-center">
                         <span className=" text-center px-2 text-lg font-bold text-white">Ls</span>
                     </div>
-                    <div className="flex flex-col items-start w-full text-black">
+                    <div className="flex flex-col items-start w-full text-white">
                         <span className="flex text-lg font-bold">Lahiru Sanjana</span>
-                        <span className="text-xs text-gray-500">Student</span>
+                        <span className="text-xs text-gray-300">Student</span>
                     </div>
                     <div>
                         <Select>
-                            <SelectTrigger className="w-[40px] border-0 hover:border-0 hover:bg-gray-300 mt-1">
+                            <SelectTrigger className="w-[40px] border-0 hover:border-0 hover:bg-gray-900 mt-1">
                                 <SelectValue/>
                             </SelectTrigger>
-                            <SelectContent>
+                            <SelectContent className="bg-slate-900 text-white">
                                 <SelectGroup className="p-4">
                                     <SelectItem value="name">Lahiru Sanjana</SelectItem>
                                     <SelectItem value="email">fernandosanjana440@gmail.com</SelectItem>
                                     <div className="mt-2 border-1"></div>
                                     <SelectItem  value="settings">
-                                        <Button className="bg-white text-black hover:bg-gray-100">
+                                        <Button className="bg-slate-900 text-white hover:bg-gray-100 hover:text-black">
                                             Profile Settings
                                         </Button>
                                     </SelectItem>
                                     <SelectItem value="perferences">
-                                        <Button className="bg-white text-black hover:bg-gray-100">
+                                        <Button className="bg-slate-900 text-white hover:bg-gray-100 hover:text-black">
                                             Preferences
                                         </Button>
                                     </SelectItem>
                                     <SelectItem value="help">
-                                        <Button className="bg-white text-black hover:bg-gray-100">
+                                        <Button className="bg-slate-900 text-white hover:bg-gray-100 hover:text-black">
                                             Help & Support
                                         </Button>
                                     </SelectItem>
