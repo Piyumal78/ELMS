@@ -16,7 +16,7 @@ const SignUpForm = () => {
   };
 
   return (
-    <div className="flex justify-center items-center bg-gradient-to-r from-blue-500 to-cyan-500 h-156">
+    <div className="flex justify-center items-center  h-156">
       <div className="bg-white w-full h-full py-12 px-32 rounded-r-2xl">
 
         <h2 className="text-3xl font-bold mb-2">Welcome Back</h2>

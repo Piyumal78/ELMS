@@ -7,7 +7,7 @@ const SignUpDetails = () => {
         {number: '99.9%', label: 'Uptime Guarantee'}
     ]
     return (
-        <div className='flex flex-col justify-center  bg-gradient-to-r from-blue-800 to-teal-800 w-2/5 py-7 px-16 rounded-l-2xl gap-6 h-156'>
+        <div className='flex flex-col justify-center  bg-sky-900 border-2 border-white w-2/5 py-7 px-16 rounded-l-2xl gap-6 h-156 overflow-hidden'>
             <div className="flex p-2 px-8 gap-3 items-center">
                 <CircuitBoard size={52} className="text-white bg-gradient-to-r from-teal-400 to-blue-500 rounded-sm p-1" />
                 <div>
@@ -25,9 +25,9 @@ const SignUpDetails = () => {
             </div>
             <div className='grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 gap-6'>
                  {activeData.map((data, index) => (
-                    <div key={index} className="p-4 flex flex-col items-center justify-center bg-blue-500 rounded-lg shadow-md w-52 h-32">
-                        <span className="text-3xl text-gray-900 font-bold">{data.number}</span>
-                        <span className="text-base text-gray-600">{data.label}</span>
+                    <div key={index} className="p-4 flex flex-col items-center justify-center bg-slate-900 rounded-lg shadow-md w-52 h-32">
+                        <span className="text-3xl text-white font-bold">{data.number}</span>
+                        <span className="text-base text-white">{data.label}</span>
                     </div>
                 ))}
             </div>
