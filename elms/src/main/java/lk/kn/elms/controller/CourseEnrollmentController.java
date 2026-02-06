@@ -60,4 +60,13 @@ public class CourseEnrollmentController {
         CourseEnrollmentListResponseDto responseDto = courseEnrollmentService.getAllEnrollmentsByCourseId(courseId);
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
+
+    // @RolesAllowed({"STUDENT","DEMONSTRATOR","LECTURER"}) // Temporarily disabled for testing
+    @GetMapping("/enrollments/search")
+    public ResponseEntity<CourseEnrollmentResponseDto> getEnrollmentByStudentNumberAndCourseCode(
+            @RequestParam String studentNumber,
+            @RequestParam String courseCode) throws ResourceNotFoundException {
+        CourseEnrollmentResponseDto responseDto = courseEnrollmentService.getEnrollmentByStudentNumberAndCourseCode(studentNumber, courseCode);
+        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
+    }
 }

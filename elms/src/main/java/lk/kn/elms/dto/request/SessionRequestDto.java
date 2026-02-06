@@ -32,8 +32,8 @@ public class SessionRequestDto {
     private Integer experimentNumber;
 
 
-    @NotNull(message = "Course ID is required")
-    private Long courseId;
+    @NotBlank(message = "Course code is required")
+    private String courseCode;
 
     @NotNull(message = "User ID is required")
     private Long userId;

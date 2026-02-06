@@ -97,7 +97,7 @@ public class LecturerServiceImpl implements LecturerService {
 
     private LecturerResponseDto mapEntityToResponseDto(Lecturer lecturer) {
         LecturerResponseDto lecturerResponseDto = new LecturerResponseDto();
-        lecturerResponseDto.setDemonstratorId(lecturer.getId());
+        lecturerResponseDto.setLectureId(lecturer.getId());
         lecturerResponseDto.setRegistrationNumber(lecturer.getRegistrationNumber());
         lecturerResponseDto.setName(lecturer.getName());
         lecturerResponseDto.setEmail(lecturer.getEmail());

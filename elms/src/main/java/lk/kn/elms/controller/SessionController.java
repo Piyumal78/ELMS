@@ -47,4 +47,12 @@ public class SessionController {
         return new ResponseEntity<>(sessionCreateResponseDto, HttpStatus.CREATED);
     }
 
+    @RolesAllowed({"STUDENT","DEMONSTRATOR","LECTURER"})
+    @GetMapping("/sessions/courses/{courseCode}")
+    public ResponseEntity<java.util.List<SessionCreateResponseDto>> getSessionsByCourseCode(
+            @PathVariable String courseCode) throws ResourceNotFoundException {
+        java.util.List<SessionCreateResponseDto> responseDtos = sessionService.getSessionsByCourseCode(courseCode);
+        return ResponseEntity.status(HttpStatus.OK).body(responseDtos);
+    }
+
 }

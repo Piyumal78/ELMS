@@ -12,6 +12,6 @@ public class CourseResponseDto {
     private Long courseId;
     private String courseCode;
     private String courseName;
-    private String lecturerName;
+    private LecturerResponseDto lecturer;
 
 }

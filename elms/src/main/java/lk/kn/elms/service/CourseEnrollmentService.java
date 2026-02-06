@@ -19,4 +19,6 @@ public interface CourseEnrollmentService {
     CourseEnrollmentListResponseDto getAllEnrollmentsByStudentId(Long studentId) throws ResourceNotFoundException;
 
     CourseEnrollmentListResponseDto getAllEnrollmentsByCourseId(Long courseId) throws ResourceNotFoundException;
+
+    CourseEnrollmentResponseDto getEnrollmentByStudentNumberAndCourseCode(String studentNumber, String courseCode) throws ResourceNotFoundException;
 }

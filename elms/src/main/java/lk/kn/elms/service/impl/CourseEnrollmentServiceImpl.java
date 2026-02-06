@@ -29,13 +29,15 @@ public class CourseEnrollmentServiceImpl implements CourseEnrollmentService {
     @Override
     public CourseEnrollmentResponseDto enrollInCourse(CourseEnrollmentRequestDto courseEnrollmentRequestDto) throws ResourceNotFoundException,ResourceAlreadyExistsException {
 
-        if (courseEnrollmentRepository.existsByStudentIdAndCourseId(courseEnrollmentRequestDto.getStudentId(), courseEnrollmentRequestDto.getCourseId())) {
+        Student student = studentRepository.findByRegistrationNumber(courseEnrollmentRequestDto.getStudentNumber())
+                .orElseThrow(() -> new ResourceNotFoundException("Student not found with Registration Number: " + courseEnrollmentRequestDto.getStudentNumber()));
+        
+        Course course = courseRepository.findByCourseCode(courseEnrollmentRequestDto.getCourseCode())
+                .orElseThrow(() -> new ResourceNotFoundException("Course not found with Course Code: " + courseEnrollmentRequestDto.getCourseCode()));
+        
+        if (courseEnrollmentRepository.existsByStudentIdAndCourseId(student.getId(), course.getId())) {
             throw new ResourceAlreadyExistsException("Already enrolled");
         }
-        Student student = studentRepository.findById(courseEnrollmentRequestDto.getStudentId())
-                .orElseThrow(() -> new ResourceNotFoundException("Student not found with ID: " + courseEnrollmentRequestDto.getStudentId()));
-        Course course = courseRepository.findById(courseEnrollmentRequestDto.getCourseId())
-                .orElseThrow(() -> new ResourceNotFoundException("Course not found with ID: " + courseEnrollmentRequestDto.getCourseId()));
 
         CourseEnrollment courseEnrollment = new CourseEnrollment();
         courseEnrollment.setStudent(student);
@@ -85,6 +87,15 @@ public class CourseEnrollmentServiceImpl implements CourseEnrollmentService {
         }
 
         return mapEntityListToResponseDtoList(enrollments);
+    }
+
+    @Override
+    public CourseEnrollmentResponseDto getEnrollmentByStudentNumberAndCourseCode(String registrationNumber, String courseCode) throws ResourceNotFoundException {
+        
+        CourseEnrollment enrollment = courseEnrollmentRepository.findByStudentNumberAndCourseCode(registrationNumber, courseCode)
+                .orElseThrow(() -> new ResourceNotFoundException("Enrollment not found for student number: " + registrationNumber + " and course code: " + courseCode));
+
+        return mapEntityToResponseDto(enrollment);
     }
 
     private CourseEnrollmentResponseDto mapEntityToResponseDto(CourseEnrollment courseEnrollment) {

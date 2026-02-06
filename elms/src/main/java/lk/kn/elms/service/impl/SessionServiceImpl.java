@@ -50,8 +50,8 @@ public class SessionServiceImpl implements SessionService {
 //        User user = userRepository.findById(sessionRequestDto.getUserId())
 //                .orElseThrow(() -> new ResourceNotFoundException("There is no user with user id " + sessionRequestDto.getUserId()));
 //
-//        Course course = courseRepository.findById(sessionRequestDto.getCourseId())
-//                .orElseThrow(()-> new ResourceNotFoundException("There is no course with course id " + sessionRequestDto.getCourseId()));
+//        Course course = courseRepository.findByCourseCode(sessionRequestDto.getCourseCode())
+//                .orElseThrow(()-> new ResourceNotFoundException("There is no course with course code " + sessionRequestDto.getCourseCode()));
 //
 //        if (file == null || file.isEmpty()) {
 //            throw new FileUploadingException("File is empty");
@@ -93,7 +93,7 @@ public class SessionServiceImpl implements SessionService {
 //        sessionCreateResponseDto.setEndTime(session.getEndTime());
 //        sessionCreateResponseDto.setFileUrl(session.getFileUrl());
 //        sessionCreateResponseDto.setFilePublicId(session.getFilePublicId());
-//        sessionCreateResponseDto.setCourseId(sessionRequestDto.getCourseId());
+//        sessionCreateResponseDto.setCourseId(course.getId());
 //        sessionCreateResponseDto.setCourseCode(course.getCourseCode());
 //        sessionCreateResponseDto.setCourseName(course.getCourseName());
 //        sessionCreateResponseDto.setCreatedAt(session.getCreatedAt());
@@ -116,15 +116,15 @@ public class SessionServiceImpl implements SessionService {
             throw new ResourceAlreadyExistsException("There is already an existing session on this date and time");
         }
 
-        if (sessionRepository.existsByCourseIdAndExperimentNumber(sessionRequestDto.getCourseId(), sessionRequestDto.getExperimentNumber())) {
+        if (sessionRepository.existsByCourse_CourseCodeAndExperimentNumber(sessionRequestDto.getCourseCode(), sessionRequestDto.getExperimentNumber())) {
             throw new ResourceAlreadyExistsException("Experiment number " + sessionRequestDto.getExperimentNumber() + "  already exists for this session");
         }
 
         User user = userRepository.findById(sessionRequestDto.getUserId())
                 .orElseThrow(() -> new ResourceNotFoundException("There is no user with user id " + sessionRequestDto.getUserId()));
 
-        Course course = courseRepository.findById(sessionRequestDto.getCourseId())
-                .orElseThrow(()-> new ResourceNotFoundException("There is no course with course id " + sessionRequestDto.getCourseId()));
+        Course course = courseRepository.findByCourseCode(sessionRequestDto.getCourseCode())
+                .orElseThrow(()-> new ResourceNotFoundException("There is no course with course code " + sessionRequestDto.getCourseCode()));
 
         Session session = new Session();
         session.setDate(sessionRequestDto.getDate());
@@ -151,5 +151,33 @@ public class SessionServiceImpl implements SessionService {
         sessionCreateResponseDto.setUpdatedAt(session.getUpdatedAt());
 
         return sessionCreateResponseDto;
+    }
+
+    @Override
+    public java.util.List<SessionCreateResponseDto> getSessionsByCourseCode(String courseCode) throws ResourceNotFoundException {
+        courseRepository.findByCourseCode(courseCode)
+                .orElseThrow(() -> new ResourceNotFoundException("There is no course with course code " + courseCode));
+
+        java.util.List<Session> sessions = sessionRepository.getSessionsByCourseCode(courseCode);
+        java.util.List<SessionCreateResponseDto> responseDtos = new java.util.ArrayList<>();
+
+        for (Session session : sessions) {
+            SessionCreateResponseDto dto = new SessionCreateResponseDto();
+            dto.setSessionId(session.getId());
+            dto.setDate(session.getDate());
+            dto.setStartTime(session.getStartTime());
+            dto.setEndTime(session.getEndTime());
+            dto.setTitle(session.getTitle());
+            dto.setExperimentNumber(session.getExperimentNumber());
+            dto.setCourseId(session.getCourse().getId());
+            dto.setCourseCode(session.getCourse().getCourseCode());
+            dto.setCourseName(session.getCourse().getCourseName());
+            dto.setCreatedUserId(session.getCreatedUser().getId());
+            dto.setCreatedAt(session.getCreatedAt());
+            dto.setUpdatedAt(session.getUpdatedAt());
+            responseDtos.add(dto);
+        }
+
+        return responseDtos;
     }
 }

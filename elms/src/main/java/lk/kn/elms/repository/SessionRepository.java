@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 public interface SessionRepository extends JpaRepository<Session, Long> {
 
@@ -23,6 +24,9 @@ public interface SessionRepository extends JpaRepository<Session, Long> {
             @Param("endTime") LocalTime endTime
     );
 
-    boolean existsByCourseIdAndExperimentNumber(Long courseId, Integer experimentNumber);
+    boolean existsByCourse_CourseCodeAndExperimentNumber(String courseCode, Integer experimentNumber);
+
+    @Query("SELECT s FROM Session s WHERE s.course.courseCode = :courseCode")
+    List<Session> getSessionsByCourseCode(@Param("courseCode") String courseCode);
 
 }

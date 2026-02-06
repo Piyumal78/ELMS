@@ -10,9 +10,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CourseEnrollmentRequestDto {
 
-    @NotNull(message = "Student ID is required")
-    private Long studentId;
+    @NotNull(message = "Student registration number is required")
+    private String studentNumber;
 
-    @NotNull(message = "Course ID is required")
-    private Long courseId;
+    @NotNull(message = "Course code is required")
+    private String courseCode;
 }

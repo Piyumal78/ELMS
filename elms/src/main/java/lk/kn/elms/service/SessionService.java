@@ -6,6 +6,7 @@ import lk.kn.elms.exception.FileUploadingException;
 import lk.kn.elms.exception.ResourceAlreadyExistsException;
 import lk.kn.elms.exception.ResourceNotFoundException;
 import org.springframework.web.multipart.MultipartFile;
+import java.util.List;
 
 public interface SessionService {
 
@@ -13,5 +14,7 @@ public interface SessionService {
 //            throws FileUploadingException, ResourceAlreadyExistsException, ResourceNotFoundException;
 
     SessionCreateResponseDto createSession(SessionRequestDto sessionRequestDto) throws ResourceAlreadyExistsException, ResourceNotFoundException;
+
+    List<SessionCreateResponseDto> getSessionsByCourseCode(String courseCode) throws ResourceNotFoundException;
 
 }

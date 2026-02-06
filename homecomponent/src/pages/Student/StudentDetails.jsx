@@ -1,28 +1,104 @@
 import Lab from "../../assets/lab.jpg";
-import { useNavigate } from "react-router-dom"; 
-import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
+import { useGetCoursesQuery, useGetEnrollmentByStudentNumberAndCourseCodeQuery } from "../../services/api";
+import { useSelector } from "react-redux";
 
 const StudentDetails = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
+  const [checkingCourse, setCheckingCourse] = useState(null);
+
+  // Get student registration number from Redux store
+  const user = useSelector((state) => state.auth?.user);
+  const studentNumber = user?.registrationNumber || user?.username;
+
+  console.log('User:', user);
+  console.log('Student Number:', studentNumber);
+
+  const { data: courses, error, isLoading } = useGetCoursesQuery();
+
+  // Check enrollment for selected course using RTK Query
+  const { data: enrollmentData, error: enrollmentError, isLoading: checkingEnrollment } = 
+    useGetEnrollmentByStudentNumberAndCourseCodeQuery(
+      {
+        studentNumber: studentNumber,
+        courseCode: checkingCourse
+      },
+      {
+        skip: !checkingCourse || !studentNumber // Skip query if no course selected
+      }
+    );
+
+  console.log('Checking Course:', checkingCourse);
+  console.log('Enrollment Data:', enrollmentData);
+  console.log('Enrollment Error:', enrollmentError);
 
   const labdetails = [
-    { semeter: "1st Semester", name: "BECS202 - Data Structures Lab", path: "/lab1" },
-    { semeter: "1st Semester", name: "BECS200 - Programming Fundamentals Lab", path: "/lab2" },
-    { semeter: "2nd Semester", name: "BECS204 - Digital Logic Design Lab", path: "/lab3" },
-    { semeter: "2nd Semester", name: "BECS214 - Computer Networks Lab", path: "/lab4" },
-    { semeter: "3rd Semester", name: "BECS206 - Computer Architecture Lab", path: "/lab5" },
-    { semeter: "4th Semester", name: "BECS208 - Microprocessor Lab0", path: "/lab6" },
-    { semeter: "5th Semester", name: "BECS210 - Operating Systems Lab", path: "/lab7" },
-    { semeter: "6th Semester", name: "BECS212 - Database Systems Lab", path: "/lab7" }, 
+    { semeter: "1st Semester" },
+    { semeter: "2nd Semester" },
+    { semeter: "3rd Semester" },
+    { semeter: "4th Semester" },
+    { semeter: "5th Semester" },
+    { semeter: "6th Semester" },
   ];
 
-  const filteredLabs = labdetails.filter((lab) =>
-    lab.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    lab.semeter.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  // useEffect to handle navigation after enrollment check
+  useEffect(() => {
+    console.log('useEffect triggered - checkingCourse:', checkingCourse, 'checkingEnrollment:', checkingEnrollment);
+    
+    if (checkingCourse && !checkingEnrollment) {
+      console.log('Query completed. enrollmentData:', enrollmentData, 'enrollmentError:', enrollmentError);
+      
+      if (enrollmentData) {
+        // Student is enrolled - go to lab details
+        console.log('Student is enrolled:', enrollmentData);
+        navigate(`/lab-details/${checkingCourse}`);
+        setCheckingCourse(null);
+      } else if (enrollmentError) {
+        // Student is not enrolled (404 error) - go to enrollment page
+        console.log('Student not enrolled, redirecting to enrollment page');
+        navigate(`/course-enroll/${checkingCourse}`);
+        setCheckingCourse(null);
+      }
+    }
+  }, [checkingCourse, checkingEnrollment, enrollmentData, enrollmentError, navigate]);
+
+  // Handle course card click
+  const handleCourseClick = (courseCode) => {
+    console.log('Course clicked:', courseCode);
+    console.log('Student Number at click:', studentNumber);
+    
+    if (!studentNumber) {
+      alert("Please login first");
+      navigate('/signin');
+      return;
+    }
+
+    // Set the course to check enrollment
+    console.log('Setting checkingCourse to:', courseCode);
+    setCheckingCourse(courseCode);
+  };
+
+  if (isLoading) {
+    return <div className="flex justify-center items-center h-64">Loading courses...</div>;
+  }
+
+  if (error) {
+    return <div className="flex justify-center items-center h-64 text-red-500">Error loading courses</div>;
+  }
+
+  const filteredCourses = courses?.filter((course) =>
+    course.courseName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    course.courseCode.toLowerCase().includes(searchQuery.toLowerCase())
+  ) || [];
+
+  // const filteredLabs = labdetails.filter((lab) =>
+  //   lab.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+  //   lab.semeter.toLowerCase().includes(searchQuery.toLowerCase())
+  // );
 
   return (
     <div className="w-full px-4">
@@ -46,29 +122,40 @@ const StudentDetails = () => {
 
       <div className="w-full max-w-auto max-h-auto mx-auto flex items-center justify-center">
         <div className="grid grid-cols-2 gap-4 w-[1200px] pr-2">
-          {filteredLabs.map((lab, index) => {
-            return (
+          {filteredCourses.length > 0 ? (
+            filteredCourses.map((course, index) => (
               <div
-                key={index}
-                onClick={() => navigate(lab.path)}
-                className="bg-white shadow-md rounded-lg p-4 cursor-pointer hover:shadow-lg transition-shadow duration-200"
+                key={course.courseId || index}
+                onClick={() => handleCourseClick(course.courseCode)}
+                className="bg-white shadow-md rounded-lg p-4 cursor-pointer hover:shadow-lg transition-shadow duration-200 relative"
               >
                 <div className="relative">
+                  {labdetails[index] && (
+                    <span className="absolute top-2 left-2 bg-green-600 text-white px-3 py-1 rounded-md text-sm font-semibold z-10">
+                      {labdetails[index].semeter}
+                    </span>
+                  )}
                   <img
                     src={Lab}
-                    alt={lab.name}
+                    alt={course.courseName}
                     className="w-full h-56 object-cover rounded-md mb-2"
                   />
-                  <span className="absolute top-2 right-2 bg-blue-600 text-white px-3 py-1 rounded-md text-sm font-semibold">
-                    {lab.semeter}
-                  </span>
                 </div>
-                <h2 className="text-lg sm:text-xl font-bold mb-2 truncate">
-                  {lab.name}
-                </h2>
+                <div className="flex gap-4">
+                  <h2 className="text-lg sm:text-xl font-bold mb-2 truncate">
+                    {course.courseCode}
+                  </h2>
+                  <p className="text-lg sm:text-xl font-bold mb-2 truncate">
+                    {course.courseName}
+                  </p>
+                </div>
               </div>
-            );
-          })}
+            ))
+          ) : (
+            <div className="col-span-2 text-center py-8 text-gray-500">
+              No courses found matching your search
+            </div>
+          )}
         </div>
       </div>
     </div>
