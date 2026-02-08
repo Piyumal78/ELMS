@@ -38,6 +38,9 @@ export const demoAPI = {
     // Session Components
     getSessionComponents: (sessionId) => api.get(`/sessions/${sessionId}/session-components`),
 
+    // Submissions
+    getSubmissionsBySession: (sessionId) => api.get(`/submissions/session/${sessionId}`),
+
     // Mocked: Get Pending Reports (Since no backend endpoint exists for listing yet)
     getPendingReports: () => {
         return new Promise((resolve) => {

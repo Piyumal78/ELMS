@@ -30,6 +30,7 @@ import CourseEnrollPage from './pages/Student/CourseEnroll'
 import DemonstratorDashboard from '../../Frontend/src/pages/Demonstrator/DemonstratorDashboard.jsx'
 import DemoSessionManager from '../../Frontend/src/pages/Demonstrator/DemoSessionManager.jsx'
 import DemoReportReviews from '../../Frontend/src/pages/Demonstrator/DemoReportReviews.jsx'
+import DemonstratorProfile from '../../Frontend/src/pages/Demonstrator/DemonstratorProfile.jsx'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -73,7 +74,7 @@ function App() {
             </StudentRoute>
           } />
 
-          <Route path='/login' element={<LoginExample />} />
+
         </Route>
 
         {/* Lab Assistant Routes using Frontend Layout */}
@@ -102,6 +103,7 @@ function App() {
           <Route path="/demonstrator/dashboard" element={<DemonstratorDashboard />} />
           <Route path="/demonstrator/sessions" element={<DemoSessionManager />} />
           <Route path="/demonstrator/reports" element={<DemoReportReviews />} />
+          <Route path="/demonstrator/profile" element={<DemonstratorProfile />} />
         </Route>
 
         {/* Legacy route kept just in case */}
