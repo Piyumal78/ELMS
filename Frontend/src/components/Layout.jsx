@@ -2,11 +2,11 @@ import React, { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import './Layout.css'
 
-const Layout = ({ children }) => {
+const Layout = ({ children, menuItems }) => {
   const location = useLocation()
   const [sidebarOpen, setSidebarOpen] = useState(true)
 
-  const menuItems = [
+  const defaultMenuItems = [
     { path: '/dashboard', label: 'Dashboard', icon: '📊' },
     { path: '/inventory', label: 'Inventory', icon: '📦' },
     { path: '/requests', label: 'Requests', icon: '📋' },
@@ -14,6 +14,8 @@ const Layout = ({ children }) => {
     { path: '/maintenance', label: 'Maintenance', icon: '🔧' },
     { path: '/reports', label: 'Reports', icon: '📄' }
   ]
+
+  const itemsToRender = menuItems || defaultMenuItems;
 
   return (
     <div className="layout">
@@ -32,7 +34,7 @@ const Layout = ({ children }) => {
       <div className="layout-body">
         <aside className={`sidebar ${sidebarOpen ? 'open' : 'closed'}`}>
           <ul className="sidebar-menu">
-            {menuItems.map((item) => (
+            {itemsToRender.map((item) => (
               <li key={item.path}>
                 <Link
                   to={item.path}
