@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import api from '../utils/api';
 import './Reports.css';
 
 const Reports = () => {
@@ -10,8 +10,10 @@ const Reports = () => {
         setLoading(true);
         setError(null);
         try {
-            const endpoint = `/api/reports/${type}/${format}`;
-            const response = await axios.get(`http://localhost:8080/elms${endpoint}`, {
+            // Use the configured api instance which includes the Authorization header
+            // Endpoint should be /reports/... because baseURL is .../elms/api
+            const endpoint = `/reports/${type}/${format}`;
+            const response = await api.get(endpoint, {
                 responseType: 'blob', // Important!
             });
 
@@ -22,7 +24,6 @@ const Reports = () => {
 
             // Extract filename if possible, or give default
             let filename = `report-${type}.${format === 'excel' ? 'xlsx' : 'pdf'}`;
-            // If backend sends Content-Disposition, we could parse it, but simple default is fine.
 
             link.setAttribute('download', filename);
             document.body.appendChild(link);
