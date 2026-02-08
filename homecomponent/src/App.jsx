@@ -26,6 +26,11 @@ import LoginExample from './components/LoginExample.jsx'
 import { StudentRoute, StaffRoute, ProtectedRoute } from './components/ProtectedRoute'
 import CourseEnrollPage from './pages/Student/CourseEnroll'
 
+// Import Demonstrator Pages
+import DemonstratorDashboard from '../../Frontend/src/pages/Demonstrator/DemonstratorDashboard.jsx'
+import DemoSessionManager from '../../Frontend/src/pages/Demonstrator/DemoSessionManager.jsx'
+import DemoReportReviews from '../../Frontend/src/pages/Demonstrator/DemoReportReviews.jsx'
+
 function App() {
   const [count, setCount] = useState(0)
 
@@ -86,6 +91,17 @@ function App() {
           <Route path="/procurement" element={<ProcurementPage />} />
           <Route path="/maintenance" element={<MaintenancePage />} />
           <Route path="/reports" element={<ReportsPage />} />
+        </Route>
+
+        {/* Demonstrator Routes - Protected by StaffRoute but uses its own Layout */}
+        <Route element={
+          <StaffRoute>
+            <Outlet />
+          </StaffRoute>
+        }>
+          <Route path="/demonstrator/dashboard" element={<DemonstratorDashboard />} />
+          <Route path="/demonstrator/sessions" element={<DemoSessionManager />} />
+          <Route path="/demonstrator/reports" element={<DemoReportReviews />} />
         </Route>
 
         {/* Legacy route kept just in case */}

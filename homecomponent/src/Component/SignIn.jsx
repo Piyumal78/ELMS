@@ -38,7 +38,9 @@ const SignIn = () => {
 
             if (userRole.includes('STUDENT')) {
                 navigate("/student");
-            } else if (userRole.includes('LECTURER') || userRole.includes('STAFF') || userRole.includes('ADMIN')) {
+            } else if (userRole.includes('DEMONSTRATOR')) {
+                navigate("/demonstrator/dashboard");
+            } else if (userRole.includes('LECTURER') || userRole.includes('STAFF') || userRole.includes('ADMIN') || userRole.includes('LAB_ASSISTANT')) {
                 navigate("/dashboard");
             } else {
                 navigate("/");
