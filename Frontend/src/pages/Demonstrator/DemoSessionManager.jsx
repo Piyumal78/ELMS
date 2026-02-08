@@ -113,7 +113,7 @@ const DemoSessionManager = () => {
     };
 
     return (
-        <Layout menuItems={demonstratorMenu}>
+        <Layout menuItems={demonstratorMenu} title="🎓 Demonstrator">
             <ToastContainer />
             <div className="p-6">
                 <h2 className="text-2xl font-bold mb-6 text-gray-800">Session Manager</h2>

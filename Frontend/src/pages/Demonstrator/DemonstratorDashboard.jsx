@@ -14,10 +14,10 @@ const DemonstratorDashboard = () => {
     ];
 
     return (
-        <Layout menuItems={demonstratorMenu}>
+        <Layout menuItems={demonstratorMenu} title="🎓 Demonstrator">
             <div className="demo-dashboard">
                 <header className="demo-header">
-                    <h1>🎓 Welcome, Demonstrator</h1>
+                    <h1>🔬 Lab Assistant</h1>
                     <p>Manage your lab sessions and student assessments efficiently.</p>
                 </header>
 

@@ -124,7 +124,7 @@ const DemoReportReviews = () => {
     };
 
     return (
-        <Layout menuItems={demonstratorMenu}>
+        <Layout menuItems={demonstratorMenu} title="🎓 Demonstrator">
             <ToastContainer />
             <div className="report-reviews">
                 <h2>Student Report Reviews</h2>

@@ -29,7 +29,7 @@ const DemonstratorProfile = () => {
 
     if (!user) {
         return (
-            <Layout menuItems={demonstratorMenu}>
+            <Layout menuItems={demonstratorMenu} title="🎓 Demonstrator">
                 <div className="p-6">Loading Profile...</div>
             </Layout>
         );

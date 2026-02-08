@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import './Layout.css'
 
-const Layout = ({ children, menuItems }) => {
+const Layout = ({ children, menuItems, title = "🔬 Lab Assistant" }) => {
   const location = useLocation()
   const [sidebarOpen, setSidebarOpen] = useState(true)
 
@@ -21,7 +21,7 @@ const Layout = ({ children, menuItems }) => {
     <div className="layout">
       <nav className="navbar">
         <div className="nav-content">
-          <h1 className="nav-title">🔬 Lab Assistant</h1>
+          <h1 className="nav-title">{title}</h1>
           <button
             className="menu-toggle"
             onClick={() => setSidebarOpen(!sidebarOpen)}
