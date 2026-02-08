@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.ByteArrayInputStream;
 
 @RestController
-@RequestMapping("/api/reports")
+@RequestMapping("/elms/api/reports")
 @CrossOrigin(origins = "*") // Allow React to access
 public class ReportController {
 
@@ -56,6 +56,20 @@ public class ReportController {
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Disposition", "attachment; filename=damaged-items-report.pdf");
+
+        return ResponseEntity
+                .ok()
+                .headers(headers)
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(new InputStreamResource(in));
+    }
+
+    @GetMapping("/inventory/pdf")
+    public ResponseEntity<InputStreamResource> downloadAllInventoryReport() {
+        ByteArrayInputStream in = reportService.generateAllInventoryPdf();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Disposition", "attachment; filename=all-inventory-report.pdf");
 
         return ResponseEntity
                 .ok()

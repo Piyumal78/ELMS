@@ -81,6 +81,19 @@ const Reports = () => {
                         {loading ? 'Downloading...' : '📄 Download PDF'}
                     </button>
                 </div>
+
+                {/* All Inventory */}
+                <div className="report-card">
+                    <h3>All Inventory</h3>
+                    <p>Complete list of all items in the database.</p>
+                    <button
+                        className="btn-download pdf"
+                        onClick={() => downloadReport('inventory', 'pdf')}
+                        disabled={loading}
+                    >
+                        {loading ? 'Downloading...' : '📄 Download PDF'}
+                    </button>
+                </div>
             </div>
         </div>
     );

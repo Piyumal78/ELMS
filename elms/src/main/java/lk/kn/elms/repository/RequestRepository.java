@@ -17,7 +17,8 @@ public interface RequestRepository extends JpaRepository<Request, Long> {
 
     @org.springframework.data.jpa.repository.Query("SELECT i, SUM(r.quantity) as usageCount " +
             "FROM Request r, Inventory i " +
-            "WHERE r.itemName = i.name " +
+            "WHERE r.inventoryId = i.id " +
+            "AND r.status IN ('APPROVED', 'ISSUED', 'RETURNED') " +
             "AND MONTH(r.requestDate) = MONTH(CURRENT_DATE) " +
             "AND YEAR(r.requestDate) = YEAR(CURRENT_DATE) " +
             "GROUP BY i " +

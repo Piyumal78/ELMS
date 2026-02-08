@@ -167,4 +167,50 @@ public class ReportService {
 
         return new ByteArrayInputStream(out.toByteArray());
     }
+
+    // 4. All Inventory Report (PDF)
+    public ByteArrayInputStream generateAllInventoryPdf() {
+        Document document = new Document();
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+        try {
+            PdfWriter.getInstance(document, out);
+            document.open();
+
+            Font fontTitle = FontFactory.getFont(FontFactory.HELVETICA_BOLD);
+            fontTitle.setSize(18);
+            Paragraph title = new Paragraph("All Inventory Items Report", fontTitle);
+            title.setAlignment(Element.ALIGN_CENTER);
+            document.add(title);
+            document.add(new Paragraph("\n"));
+
+            PdfPTable table = new PdfPTable(5);
+            table.setWidthPercentage(100);
+            table.setWidths(new int[] { 1, 3, 2, 2, 2 });
+
+            addTableHeader(table, "ID");
+            addTableHeader(table, "Item Name");
+            addTableHeader(table, "Category");
+            addTableHeader(table, "Qty");
+            addTableHeader(table, "Status");
+
+            List<Inventory> allItems = inventoryRepository.findAll();
+
+            for (Inventory item : allItems) {
+                table.addCell(String.valueOf(item.getId()));
+                table.addCell(item.getName());
+                table.addCell(item.getCategory());
+                table.addCell(String.valueOf(item.getQuantity()));
+                table.addCell(item.getStatus());
+            }
+
+            document.add(table);
+            document.close();
+
+        } catch (DocumentException e) {
+            e.printStackTrace();
+        }
+
+        return new ByteArrayInputStream(out.toByteArray());
+    }
 }
