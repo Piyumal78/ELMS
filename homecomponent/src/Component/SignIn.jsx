@@ -23,6 +23,10 @@ const SignIn = () => {
 
             const userRole = result.user?.role || 'ROLE_STUDENT';
 
+            // Save token and role to localStorage for API access
+            localStorage.setItem('token', result.token);
+            localStorage.setItem('userRole', userRole);
+
             dispatch(setCredentials({
                 token: result.token,
                 user: {
@@ -47,8 +51,8 @@ const SignIn = () => {
 
     return (
         <div className="flex flex-row justify-center items-center py-16 bg-slate-900 min-h-screen">
-             <SignUpDetails />
-             <div className="flex justify-center items-center h-156">
+            <SignUpDetails />
+            <div className="flex justify-center items-center h-156">
                 <div className="bg-white w-full h-full py-12 px-32 rounded-r-2xl">
                     <h2 className="text-3xl font-bold mb-2">Welcome Back</h2>
                     <p className="text-gray-500 mb-6">Sign in to access your dashboard</p>
@@ -94,18 +98,18 @@ const SignIn = () => {
                             {isLoading ? "Signing In..." : "Sign In"}
                         </button>
                     </form>
-                    
+
                     <div className="mt-4 text-center">
                         <button
                             onClick={() => navigate("/signup")}
                             className="text-blue-600 hover:underline font-medium"
                         >
-                           First time? Activate Your Account
+                            First time? Activate Your Account
                         </button>
                     </div>
 
                 </div>
-             </div>
+            </div>
         </div>
     );
 };
