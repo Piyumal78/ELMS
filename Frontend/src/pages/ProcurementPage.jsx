@@ -203,85 +203,97 @@ const ProcurementPage = () => {
         </button>
       </div>
 
-      <div className="procurement-grid">
-        {filteredRequests.length === 0 ? (
-          <div className="empty-state">
-            <p>No procurement requests found</p>
-          </div>
-        ) : (
-          filteredRequests.map((request) => (
-            <div key={request.id} className="procurement-card">
-              <div className="card-header">
-                <h3>{request.itemName}</h3>
-                <div className="card-badges">
-                  <span
-                    className="priority-badge"
-                    style={{
-                      backgroundColor: `${getPriorityColor(request.priority)}20`,
-                      color: getPriorityColor(request.priority)
-                    }}
-                  >
-                    {request.priority} Priority
-                  </span>
-                  <span
-                    className="status-badge"
-                    style={{
-                      backgroundColor: `${getStatusColor(request.status)}20`,
-                      color: getStatusColor(request.status)
-                    }}
-                  >
-                    {request.status}
-                  </span>
-                </div>
-              </div>
-
-              <div className="card-content">
-                <div className="info-row">
-                  <span className="info-label">Quantity:</span>
-                  <span className="info-value">{request.quantity}</span>
-                </div>
-                <div className="info-row">
-                  <span className="info-label">Request Date:</span>
-                  <span className="info-value">
-                    {new Date(request.requestDate).toLocaleDateString()}
-                  </span>
-                </div>
-                {request.notes && (
-                  <div className="info-row notes-row">
-                    <span className="info-label">Notes:</span>
-                    <span className="info-value">{request.notes}</span>
-                  </div>
-                )}
-                {request.deliveryDate && (
-                  <div className="info-row">
-                    <span className="info-label">Delivery Date:</span>
-                    <span className="info-value">
-                      {new Date(request.deliveryDate).toLocaleDateString()}
+      <div className="procurement-table-container">
+        <table className="procurement-table" style={{ width: '100%', borderCollapse: 'collapse', marginTop: '20px' }}>
+          <thead>
+            <tr style={{ backgroundColor: '#f9fafb', textAlign: 'left' }}>
+              <th style={{ padding: '12px', borderBottom: '1px solid #e5e7eb' }}>Item Name</th>
+              <th style={{ padding: '12px', borderBottom: '1px solid #e5e7eb' }}>Quantity</th>
+              <th style={{ padding: '12px', borderBottom: '1px solid #e5e7eb' }}>Priority</th>
+              <th style={{ padding: '12px', borderBottom: '1px solid #e5e7eb' }}>Status</th>
+              <th style={{ padding: '12px', borderBottom: '1px solid #e5e7eb' }}>Request Date</th>
+              <th style={{ padding: '12px', borderBottom: '1px solid #e5e7eb' }}>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredRequests.length === 0 ? (
+              <tr>
+                <td colSpan="6" className="empty-state" style={{ padding: '20px', textAlign: 'center', color: '#6b7280' }}>
+                  No procurement requests found
+                </td>
+              </tr>
+            ) : (
+              filteredRequests.map((request) => (
+                <tr key={request.id} style={{ borderBottom: '1px solid #e5e7eb' }}>
+                  <td style={{ padding: '12px' }}>
+                    <strong>{request.itemName}</strong>
+                    {request.notes && <div style={{ fontSize: '0.85rem', color: '#6b7280' }}>{request.notes}</div>}
+                  </td>
+                  <td style={{ padding: '12px' }}>{request.quantity}</td>
+                  <td style={{ padding: '12px' }}>
+                    <span
+                      className="priority-badge"
+                      style={{
+                        backgroundColor: `${getPriorityColor(request.priority)}20`,
+                        color: getPriorityColor(request.priority),
+                        padding: '4px 8px',
+                        borderRadius: '4px',
+                        fontSize: '0.85rem'
+                      }}
+                    >
+                      {request.priority}
                     </span>
-                  </div>
-                )}
-              </div>
-
-              <div className="card-actions" style={{ padding: '15px', borderTop: '1px solid #eee', display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
-                {getStatusActions(request.status).includes('approve') && (
-                  <button className="btn-approve" onClick={() => handleApprove(request.id)} style={{ padding: '0.5rem 1rem', background: '#10b981', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
-                    Approve
-                  </button>
-                )}
-                {getStatusActions(request.status).includes('reject') && (
-                  <button className="btn-reject" onClick={() => handleReject(request.id)} style={{ padding: '0.5rem 1rem', background: '#ef4444', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
-                    Reject
-                  </button>
-                )}
-                {getStatusActions(request.status).includes('receive') && (
-                  <button className="btn-receive" onClick={() => handleReceive(request.id)} style={{ padding: '0.5rem 1rem', background: '#3b82f6', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
-                    Mark Received
-                  </button>
-                )}
-              </div>
-            </div>
-          ))
-        )}
+                  </td>
+                  <td style={{ padding: '12px' }}>
+                    <span
+                      className="status-badge"
+                      style={{
+                        backgroundColor: `${getStatusColor(request.status)}20`,
+                        color: getStatusColor(request.status),
+                        padding: '4px 8px',
+                        borderRadius: '4px',
+                        fontSize: '0.85rem'
+                      }}
+                    >
+                      {request.status}
+                    </span>
+                  </td>
+                  <td style={{ padding: '12px' }}>
+                    {new Date(request.requestDate).toLocaleDateString()}
+                  </td>
+                  <td style={{ padding: '12px' }}>
+                    <div style={{ display: 'flex', gap: '8px' }}>
+                      {getStatusActions(request.status).includes('approve') && (
+                        <button
+                          onClick={() => handleApprove(request.id)}
+                          style={{ padding: '6px 12px', background: '#10b981', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+                        >
+                          Approve
+                        </button>
+                      )}
+                      {getStatusActions(request.status).includes('reject') && (
+                        <button
+                          onClick={() => handleReject(request.id)}
+                          style={{ padding: '6px 12px', background: '#ef4444', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+                        >
+                          Reject
+                        </button>
+                      )}
+                      {getStatusActions(request.status).includes('receive') && (
+                        <button
+                          onClick={() => handleReceive(request.id)}
+                          style={{ padding: '6px 12px', background: '#3b82f6', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+                        >
+                          Received
+                        </button>
+                      )}
+                    </div>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
       </div>
 
       {showAddModal && (

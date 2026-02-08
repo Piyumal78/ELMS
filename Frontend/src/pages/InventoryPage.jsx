@@ -29,36 +29,11 @@ const InventoryPage = () => {
       setItems(response.data)
     } catch (error) {
       console.error('Error fetching inventory:', error)
-      // Mock data for development
-      // setItems([
-      //   {
-      //     id: 1,
-      //     name: '10k Resistor',
-      //     category: 'Resistor',
-      //     quantity: 5,
-      //     minimumStock: 20,
-      //     status: 'Available',
-      //     description: '10k ohm resistor'
-      //   },
-      //   {
-      //     id: 2,
-      //     name: 'Arduino Uno',
-      //     category: 'IC',
-      //     quantity: 15,
-      //     minimumStock: 10,
-      //     status: 'Available',
-      //     description: 'Arduino Uno microcontroller'
-      //   },
-      //   {
-      //     id: 3,
-      //     name: 'Temperature Sensor',
-      //     category: 'Sensor',
-      //     quantity: 3,
-      //     minimumStock: 10,
-      //     status: 'Available',
-      //     description: 'DS18B20 temperature sensor'
-      //   }
-      // ])
+      if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+        alert("Session expired or unauthorized. Please log in again.");
+        // Optional: Redirect to login
+        // window.location.href = '/login'; 
+      }
     } finally {
       setLoading(false)
     }

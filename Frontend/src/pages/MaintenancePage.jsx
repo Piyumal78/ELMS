@@ -174,63 +174,70 @@ const MaintenancePage = () => {
         </button>
       </div>
 
-      <div className="equipment-grid">
-        {filteredEquipment.length === 0 ? (
-          <div className="empty-state">
-            <p>No equipment found</p>
-          </div>
-        ) : (
-          filteredEquipment.map((eq) => (
-            <div key={eq.id} className="equipment-card">
-              <div className="card-header">
-                <div>
-                  <h3>{eq.name}</h3>
-                  <p className="equipment-model">{eq.model}</p>
-                </div>
-                <div
-                  className="status-indicator"
-                  style={{
-                    backgroundColor: `${getStatusColor(eq.status)}20`,
-                    color: getStatusColor(eq.status)
-                  }}
-                >
-                  <span className="status-icon">{getStatusIcon(eq.status)}</span>
-                  <span className="status-text">{eq.status}</span>
-                </div>
-              </div>
-
-              <div className="card-content">
-                <div className="info-row">
-                  <span className="info-label">Location:</span>
-                  <span className="info-value">{eq.location}</span>
-                </div>
-                {eq.lastMaintenanceDate && (
-                  <div className="info-row">
-                    <span className="info-label">Last Maintenance:</span>
-                    <span className="info-value">
-                      {new Date(eq.lastMaintenanceDate).toLocaleDateString()}
+      <div className="equipment-table-container">
+        <table className="equipment-table" style={{ width: '100%', borderCollapse: 'collapse', marginTop: '20px' }}>
+          <thead>
+            <tr style={{ backgroundColor: '#f9fafb', textAlign: 'left' }}>
+              <th style={{ padding: '12px', borderBottom: '1px solid #e5e7eb' }}>Equipment Name</th>
+              <th style={{ padding: '12px', borderBottom: '1px solid #e5e7eb' }}>Model / Serial</th>
+              <th style={{ padding: '12px', borderBottom: '1px solid #e5e7eb' }}>Location</th>
+              <th style={{ padding: '12px', borderBottom: '1px solid #e5e7eb' }}>Status</th>
+              <th style={{ padding: '12px', borderBottom: '1px solid #e5e7eb' }}>Last Maintenance</th>
+              <th style={{ padding: '12px', borderBottom: '1px solid #e5e7eb' }}>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredEquipment.length === 0 ? (
+              <tr>
+                <td colSpan="6" className="empty-state" style={{ padding: '20px', textAlign: 'center', color: '#6b7280' }}>
+                  No equipment found
+                </td>
+              </tr>
+            ) : (
+              filteredEquipment.map((eq) => (
+                <tr key={eq.id} style={{ borderBottom: '1px solid #e5e7eb' }}>
+                  <td style={{ padding: '12px' }}>
+                    <strong>{eq.name}</strong>
+                  </td>
+                  <td style={{ padding: '12px' }}>
+                    <div>{eq.model}</div>
+                    <div style={{ fontSize: '0.85rem', color: '#6b7280' }}>{eq.serialNumber}</div>
+                  </td>
+                  <td style={{ padding: '12px' }}>{eq.location}</td>
+                  <td style={{ padding: '12px' }}>
+                    <span
+                      className="status-indicator"
+                      style={{
+                        backgroundColor: `${getStatusColor(eq.status)}20`,
+                        color: getStatusColor(eq.status),
+                        padding: '4px 8px',
+                        borderRadius: '4px',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '6px',
+                        fontSize: '0.85rem'
+                      }}
+                    >
+                      {getStatusIcon(eq.status)} {eq.status}
                     </span>
-                  </div>
-                )}
-                {eq.serialNumber && (
-                  <div className="info-row">
-                    <span className="info-label">Serial Number:</span>
-                    <span className="info-value">{eq.serialNumber}</span>
-                  </div>
-                )}
-              </div>
-
-              <div className="card-footer">
-                <button
-                  className="btn-update-status"
-                  onClick={() => handleStatusChange(eq)}
-                >
-                  Update Status
-                </button>
-              </div>
-            </div>
-          ))
-        )}
+                  </td>
+                  <td style={{ padding: '12px' }}>
+                    {eq.lastMaintenanceDate ? new Date(eq.lastMaintenanceDate).toLocaleDateString() : '-'}
+                  </td>
+                  <td style={{ padding: '12px' }}>
+                    <button
+                      className="btn-update-status"
+                      onClick={() => handleStatusChange(eq)}
+                      style={{ padding: '6px 12px', background: 'transparent', border: '1px solid #d1d5db', borderRadius: '4px', cursor: 'pointer' }}
+                    >
+                      Update Status
+                    </button>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
       </div>
 
       {showStatusModal && editingEquipment && (

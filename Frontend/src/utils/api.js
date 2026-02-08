@@ -9,6 +9,20 @@ const api = axios.create({
   }
 })
 
+// Add a request interceptor
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
 // Inventory API
 export const inventoryAPI = {
   getAll: () => api.get('/inventory'),
@@ -25,7 +39,7 @@ export const requestsAPI = {
   approve: (id) => api.put(`/requests/${id}/approve`),
   reject: (id) => api.put(`/requests/${id}/reject`),
   issue: (id) => api.put(`/requests/${id}/issue`),
-  return: (id, isDamaged) => api.put(`/requests/${id}/return`, { isDamaged }),
+  return: (id, isDamaged) => api.put(`/requests/${id}/return`, null, { params: { isDamaged } }),
   create: (data) => api.post('/requests', data)
 }
 

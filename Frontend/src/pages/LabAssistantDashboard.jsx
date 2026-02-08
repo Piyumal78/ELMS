@@ -35,11 +35,9 @@ const LabAssistantDashboard = () => {
       // For now, if it's first load and fails, we might want to keep mock or show empty.
       // But user said "stats are hardcoded... no caching" implying they dislike the mock.
       // We will ONLY fallback if stats are empty (first load).
-      if (!stats.totalItems && !silent) {
-        // Basic fallback 0s or keep mocks but mark them? 
-        // User specifically hated the hardcoded default. 
-        // Let's NOT set hardcoded defaults unless absolutely necessary for UI structure.
-        // We'll leave the initial state (0s).
+      if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+        // If 401/403, we might want to stop polling or alert
+        console.warn("Unauthorized access to dashboard stats");
       }
     } finally {
       setLoading(false)
