@@ -29,10 +29,9 @@ const InventoryPage = () => {
       setItems(response.data)
     } catch (error) {
       console.error('Error fetching inventory:', error)
-      if (error.response && (error.response.status === 401 || error.response.status === 403)) {
-        alert("Session expired or unauthorized. Please log in again.");
-        // Optional: Redirect to login
-        // window.location.href = '/login'; 
+      // 401/403 are handled by api.js interceptor
+      if (!error.response || (error.response.status !== 401 && error.response.status !== 403)) {
+        alert("Failed to fetch inventory. " + (error.response?.data?.message || error.message));
       }
     } finally {
       setLoading(false)
