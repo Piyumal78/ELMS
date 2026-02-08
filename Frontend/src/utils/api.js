@@ -61,10 +61,10 @@ export const procurementAPI = {
 
 // Maintenance API (Placeholder - Backend Controller Missing)
 export const maintenanceAPI = {
-  getAll: () => api.get('/requests?type=MAINTENANCE'), // Tentative mapping
-  create: (data) => api.post('/requests', { ...data, type: 'MAINTENANCE' }),
-  updateStatus: (id, status) => api.put(`/requests/${id}/status`, { status }),
-  getById: (id) => api.get(`/requests/${id}`)
+  getAll: () => api.get('/maintenance'),
+  create: (data) => api.post('/maintenance', data),
+  updateStatus: (id, status) => api.put(`/maintenance/${id}/status`, { status }),
+  getById: (id) => api.get(`/maintenance/${id}`)
 }
 
 // Dashboard API

@@ -3,7 +3,7 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import HomePage from './pages/Home/HomePage.jsx'
 import { Provider } from 'react-redux'
-import { Routes, Route, BrowserRouter } from 'react-router-dom'
+import { Routes, Route, BrowserRouter, Outlet } from 'react-router-dom'
 import RootLayout from './layout/Root.layout.jsx'
 import SignUp from './Component/SignUp.jsx'
 import SignIn from './Component/SignIn.jsx'
@@ -11,11 +11,17 @@ import Student from './pages/Student/Student'
 import Lab from './pages/Lab/Lab'
 import LabDetails from './Component/LabDetail'
 import LabSubmission from './pages/Lab/LabSubmission'
-import LabAssistantDashboard from '../Frontend/src/pages/LabAssistantDashboard'
-import InventoryPage from '../Frontend/src/pages/InventoryPage'
-import RequestsPage from '../Frontend/src/pages/RequestsPage'
-import ProcurementPage from '../Frontend/src/pages/ProcurementPage'
-import MaintenancePage from '../Frontend/src/pages/MaintenancePage'
+
+// Import Lab Assistant Pages and Layout from Frontend
+import Layout from '../../Frontend/src/components/Layout.jsx'
+import LabAssistantDashboard from '../../Frontend/src/pages/LabAssistantDashboard.jsx'
+import InventoryPage from '../../Frontend/src/pages/InventoryPage.jsx'
+import RequestsPage from '../../Frontend/src/pages/RequestsPage.jsx'
+import ProcurementPage from '../../Frontend/src/pages/ProcurementPage.jsx'
+import MaintenancePage from '../../Frontend/src/pages/MaintenancePage.jsx'
+import ReportsPage from '../../Frontend/src/pages/ReportsPage.jsx'
+import CreateRequestPage from '../../Frontend/src/pages/CreateRequestPage.jsx'
+
 import LoginExample from './components/LoginExample.jsx'
 import { StudentRoute, StaffRoute, ProtectedRoute } from './components/ProtectedRoute'
 import CourseEnrollPage from './pages/Student/CourseEnroll'
@@ -26,6 +32,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+        {/* Public and Student Routes using RootLayout */}
         <Route element={<RootLayout />}>
           <Route index element={<HomePage />} path='/' />
           <Route path='/signup' element={<SignUp />} />
@@ -61,35 +68,27 @@ function App() {
             </StudentRoute>
           } />
 
-          {/* Staff only access routes */}
-          <Route path="/dashboard" element={
-            <StaffRoute>
-              <LabAssistantDashboard />
-            </StaffRoute>
-          } />
-          <Route path="/inventory" element={
-            <StaffRoute>
-              <InventoryPage />
-            </StaffRoute>
-          } />
-          <Route path="/requests" element={
-            <StaffRoute>
-              <RequestsPage />
-            </StaffRoute>
-          } />
-          <Route path="/procurement" element={
-            <StaffRoute>
-              <ProcurementPage />
-            </StaffRoute>
-          } />
-          <Route path="/maintenance" element={
-            <StaffRoute>
-              <MaintenancePage />
-            </StaffRoute>
-          } />
-
           <Route path='/login' element={<LoginExample />} />
         </Route>
+
+        {/* Lab Assistant Routes using Frontend Layout */}
+        <Route element={
+          <StaffRoute>
+            <Layout>
+              <Outlet />
+            </Layout>
+          </StaffRoute>
+        }>
+          <Route path="/dashboard" element={<LabAssistantDashboard />} />
+          <Route path="/inventory" element={<InventoryPage />} />
+          <Route path="/requests" element={<RequestsPage />} />
+          <Route path="/requests/new" element={<CreateRequestPage />} />
+          <Route path="/procurement" element={<ProcurementPage />} />
+          <Route path="/maintenance" element={<MaintenancePage />} />
+          <Route path="/reports" element={<ReportsPage />} />
+        </Route>
+
+        {/* Legacy route kept just in case */}
         <Route path='/lab-assistant' element={<LabAssistantDashboard user={{ name: "Lab Assistant" }} onLogout={() => window.location.href = '/'} />} />
       </Routes>
     </BrowserRouter>
