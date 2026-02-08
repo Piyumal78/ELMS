@@ -24,6 +24,9 @@ api.interceptors.request.use(
 );
 
 export const demoAPI = {
+    // Dashboard Statistics
+    getDemonstratorStats: (demonstratorId) => api.get(`/dashboard/demonstrator/${demonstratorId}/stats`),
+
     // Session Management
     getSessionsByCourse: (courseCode) => api.get(`/sessions/courses/${courseCode}`),
     createSession: (data) => api.post('/sessions', data),

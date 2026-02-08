@@ -43,22 +43,36 @@ const DemoReportReviews = () => {
         fetchSessions();
     }, []);
 
-    const [courseCode, setCourseCode] = useState('EE101'); // Default but editable
+    const [courseCode, setCourseCode] = useState(''); // Start empty, user must enter/select
 
     useEffect(() => {
-        // Initial fetch (can be removed if we want manual trigger only)
-        fetchSessions();
+        // Don't auto-fetch on mount if no course code
+        if (courseCode && courseCode.trim() !== '') {
+            fetchSessions();
+        }
     }, []);
 
     const fetchSessions = async () => {
+        // Validate course code before making API call
+        if (!courseCode || courseCode.trim() === '') {
+            toast.warning('Please enter a course code');
+            setSessions([]);
+            return;
+        }
+
         try {
             const res = await demoAPI.getSessionsByCourse(courseCode);
-            setSessions(res.data);
+            setSessions(res.data || []);
             setSelectedSessionId(''); // Reset selection
         } catch (err) {
             console.error("Error fetching sessions", err);
             setSessions([]);
-            // toast.error(`Failed to fetch sessions for ${courseCode}`); // Optional
+            // Show user-friendly error message
+            if (err.response?.status === 404 || err.response?.status === 400) {
+                toast.info(`No course found with code: ${courseCode}`);
+            } else {
+                toast.error('Failed to fetch sessions. Please try again.');
+            }
         }
     };
 
@@ -96,18 +110,34 @@ const DemoReportReviews = () => {
         setSubmitting(true);
 
         try {
-            // Payload must match:
-            // {
-            //   "comments": "...",
-            //   "grade": "A_PLUS",
-            //   "demonstratorId": 8,
-            //   "reportSubmissionId": 3
-            // }
+            // Get demonstrator ID from localStorage
+            const userStr = localStorage.getItem('user');
+            if (!userStr) {
+                toast.error('User not found. Please login again.');
+                setSubmitting(false);
+                return;
+            }
+
+            const user = JSON.parse(userStr);
+            const demonstratorId = user?.id;
+
+            if (!demonstratorId) {
+                toast.error('Demonstrator ID not found. Please login again.');
+                setSubmitting(false);
+                return;
+            }
+
+            // Validate inputs
+            if (!reviewComment || reviewComment.trim() === '') {
+                toast.warning('Please provide feedback comments');
+                setSubmitting(false);
+                return;
+            }
 
             const payload = {
                 comments: reviewComment,
-                grade: reviewGrade, // Enum value
-                demonstratorId: 1, // HARDCODED for now, should come from auth/context
+                grade: reviewGrade, // Enum value (e.g., A_PLUS, A, B, etc.)
+                demonstratorId: demonstratorId,
                 reportSubmissionId: selectedReport.id
             };
 
@@ -117,7 +147,19 @@ const DemoReportReviews = () => {
             loadReports(selectedSessionId); // Refresh list
         } catch (error) {
             console.error("Review submission failed", error);
-            toast.error("Failed to submit review.");
+
+            // Display specific error messages
+            if (error.response?.data?.message) {
+                toast.error(error.response.data.message);
+            } else if (error.response?.status === 400) {
+                toast.error("Invalid data. Please check your inputs.");
+            } else if (error.response?.status === 404) {
+                toast.error("Report or demonstrator not found.");
+            } else if (error.response?.status === 409) {
+                toast.error("This report has already been reviewed.");
+            } else {
+                toast.error("Failed to submit review. Please try again.");
+            }
         } finally {
             setSubmitting(false);
         }

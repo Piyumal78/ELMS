@@ -32,15 +32,25 @@ const DemoSessionManager = () => {
     }, [formData.courseCode]); // Re-fetch when course code changes
 
     const fetchSessions = async () => {
-        const codeToFetch = formData.courseCode || 'EE101'; // Use form value or default
+        // Only fetch if a course code is provided
+        if (!formData.courseCode || formData.courseCode.trim() === '') {
+            setSessions([]);
+            return; // Don't make API call without a valid course code
+        }
+
         try {
-            const response = await demoAPI.getSessionsByCourse(codeToFetch);
+            const response = await demoAPI.getSessionsByCourse(formData.courseCode);
             if (response.data) setSessions(response.data);
             else setSessions([]);
         } catch (error) {
             console.error("Error fetching sessions", error);
             setSessions([]);
-            // Optional: Don't toast on initial load if EE101 is missing, just show empty
+            // Show toast only for non-404 errors
+            if (error.response?.status === 404 || error.response?.status === 400) {
+                toast.info(`No course found with code: ${formData.courseCode}`);
+            } else {
+                toast.error("Failed to fetch sessions. Please try again.");
+            }
         }
     };
 
@@ -61,8 +71,15 @@ const DemoSessionManager = () => {
 
         try {
             // Get userId from localStorage
-            const user = JSON.parse(localStorage.getItem('user'));
-            const userId = user ? user.id : null;
+            const userStr = localStorage.getItem('user');
+            if (!userStr) {
+                toast.error("User not found. Please log in.");
+                setLoading(false);
+                return;
+            }
+
+            const user = JSON.parse(userStr);
+            const userId = user?.id;
 
             if (!userId) {
                 toast.error("User ID not found. Please log in.");
@@ -70,25 +87,47 @@ const DemoSessionManager = () => {
                 return;
             }
 
+            // Client-side validation
+            if (!formData.courseCode || formData.courseCode.trim() === '') {
+                toast.error("Course code is required");
+                setLoading(false);
+                return;
+            }
+
+            if (!formData.date || !formData.startTime || !formData.endTime) {
+                toast.error("Date and time fields are required");
+                setLoading(false);
+                return;
+            }
+
             // Step 1: Create Session
             const sessionPayload = {
-                ...formData,
-                userId: userId,
+                date: formData.date,
+                startTime: formData.startTime,
+                endTime: formData.endTime,
+                title: formData.title,
                 experimentNumber: parseInt(formData.experimentNumber),
-                courseCode: formData.courseCode
+                courseCode: formData.courseCode,
+                userId: userId
             };
 
             const sessionResponse = await demoAPI.createSession(sessionPayload);
-            const sessionId = sessionResponse.data.id; // Capture ID
+            const sessionId = sessionResponse.data.sessionId || sessionResponse.data.id;
 
             // Step 2: Upload Manual (if selected)
             if (selectedFile) {
-                const manualFormData = new FormData();
-                manualFormData.append('file', selectedFile);
-                await demoAPI.uploadLabManual(sessionId, manualFormData);
+                try {
+                    const manualFormData = new FormData();
+                    manualFormData.append('file', selectedFile);
+                    await demoAPI.uploadLabManual(sessionId, manualFormData);
+                    toast.success("Session Created & Manual Uploaded!");
+                } catch (uploadError) {
+                    console.error("Manual upload failed", uploadError);
+                    toast.warning("Session created but manual upload failed. You can upload it later.");
+                }
+            } else {
+                toast.success("Session Created Successfully!");
             }
-
-            toast.success("Session Created & Manual Uploaded!");
 
             // Reset Form
             setFormData({
@@ -106,7 +145,19 @@ const DemoSessionManager = () => {
 
         } catch (error) {
             console.error("Operation failed", error);
-            toast.error("Failed to create session or upload manual.");
+
+            // Display specific error messages from backend
+            if (error.response?.data?.message) {
+                toast.error(error.response.data.message);
+            } else if (error.response?.status === 400) {
+                toast.error("Invalid data. Please check all fields and try again.");
+            } else if (error.response?.status === 404) {
+                toast.error("Course not found. Please check the course code.");
+            } else if (error.response?.status === 409) {
+                toast.error("A session already exists at this time or with this experiment number.");
+            } else {
+                toast.error("Failed to create session. Please try again.");
+            }
         } finally {
             setLoading(false);
         }

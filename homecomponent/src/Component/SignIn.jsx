@@ -23,9 +23,12 @@ const SignIn = () => {
 
             const userRole = result.user?.role || 'ROLE_STUDENT';
 
-            // Save token and role to localStorage for API access
+            // Save token, role, and complete user object to localStorage for API access
             localStorage.setItem('token', result.token);
             localStorage.setItem('userRole', userRole);
+
+            // Store complete user object (CRITICAL for demonstrator dashboard)
+            localStorage.setItem('user', JSON.stringify(result.user));
 
             dispatch(setCredentials({
                 token: result.token,
