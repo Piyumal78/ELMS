@@ -1,20 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import Layout from '../../components/Layout';
 import { demoAPI } from '../../utils/demoapi';
-import './DemoSessionManager.css';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const DemoSessionManager = () => {
-    const [sessions, setSessions] = useState([]);
-    const [showCreateForm, setShowCreateForm] = useState(false);
-    const [loading, setLoading] = useState(false);
-    const [newSession, setNewSession] = useState({
-        topic: '',
+    // Form State
+    const [formData, setFormData] = useState({
+        date: '',
         startTime: '',
         endTime: '',
-        link: '',
-        courseCode: '',
-        lecturerName: '' // Assuming needed or optional
+        title: '',
+        experimentNumber: '',
+        courseCode: ''
     });
+    const [selectedFile, setSelectedFile] = useState(null);
+    const [loading, setLoading] = useState(false);
+
+    // List State
+    const [sessions, setSessions] = useState([]);
 
     const demonstratorMenu = [
         { path: '/demonstrator/dashboard', label: 'Dashboard', icon: '📊' },
@@ -23,174 +27,226 @@ const DemoSessionManager = () => {
     ];
 
     useEffect(() => {
-        // Fetch sessions for a default course or allow searching. 
-        // For demo purposes, we might need an input for course code or fetch all relevant to the user.
-        // Since the prompt asks to list sessions using `api.get('/sessions/courses/{courseCode}')`,
-        // I will default to a placeholder course code or fetch it.
-        // Let's assume a default course code for the prototype or fetch a specific one.
-        fetchSessions('EE101');
-    }, []);
+        // Fetch sessions on load
+        fetchSessions();
+    }, [formData.courseCode]); // Re-fetch when course code changes
 
-    const fetchSessions = async (courseCode) => {
-        setLoading(true);
+    const fetchSessions = async () => {
+        const codeToFetch = formData.courseCode || 'EE101'; // Use form value or default
         try {
-            const response = await demoAPI.getSessionsByCourse(courseCode);
-            setSessions(response.data);
+            const response = await demoAPI.getSessionsByCourse(codeToFetch);
+            if (response.data) setSessions(response.data);
+            else setSessions([]);
         } catch (error) {
-            console.error("Error fetching sessions:", error);
-            // Handle 403 gracefully
-            if (error.response && error.response.status === 403) {
-                alert("You are not authorized to view sessions for this course.");
+            console.error("Error fetching sessions", error);
+            setSessions([]);
+            // Optional: Don't toast on initial load if EE101 is missing, just show empty
+        }
+    };
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({ ...prev, [name]: value }));
+    };
+
+    const handleFileChange = (e) => {
+        if (e.target.files && e.target.files[0]) {
+            setSelectedFile(e.target.files[0]);
+        }
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+
+        try {
+            // Get userId from localStorage
+            const user = JSON.parse(localStorage.getItem('user'));
+            const userId = user ? user.id : null;
+
+            if (!userId) {
+                toast.error("User ID not found. Please log in.");
+                setLoading(false);
+                return;
             }
+
+            // Step 1: Create Session
+            const sessionPayload = {
+                ...formData,
+                userId: userId,
+                experimentNumber: parseInt(formData.experimentNumber),
+                courseCode: formData.courseCode
+            };
+
+            const sessionResponse = await demoAPI.createSession(sessionPayload);
+            const sessionId = sessionResponse.data.id; // Capture ID
+
+            // Step 2: Upload Manual (if selected)
+            if (selectedFile) {
+                const manualFormData = new FormData();
+                manualFormData.append('file', selectedFile);
+                await demoAPI.uploadLabManual(sessionId, manualFormData);
+            }
+
+            toast.success("Session Created & Manual Uploaded!");
+
+            // Reset Form
+            setFormData({
+                date: '',
+                startTime: '',
+                endTime: '',
+                title: '',
+                experimentNumber: '',
+                courseId: ''
+            });
+            setSelectedFile(null);
+
+            // Refresh List
+            fetchSessions();
+
+        } catch (error) {
+            console.error("Operation failed", error);
+            toast.error("Failed to create session or upload manual.");
         } finally {
             setLoading(false);
         }
     };
 
-    const handleCreateSession = async (e) => {
-        e.preventDefault();
-        try {
-            // Need to format date/time properly for backend if needed.
-            // backend expects SessionRequestDto.
-            const payload = {
-                ...newSession,
-                // Add default or derived values
-                date: new Date().toISOString().split('T')[0] // simplified for demo
-            };
-            await demoAPI.createSession(payload);
-            setShowCreateForm(false);
-            fetchSessions(newSession.courseCode || 'EE101'); // Refresh
-            alert("Session Created Successfully!");
-        } catch (error) {
-            console.error("Create session failed", error);
-            if (error.response && error.response.status === 403) {
-                alert("Permission Denied: Cannot create session.");
-            } else {
-                alert("Failed to create session.");
-            }
-        }
-    };
-
-    const handleUploadManual = async (sessionId) => {
-        const fileInput = document.createElement('input');
-        fileInput.type = 'file';
-        fileInput.accept = '.pdf,.doc,.docx';
-        fileInput.onchange = async (e) => {
-            const file = e.target.files[0];
-            if (!file) return;
-
-            const formData = new FormData();
-            formData.append('file', file);
-
-            try {
-                await demoAPI.uploadLabManual(sessionId, formData);
-                alert("Lab Manual Uploaded Successfully!");
-            } catch (error) {
-                console.error("Upload failed", error);
-                alert("Failed to upload manual.");
-            }
-        };
-        fileInput.click();
-    };
-
     return (
         <Layout menuItems={demonstratorMenu}>
-            <div className="session-manager">
-                <div className="sm-header">
-                    <h2>Academic Session Management</h2>
-                    <button
-                        className="btn-create"
-                        onClick={() => setShowCreateForm(!showCreateForm)}
-                    >
-                        {showCreateForm ? 'Cancel' : '+ Create New Session'}
-                    </button>
-                </div>
+            <ToastContainer />
+            <div className="p-6">
+                <h2 className="text-2xl font-bold mb-6 text-gray-800">Session Manager</h2>
 
-                {showCreateForm && (
-                    <div className="create-session-form">
-                        <h3>New Session Details</h3>
-                        <form onSubmit={handleCreateSession}>
-                            <div className="form-group">
-                                <label>Course Code</label>
+                <div className="flex flex-col lg:flex-row gap-6">
+                    {/* Left Side: Create Session Form */}
+                    <div className="w-full lg:w-1/3 bg-white p-6 rounded-lg shadow-md">
+                        <h3 className="text-lg font-semibold mb-4 text-blue-600">Create New Session</h3>
+                        <form onSubmit={handleSubmit} className="space-y-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">Title</label>
                                 <input
-                                    type="text"
-                                    placeholder="e.g. EE101"
-                                    value={newSession.courseCode}
-                                    onChange={(e) => setNewSession({ ...newSession, courseCode: e.target.value })}
-                                    required
+                                    type="text" name="title" required
+                                    value={formData.title} onChange={handleInputChange}
+                                    className="mt-1 block w-full border border-gray-300 rounded p-2"
                                 />
                             </div>
-                            <div className="form-group">
-                                <label>Topic</label>
-                                <input
-                                    type="text"
-                                    placeholder="Session Topic"
-                                    value={newSession.topic}
-                                    onChange={(e) => setNewSession({ ...newSession, topic: e.target.value })}
-                                    required
-                                />
-                            </div>
-                            <div className="form-row">
-                                <div className="form-group">
-                                    <label>Start Time</label>
+
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700">Date</label>
                                     <input
-                                        type="time"
-                                        value={newSession.startTime}
-                                        onChange={(e) => setNewSession({ ...newSession, startTime: e.target.value })}
-                                        required
+                                        type="date" name="date" required
+                                        value={formData.date} onChange={handleInputChange}
+                                        className="mt-1 block w-full border border-gray-300 rounded p-2"
                                     />
                                 </div>
-                                <div className="form-group">
-                                    <label>End Time</label>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700">Course Code</label>
                                     <input
-                                        type="time"
-                                        value={newSession.endTime}
-                                        onChange={(e) => setNewSession({ ...newSession, endTime: e.target.value })}
-                                        required
+                                        type="text" name="courseCode" required
+                                        value={formData.courseCode} onChange={handleInputChange}
+                                        placeholder="e.g. EE101"
+                                        className="mt-1 block w-full border border-gray-300 rounded p-2"
                                     />
                                 </div>
                             </div>
-                            <button type="submit" className="btn-submit">Create Session</button>
+
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700">Start Time</label>
+                                    <input
+                                        type="time" name="startTime" required
+                                        value={formData.startTime} onChange={handleInputChange}
+                                        className="mt-1 block w-full border border-gray-300 rounded p-2"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700">End Time</label>
+                                    <input
+                                        type="time" name="endTime" required
+                                        value={formData.endTime} onChange={handleInputChange}
+                                        className="mt-1 block w-full border border-gray-300 rounded p-2"
+                                    />
+                                </div>
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">Experiment Number</label>
+                                <input
+                                    type="number" name="experimentNumber" required
+                                    value={formData.experimentNumber} onChange={handleInputChange}
+                                    className="mt-1 block w-full border border-gray-300 rounded p-2"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">Lab Manual (PDF)</label>
+                                <input
+                                    type="file" accept=".pdf"
+                                    onChange={handleFileChange}
+                                    className="mt-1 block w-full border border-gray-300 rounded p-2"
+                                />
+                            </div>
+
+                            <button
+                                type="submit"
+                                disabled={loading}
+                                className={`w-full py-2 px-4 text-white font-bold rounded hover:bg-blue-700 transition ${loading ? 'bg-blue-300' : 'bg-blue-600'}`}
+                            >
+                                {loading ? 'Processing...' : 'Create Session'}
+                            </button>
                         </form>
                     </div>
-                )}
 
-                <div className="sessions-list-container">
-                    {loading ? <p>Loading sessions...</p> : (
-                        <table className="sessions-table">
-                            <thead>
-                                <tr>
-                                    <th>Course</th>
-                                    <th>Topic</th>
-                                    <th>Time</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {sessions.length > 0 ? sessions.map(session => (
-                                    <tr key={session.id}>
-                                        <td>{session.courseCode || 'N/A'}</td>
-                                        <td>{session.topic}</td>
-                                        <td>{session.startTime} - {session.endTime}</td>
-                                        <td>
-                                            <button
-                                                className="btn-action upload"
-                                                onClick={() => handleUploadManual(session.id)}
-                                            >
-                                                ⬆ Upload Manual
-                                            </button>
-                                            {/* "View Components" placeholder */}
-                                            <button className="btn-action components">
-                                                ⚙ Components
-                                            </button>
-                                        </td>
+                    {/* Right Side: Session List */}
+                    <div className="w-full lg:w-2/3 bg-white p-6 rounded-lg shadow-md">
+                        <h3 className="text-lg font-semibold mb-4 text-gray-700">Created Sessions</h3>
+                        <div className="overflow-x-auto">
+                            <table className="min-w-full leading-normal">
+                                <thead>
+                                    <tr>
+                                        <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                            Title
+                                        </th>
+                                        <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                            Date
+                                        </th>
+                                        <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                            Time
+                                        </th>
+                                        <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                            Exp No
+                                        </th>
                                     </tr>
-                                )) : (
-                                    <tr><td colSpan="4">No sessions found.</td></tr>
-                                )}
-                            </tbody>
-                        </table>
-                    )}
+                                </thead>
+                                <tbody>
+                                    {sessions.length > 0 ? sessions.map(session => (
+                                        <tr key={session.id}>
+                                            <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                                <p className="text-gray-900 whitespace-no-wrap">{session.title || session.name}</p>
+                                            </td>
+                                            <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                                <p className="text-gray-900 whitespace-no-wrap">{session.date}</p>
+                                            </td>
+                                            <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                                <p className="text-gray-900 whitespace-no-wrap">{session.startTime} - {session.endTime}</p>
+                                            </td>
+                                            <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                                <p className="text-gray-900 whitespace-no-wrap">{session.experimentNumber}</p>
+                                            </td>
+                                        </tr>
+                                    )) : (
+                                        <tr>
+                                            <td colSpan="4" className="px-5 py-5 border-b border-gray-200 bg-white text-sm text-center">
+                                                No sessions found.
+                                            </td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </Layout>
