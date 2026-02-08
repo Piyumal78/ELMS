@@ -25,6 +25,8 @@ public interface SessionRepository extends JpaRepository<Session, Long> {
 
   boolean existsByCourse_CourseCodeAndExperimentNumber(String courseCode, Integer experimentNumber);
 
+  boolean existsByCourse_IdAndExperimentNumber(Long courseId, Integer experimentNumber);
+
   @Query("SELECT s FROM Session s WHERE s.course.courseCode = :courseCode")
   List<Session> getSessionsByCourseCode(@Param("courseCode") String courseCode);
 

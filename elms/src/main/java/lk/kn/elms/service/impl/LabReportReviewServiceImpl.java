@@ -23,8 +23,8 @@ public class LabReportReviewServiceImpl implements LabReportReviewService {
     private DemonstratorRepository demonstratorRepository;
     private ReportSubmissionRepository reportSubmissionRepository;
 
-    //*********************************************
-    //Need to set demonstrator from security context
+    // *********************************************
+    // Need to set demonstrator from security context
     @Override
     public LabReportReviewResponseDto reviewLabReport(LabReportReviewRequestDto labReportReviewRequestDto)
             throws ResourceAlreadyExistsException, ResourceNotFoundException {
@@ -34,10 +34,13 @@ public class LabReportReviewServiceImpl implements LabReportReviewService {
         }
 
         Demonstrator demonstrator = demonstratorRepository.findById(labReportReviewRequestDto.getDemonstratorId())
-                .orElseThrow(() -> new ResourceNotFoundException("Demonstrator not found for id: " + labReportReviewRequestDto.getDemonstratorId()));
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Demonstrator not found for id: " + labReportReviewRequestDto.getDemonstratorId()));
 
-        ReportSubmission reportSubmission = reportSubmissionRepository.findById(labReportReviewRequestDto.getReportSubmissionId())
-                .orElseThrow(()-> new ResourceNotFoundException("ReportSubmission not found for id: " + labReportReviewRequestDto.getReportSubmissionId()));
+        ReportSubmission reportSubmission = reportSubmissionRepository
+                .findById(labReportReviewRequestDto.getReportSubmissionId())
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "ReportSubmission not found for id: " + labReportReviewRequestDto.getReportSubmissionId()));
 
         LabReportReview labReportReview = new LabReportReview();
         labReportReview.setComments(labReportReviewRequestDto.getComments());
@@ -46,10 +49,11 @@ public class LabReportReviewServiceImpl implements LabReportReviewService {
         labReportReview.setReportSubmission(reportSubmission);
         labReportReviewRepository.save(labReportReview);
 
+        reportSubmission.setStatus(lk.kn.elms.model.enums.Status.GRADED);
+        reportSubmissionRepository.save(reportSubmission);
+
         return mapEntityToResponseDto(labReportReview);
     }
-
-
 
     private LabReportReviewResponseDto mapEntityToResponseDto(LabReportReview labReportReview) {
 
