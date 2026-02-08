@@ -97,7 +97,7 @@ const DemoSessionManager = () => {
                 endTime: '',
                 title: '',
                 experimentNumber: '',
-                courseId: ''
+                courseCode: ''
             });
             setSelectedFile(null);
 
