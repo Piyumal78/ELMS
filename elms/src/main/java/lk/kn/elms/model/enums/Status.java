@@ -4,4 +4,6 @@ public enum Status {
     ACTIVE,
     INACTIVE,
     COMPLETED,
+    PENDING,
+    GRADED
 }

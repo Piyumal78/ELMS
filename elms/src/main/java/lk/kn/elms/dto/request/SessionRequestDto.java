@@ -31,7 +31,6 @@ public class SessionRequestDto {
     @Max(value = 20, message = "Experiment number must be less than 20")
     private Integer experimentNumber;
 
-
     @NotBlank(message = "Course code is required")
     private String courseCode;
 

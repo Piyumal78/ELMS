@@ -20,17 +20,27 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping(value = "elms/api")
 public class ReportSubmissionController {
 
-    private  ReportSubmissionService reportSubmissionService;
+    private ReportSubmissionService reportSubmissionService;
 
-    @RolesAllowed({"STUDENT"})
+    @RolesAllowed({ "STUDENT" })
     @PostMapping(value = "/submissions/student/{studentId}/session/{sessionId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ReportSubmissionCreateResponseDto> createSubmission(
             @PathVariable Long studentId,
             @PathVariable Long sessionId,
             @RequestPart("file") MultipartFile file)
-            throws ResourceAlreadyExistsException, ResourceNotFoundException, FileUploadingException{
+            throws ResourceAlreadyExistsException, ResourceNotFoundException, FileUploadingException {
 
-        ReportSubmissionCreateResponseDto responseDto = reportSubmissionService.createSubmission(studentId, sessionId, file);
+        ReportSubmissionCreateResponseDto responseDto = reportSubmissionService.createSubmission(studentId, sessionId,
+                file);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
+    }
+
+    @RolesAllowed({ "DEMONSTRATOR", "LECTURER" })
+    @GetMapping(value = "/submissions/session/{sessionId}")
+    public ResponseEntity<java.util.List<lk.kn.elms.dto.response.ReportSubmissionResponseDto>> listSubmissionsBySession(
+            @PathVariable Long sessionId) {
+        java.util.List<lk.kn.elms.dto.response.ReportSubmissionResponseDto> responseDtos = reportSubmissionService
+                .getSubmissionsBySessionId(sessionId);
+        return ResponseEntity.ok(responseDtos);
     }
 }
