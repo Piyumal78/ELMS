@@ -155,8 +155,10 @@ const StudentNavbar = () => {
                                 </DropdownMenuLabel>
                                 <DropdownMenuSeparator className="bg-slate-800" />
                                 <DropdownMenuItem className="hover:bg-slate-800 cursor-pointer">
+                                    <Link to="/profile" className="flex items-center">
                                     <User className="mr-2 h-4 w-4" />
                                     <span>Profile</span>
+                                    </Link>
                                 </DropdownMenuItem>
                                 <DropdownMenuItem className="hover:bg-slate-800 cursor-pointer">
                                     <Settings className="mr-2 h-4 w-4" />
