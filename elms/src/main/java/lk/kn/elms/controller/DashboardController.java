@@ -20,4 +20,10 @@ public class DashboardController {
         Map<String, Object> stats = dashboardService.getStats();
         return ResponseEntity.ok(stats);
     }
+
+    @GetMapping("/demonstrator/{demonstratorId}/stats")
+    public ResponseEntity<Map<String, Object>> getDemonstratorStats(@PathVariable Long demonstratorId) {
+        Map<String, Object> stats = dashboardService.getDemonstratorStats(demonstratorId);
+        return ResponseEntity.ok(stats);
+    }
 }
