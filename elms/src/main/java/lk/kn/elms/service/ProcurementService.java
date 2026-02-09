@@ -22,9 +22,6 @@ public class ProcurementService {
     @Autowired
     private InventoryRepository inventoryRepository;
 
-    @Autowired
-    private NotificationService notificationService;
-
     public List<Procurement> getAllRequests() {
         return procurementRepository.findAll();
     }
@@ -40,12 +37,6 @@ public class ProcurementService {
         Procurement saved = procurementRepository
                 .save(Objects.requireNonNull(procurement, "Procurement cannot be null"));
 
-        // Notify Lab Assistant (though typically they create it, maybe notify Admin?)
-        // For now, let's notify LAB_ASSISTANT just so it shows up in their feed as a
-        // record
-        notificationService.createNotification(
-                "Request for " + saved.getQuantity() + "x " + saved.getItemName() + " created.",
-                "LAB_ASSISTANT");
         return saved;
     }
 
@@ -104,7 +95,8 @@ public class ProcurementService {
             Inventory newInventory = new Inventory();
             newInventory.setName(procurement.getItemName());
             newInventory.setQuantity(procurement.getQuantity());
-            newInventory.setCategory("Other"); // Default
+            // Use category from procurement if available, otherwise default to "Other"
+            newInventory.setCategory(procurement.getCategory() != null ? procurement.getCategory() : "Other");
             newInventory.setMinimumStock(5); // Default
             newInventory.setStatus("Available");
             newInventory.setDescription("Automatically added from procurement");
@@ -114,10 +106,6 @@ public class ProcurementService {
         procurement.setStatus("Received");
         procurement.setDeliveryDate(LocalDate.now());
         Procurement saved = procurementRepository.save(procurement);
-
-        notificationService.createNotification(
-                procurement.getQuantity() + "x " + procurement.getItemName() + " has been added to inventory.",
-                "LAB_ASSISTANT");
 
         return saved;
     }

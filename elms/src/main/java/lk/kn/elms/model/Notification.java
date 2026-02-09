@@ -30,10 +30,18 @@ public class Notification {
     @Column(name = "timestamp", nullable = false, columnDefinition = "datetime(6) DEFAULT CURRENT_TIMESTAMP(6)")
     private LocalDateTime timestamp;
 
+    @Column(name = "created_at", nullable = false, columnDefinition = "datetime(6) DEFAULT CURRENT_TIMESTAMP(6)")
+    private LocalDateTime createdAt;
+
+    @Column(name = "read_status", nullable = false, columnDefinition = "BIT(1) DEFAULT 0")
+    private boolean readStatus = false;
+
     public Notification(String message, String recipientRole) {
         this.message = message;
         this.recipientRole = recipientRole;
         this.timestamp = LocalDateTime.now();
+        this.createdAt = LocalDateTime.now();
         this.isRead = false;
+        this.readStatus = false;
     }
 }

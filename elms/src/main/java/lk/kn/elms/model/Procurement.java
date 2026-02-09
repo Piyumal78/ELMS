@@ -39,6 +39,9 @@ public class Procurement {
     @Column(columnDefinition = "TEXT")
     private String notes;
 
+    @Column(nullable = true)
+    private String category; // e.g., "Resistors", "ICs", "Tools", "Other"
+
     @Column(name = "delivery_date")
     private LocalDate deliveryDate;
 
@@ -113,6 +116,14 @@ public class Procurement {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public LocalDate getDeliveryDate() {

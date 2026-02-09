@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/procurement")
+@RequestMapping("/elms/api/procurement")
 @CrossOrigin(origins = "*")
 public class ProcurementController {
 
@@ -25,7 +25,7 @@ public class ProcurementController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Procurement> getRequestById(@PathVariable Long id) {
+    public ResponseEntity<Procurement> getRequestById(@PathVariable("id") Long id) {
         return procurementService.getRequestById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -38,30 +38,33 @@ public class ProcurementController {
     }
 
     @PutMapping("/{id}/approve")
-    public ResponseEntity<?> approveRequest(@PathVariable Long id) {
+    public ResponseEntity<?> approveRequest(@PathVariable("id") Long id) {
         System.out.println("Received approval request for ID: " + id);
         try {
             return ResponseEntity.ok(procurementService.approveRequest(id));
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest()
+                    .body(java.util.Map.of("message", e.getMessage()));
         }
     }
 
     @PutMapping("/{id}/reject")
-    public ResponseEntity<?> rejectRequest(@PathVariable Long id) {
+    public ResponseEntity<?> rejectRequest(@PathVariable("id") Long id) {
         try {
             return ResponseEntity.ok(procurementService.rejectRequest(id));
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest()
+                    .body(java.util.Map.of("message", e.getMessage()));
         }
     }
 
     @PutMapping("/{id}/receive")
-    public ResponseEntity<?> receiveRequest(@PathVariable Long id) {
+    public ResponseEntity<?> receiveRequest(@PathVariable("id") Long id) {
         try {
             return ResponseEntity.ok(procurementService.receiveRequest(id));
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest()
+                    .body(java.util.Map.of("message", e.getMessage()));
         }
     }
 }

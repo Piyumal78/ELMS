@@ -32,7 +32,7 @@ public class InventoryController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Inventory> getItemById(@PathVariable Long id) {
+    public ResponseEntity<Inventory> getItemById(@PathVariable("id") Long id) {
         return inventoryService.getItemById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -50,7 +50,7 @@ public class InventoryController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateItem(@PathVariable Long id, @Valid @RequestBody Inventory inventory,
+    public ResponseEntity<?> updateItem(@PathVariable("id") Long id, @Valid @RequestBody Inventory inventory,
             BindingResult result) {
         if (result.hasErrors()) {
             StringBuilder errors = new StringBuilder();
@@ -66,7 +66,7 @@ public class InventoryController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteItem(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteItem(@PathVariable("id") Long id) {
         try {
             inventoryService.deleteItem(id);
             return ResponseEntity.noContent().build();

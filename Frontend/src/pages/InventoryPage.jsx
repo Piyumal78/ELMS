@@ -67,11 +67,18 @@ const InventoryPage = () => {
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this item?')) {
       try {
+        // Optimistic update - remove from UI immediately
+        setItems(prevItems => prevItems.filter(item => item.id !== id))
+
         await inventoryAPI.delete(id)
-        fetchItems()
+
+        // Fetch fresh data to confirm
+        await fetchItems()
       } catch (error) {
         console.error('Error deleting item:', error)
         alert('Error deleting item. Please try again.')
+        // Restore the list on error
+        await fetchItems()
       }
     }
   }

@@ -49,14 +49,14 @@ export const requestsAPI = {
   create: (data) => api.post('/requests', data)
 }
 
-// Procurement API (Placeholder - Backend Controller Missing)
+// Procurement API
 export const procurementAPI = {
-  getAll: () => api.get('/requests?type=PROCUREMENT'), // Tentative mapping
-  create: (data) => api.post('/requests', { ...data, type: 'PROCUREMENT' }),
-  getById: (id) => api.get(`/requests/${id}`),
-  approve: (id) => api.put(`/requests/${id}/approve`),
-  reject: (id) => api.put(`/requests/${id}/reject`),
-  receive: (id) => api.put(`/requests/${id}/receive`)
+  getAll: () => api.get('/procurement'),
+  create: (data) => api.post('/procurement', data),
+  getById: (id) => api.get(`/procurement/${id}`),
+  approve: (id) => api.put(`/procurement/${id}/approve`),
+  reject: (id) => api.put(`/procurement/${id}/reject`),
+  receive: (id) => api.put(`/procurement/${id}/receive`)
 }
 
 // Maintenance API (Placeholder - Backend Controller Missing)

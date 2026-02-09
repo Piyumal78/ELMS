@@ -20,7 +20,7 @@ const LabAssistantDashboard = () => {
     fetchStats()
     const interval = setInterval(() => {
       fetchStats(true) // Silent refresh
-    }, 30000) // Poll every 30 seconds
+    }, 5000) // Poll every 5 seconds for faster updates
 
     return () => clearInterval(interval)
   }, [])

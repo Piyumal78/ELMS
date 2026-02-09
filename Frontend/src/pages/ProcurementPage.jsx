@@ -12,6 +12,7 @@ const ProcurementPage = () => {
     itemName: '',
     quantity: '',
     priority: 'Medium',
+    category: 'Other',
     notes: ''
   })
 
@@ -65,6 +66,7 @@ const ProcurementPage = () => {
       itemName: '',
       quantity: '',
       priority: 'Medium',
+      category: 'Other',
       notes: ''
     })
     setShowAddModal(true)
@@ -191,19 +193,19 @@ const ProcurementPage = () => {
           className={`filter-btn ${filter === 'pending' ? 'active' : ''}`}
           onClick={() => setFilter('pending')}
         >
-          Pending ({requests.filter(r => r.status.toLowerCase() === 'pending').length})
+          Pending ({requests.filter(r => r.status?.toLowerCase() === 'pending').length})
         </button>
         <button
           className={`filter-btn ${filter === 'approved' ? 'active' : ''}`}
           onClick={() => setFilter('approved')}
         >
-          Approved ({requests.filter(r => r.status.toLowerCase() === 'approved').length})
+          Approved ({requests.filter(r => r.status?.toLowerCase() === 'approved').length})
         </button>
         <button
           className={`filter-btn ${filter === 'delivered' ? 'active' : ''}`}
           onClick={() => setFilter('delivered')}
         >
-          Delivered ({requests.filter(r => r.status.toLowerCase() === 'delivered').length})
+          Delivered ({requests.filter(r => r.status?.toLowerCase() === 'delivered').length})
         </button>
       </div>
 
@@ -244,6 +246,12 @@ const ProcurementPage = () => {
                   <span className="info-label">Quantity:</span>
                   <span className="info-value">{request.quantity}</span>
                 </div>
+                {request.category && (
+                  <div className="info-row">
+                    <span className="info-label">Category:</span>
+                    <span className="info-value">{request.category}</span>
+                  </div>
+                )}
                 <div className="info-row">
                   <span className="info-label">Request Date:</span>
                   <span className="info-value">
@@ -334,6 +342,23 @@ const ProcurementPage = () => {
                   <option value="Low">Low</option>
                   <option value="Medium">Medium</option>
                   <option value="High">High</option>
+                </select>
+              </div>
+
+              <div className="form-group">
+                <label>Category *</label>
+                <select
+                  required
+                  value={formData.category}
+                  onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                >
+                  <option value="Resistors">Resistors</option>
+                  <option value="Capacitors">Capacitors</option>
+                  <option value="ICs">ICs</option>
+                  <option value="Sensors">Sensors</option>
+                  <option value="Tools">Tools</option>
+                  <option value="Cables">Cables</option>
+                  <option value="Other">Other</option>
                 </select>
               </div>
 
