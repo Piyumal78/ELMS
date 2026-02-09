@@ -14,10 +14,7 @@ import lombok.NoArgsConstructor;
 public class ComponentRequestDto {
 
     @NotBlank(message = "Component name is required")
-    @Pattern(
-            regexp = "^[A-Z_ ]+$",
-            message = "Component name must be in capital letters only"
-    )
+    @Pattern(regexp = "^[A-Z_ ]+$", message = "Component name must be in capital letters only")
     private String componentName;
 
     private String type;

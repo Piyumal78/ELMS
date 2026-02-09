@@ -1,7 +1,7 @@
 package lk.kn.elms.controller;
 
 import lk.kn.elms.model.Equipment;
-import lk.kn.elms.service.MaintenanceService;
+import lk.kn.elms.service.impl.MaintenanceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
