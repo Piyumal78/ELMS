@@ -1,7 +1,7 @@
 package lk.kn.elms.controller;
 
 import lk.kn.elms.model.Notification;
-import lk.kn.elms.service.NotificationService;
+import lk.kn.elms.service.impl.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

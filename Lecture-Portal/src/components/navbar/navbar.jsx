@@ -8,7 +8,6 @@ const Navbar = () => {
 
   const handleLogout = async () => {
     logout();
-    navigate('/login');
   };
 
   // Get user display info

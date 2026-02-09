@@ -50,6 +50,22 @@ export const StaffRoute = ({ children }) => {
   return children;
 };
 
+// Lecturer Only Route - Lecturer විතරක් access කරන්න පුළුවන්
+export const LecturerRoute = ({ children }) => {
+  const { token, user } = useSelector((state) => state.auth);
+
+  if (!token) {
+    return <Navigate to="/lecturer/login" replace />;
+  }
+
+  // Backend එකෙන් ආපු ACTUAL role එක check කරනවා
+  if (!user?.role?.includes('LECTURER')) {
+    return <Navigate to="/" replace />;
+  }
+
+  return children;
+};
+
 // Admin Only Route - Admin විතරක් access කරන්න පුළුවන්
 export const AdminRoute = ({ children }) => {
   const { token, user } = useSelector((state) => state.auth);

@@ -18,15 +18,14 @@ const Sidebar = () => {
   
   // Function to check if current path matches
   const isActive = (path) => {
-    if (path === '/') {
-      return location.pathname === '/';
+    if (path === '/lecturer') {
+      return location.pathname === '/lecturer';
     }
     return location.pathname.startsWith(path);
   };
 
   const handleLogout = async () => {
     logout();
-    navigate('/login');
   };
 
   // Get user display name

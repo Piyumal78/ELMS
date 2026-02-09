@@ -16,6 +16,12 @@ import java.util.List;
 @PrimaryKeyJoinColumn(name = "id")
 public class Student extends User{
 
+    @Column(name = "file_url")
+    private String fileUrl;
+
+    @Column(name = "file_public_id")
+    private String filePublicId;
+
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
     private List<ComponentHandover> componentHandovers;
 
