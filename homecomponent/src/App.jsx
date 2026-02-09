@@ -29,8 +29,8 @@ import Grades from './pages/Student/Grades'
 import LabBooking from './pages/Lab/Labbooking'
 import Announcements from './Component/Announcements'
 import Profile from './Component/Profile.jsx'
+import StudentDetailsUpdate from './pages/Student/StudentDetailsUpdate.jsx'
 import HelpSupport from './pages/HelpSupport.jsx'
-import ChatInterface from './Component/ChatInterface.jsx'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
@@ -123,15 +123,15 @@ function App() {
             </StudentRoute>
           } />
 
-          <Route path='/help' element={
+          <Route path='/update-details' element={
             <StudentRoute>
-              <HelpSupport />
+              <StudentDetailsUpdate />
             </StudentRoute>
           } />
 
-          <Route path='/ai-chat' element={
+          <Route path='/help' element={
             <StudentRoute>
-              <ChatInterface />
+              <HelpSupport />
             </StudentRoute>
           } />
           

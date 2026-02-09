@@ -34,20 +34,20 @@ export const api = createApi({
       if (token) {
         headers.set('Authorization', `Bearer ${token}`);
       }
-      
+
       // Special handling for file uploads - browser sets Content-Type with boundary automatically
-      if (endpoint !== 'submitReport' && endpoint !== 'analyzeLabReport') {
+      if (endpoint !== 'submitReport' && endpoint !== 'analyzeLabReport' && endpoint !== 'uploadProfilePhoto') {
         headers.set('Content-Type', 'application/json');
       }
       return headers;
     },
   }),
-  
+
   // Cache tags for automatic data invalidation and refetching
   tagTypes: ['Student', 'Course', 'Session', 'Announcement', 'LabReservation', 'Submission', 'ReportReview'],
   endpoints: (builder) => ({
     // ============ Authentication Endpoints ============
-    
+
     // User login - Authenticates user and returns JWT token
     login: builder.mutation({
       query: (credentials) => ({
@@ -76,7 +76,7 @@ export const api = createApi({
         return response;
       },
     }),
-    
+
     // Activate user account - Registers new user with username and password
     activateAccount: builder.mutation({
       query: (credentials) => ({
@@ -85,7 +85,7 @@ export const api = createApi({
         body: credentials,
       }),
     }),
-    
+
     // Get current user profile - Fetches user details by registration number
     getCurrentUserProfile: builder.query({
       query: (registrationNumber) => `/users/profile?registrationNumber=${encodeURIComponent(registrationNumber)}`,
@@ -93,7 +93,7 @@ export const api = createApi({
     }),
 
     // ============ Student Endpoints ============
-    
+
     // Create new student - Registers a new student in the system
     createStudent: builder.mutation({
       query: (studentData) => ({
@@ -103,27 +103,58 @@ export const api = createApi({
       }),
       invalidatesTags: ['Student'],
     }),
-    
+
+    // Upload profile photo - Uploads student profile picture
+    uploadProfilePhoto: builder.mutation({
+      query: ({ studentId, file }) => {
+        const formData = new FormData();
+        formData.append('file', file);
+        return {
+          url: `/students/profile-photos/${studentId}`,
+          method: 'POST',
+          body: formData,
+        };
+      },
+      invalidatesTags: ['Student'],
+    }),
+
     // Get student by ID - Fetches student details using student ID
     getStudentById: builder.query({
       query: (id) => `/students/${id}`,
       providesTags: (result, error, id) => [{ type: 'Student', id }],
     }),
 
+    // Update student details - Updates student information (name, email, password)
+    updateStudent: builder.mutation({
+      query: ({ studentId, studentData }) => ({
+        url: `/students/${studentId}`,
+        method: 'PUT',
+        body: studentData,
+      }),
+      invalidatesTags: (result, error, { studentId }) => [
+        { type: 'Student', id: studentId },
+        'Student',
+      ],
+    }),
+
+    getAllCourseByStudentId: builder.query({
+      query: (studentId) => `/students/${studentId}`,
+      providesTags: (result, error, studentId) => [{ type: 'Student', id: `courses-${studentId}` }],
+    }),
     // ============ Course Endpoints ============
-    
+
     // Get all courses - Retrieves list of all available courses
     getCourses: builder.query({
       query: () => '/courses/all',
       providesTags: ['Course'],
     }),
-    
+
     // Get course by ID - Fetches specific course details using course ID
     getCourseById: builder.query({
       query: (id) => `/courses/${id}`,
       providesTags: (result, error, id) => [{ type: 'Course', id }],
     }),
-    
+
     // Get course by course code - Fetches course details using course code (e.g., BECS 11431)
     getCourseByCourseCode: builder.query({
       query: (courseCode) => `/courses/code/${courseCode}`,
@@ -131,25 +162,25 @@ export const api = createApi({
     }),
 
     // ============ Session (Lab Session) Endpoints ============
-    
+
     // Get all sessions - Retrieves list of all lab sessions
     getSessions: builder.query({
       query: () => '/sessions',
       providesTags: ['Session'],
     }),
-    
+
     // Get session by ID - Fetches specific lab session details
     getSessionById: builder.query({
       query: (id) => `/sessions/${id}`,
       providesTags: (result, error, id) => [{ type: 'Session', id }],
     }),
-    
+
     // Get sessions by course code - Fetches all lab sessions for a specific course
     getSessionByCourseCode: builder.query({
       query: (courseCode) => `/sessions/${courseCode}`,
       providesTags: (result, error, courseCode) => [{ type: 'Session', courseCode }],
     }),
-    
+
     // Get lab manual by session ID - Downloads lab manual for a specific session
     getLabManualBySessionId: builder.query({
       query: (sessionId) => `/lab-manuals/session/${sessionId}`,
@@ -157,13 +188,13 @@ export const api = createApi({
     }),
 
     // ============ Announcement Endpoints ============
-    
+
     // Get announcements by course code - Fetches all announcements for a specific course
     getAnnouncementsByCourseCode: builder.query({
       query: (courseCode) => `/courses/code/${courseCode}/announcements`,
       providesTags: ['Announcement'],
     }),
-    
+
     // Get announcements by course ID - Fetches all announcements using course ID
     getAnnouncementsByCourseId: builder.query({
       query: (courseId) => `/courses/${courseId}/announcements`,
@@ -171,7 +202,7 @@ export const api = createApi({
     }),
 
     // ============ Enrollment Endpoints ============
-    
+
     // Create course enrollment - Enrolls a student in a course
     createCourseEnrollment: builder.mutation({
       query: (enrollmentData) => ({
@@ -181,13 +212,13 @@ export const api = createApi({
       }),
       invalidatesTags: ['Course'],
     }),
-    
+
     // Get enrollments by student ID - Fetches all courses enrolled by a student
     getEnrollmentsByStudentId: builder.query({
       query: (studentId) => `/enrollments/students/${studentId}`,
       providesTags: (result, error, studentId) => [{ type: 'Course', studentId }],
     }),
-    
+
     // Get specific enrollment - Checks if student is enrolled in a specific course
     getEnrollmentByStudentNumberAndCourseCode: builder.query({
       query: ({ studentNumber, courseCode }) => `/enrollments/search?studentNumber=${encodeURIComponent(studentNumber)}&courseCode=${encodeURIComponent(courseCode)}`,
@@ -206,7 +237,7 @@ export const api = createApi({
       }),
       invalidatesTags: ['LabReservation'],
     }),
-    
+
     // Get all lab reservations - Fetches list of all lab bookings
     getLabReservations: builder.query({
       query: () => '/lab-reservations',
@@ -221,7 +252,7 @@ export const api = createApi({
       query: (studentId) => `/lab-reservations/student/${studentId}`,
       providesTags: (result, error, studentId) => [{ type: 'LabReservation', studentId }],
     }),
-    
+
     // Delete lab reservation - Cancels an existing lab booking
     deleteLabReservation: builder.mutation({
       query: (reservationId) => ({
@@ -248,13 +279,13 @@ export const api = createApi({
       }),
       invalidatesTags: ['Submission'],
     }),
-    
+
     // Get submissions by student ID - Fetches all lab reports submitted by a student
     getSubmissionsByStudentId: builder.query({
       query: (studentId) => `/submissions/student/${studentId}`,
       providesTags: (result, error, studentId) => [{ type: 'Submission', studentId }],
     }),
-    
+
     // Get submission by ID - Fetches specific lab report submission details
     getSubmissionById: builder.query({
       query: (submissionId) => `/submissions/${submissionId}`,
@@ -262,13 +293,13 @@ export const api = createApi({
     }),
 
     // ============ Report Review Endpoints ============
-    
+
     // Get review by submission ID - Fetches feedback and grades for a specific submission
     getReportReviewBySubmissionId: builder.query({
       query: (submissionId) => `/report-reviews/submission/${submissionId}`,
       providesTags: (result, error, submissionId) => [{ type: 'ReportReview', submissionId }],
     }),
-    
+
     // Get all reviews by student ID - Fetches all feedback and grades received by a student
     getReviewsByStudentId: builder.query({
       query: (studentId) => `/report-reviews/student/${studentId}`,
@@ -276,7 +307,7 @@ export const api = createApi({
     }),
 
     // ============ AI Chat Endpoints ============
-    
+
     // Analyze lab report with AI - Uploads PDF and sends question to AI agent
     analyzeLabReport: builder.mutation({
       query: ({ file, question }) => {
@@ -315,7 +346,9 @@ export const {
   useActivateAccountMutation,
   useGetCurrentUserProfileQuery,
   useCreateStudentMutation,
+  useUpdateStudentMutation,
   useGetStudentByIdQuery,
+  useGetAllCourseByStudentIdQuery,
   useGetCoursesQuery,
   useGetCourseByIdQuery,
   useGetSessionsQuery,
@@ -338,4 +371,5 @@ export const {
   useGetReportReviewBySubmissionIdQuery,
   useGetReviewsByStudentIdQuery,
   useAnalyzeLabReportMutation,
+  useUploadProfilePhotoMutation,
 } = api;

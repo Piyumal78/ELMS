@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -125,12 +126,12 @@ public class StudentServiceImpl implements StudentService {
         Map uploadResult;
 
         try {
+            Map<String, String> uploadParams = new HashMap<>();
+            uploadParams.put("public_id", UUID.randomUUID().toString());
+            uploadParams.put("folder", uploadFolder);
             uploadResult = cloudinary.uploader().upload(
                     file.getBytes(),
-                    Map.of(
-                            "public_id", UUID.randomUUID().toString(),
-                            "folder", uploadFolder
-                    )
+                    uploadParams
             );
         } catch (IOException e) {
             throw new FileUploadingException("Failed to read uploaded file");

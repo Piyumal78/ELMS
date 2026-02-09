@@ -13,17 +13,7 @@ import {
     Bot
 } from "lucide-react"
 
-import { Button } from "@/components/ui/button"
 import * as React from "react"
-import {
-    Select,
-    SelectContent,
-    SelectGroup,
-    SelectItem,
-    SelectLabel,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select"
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -31,7 +21,7 @@ import {
     DropdownMenuLabel,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "../../components/ui/dropdown-menu"
 import { CircuitBoard, LogOut, User } from "lucide-react";
 import { Link, useNavigate, useLocation } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
@@ -71,7 +61,6 @@ const StudentNavbar = () => {
         { to: "/student", label: "My Labs", icon: BookOpen },
         { to: "/grades", label: "Grades", icon: Award },
         { to: "/lab-booking", label: "Lab Booking", icon: Calendar },
-        { to: "/ai-chat", label: "AI Assistant", icon: Bot },
     ];
 
     const isActive = (path) => location.pathname === path;

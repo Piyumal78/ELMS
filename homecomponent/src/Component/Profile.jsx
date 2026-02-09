@@ -1,18 +1,25 @@
-import React from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { useGetCurrentUserProfileQuery } from '../services/api';
+import { useNavigate } from 'react-router-dom';
+import { useGetCurrentUserProfileQuery, useUploadProfilePhotoMutation, useGetAllCourseByStudentIdQuery } from '../services/api';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '../components/ui/avatar';
 import { Badge } from '../components/ui/badge';
 import { Button } from '../components/ui/button';
 import { Skeleton } from '../components/ui/skeleton';
 import { Separator } from '../components/ui/separator';
-import { Mail, Phone, MapPin, Calendar, User, GraduationCap, Hash, Shield, Edit, RefreshCw, Sparkles } from 'lucide-react';
+import { Mail, Phone, MapPin, Calendar, User, GraduationCap, Hash, Shield, Edit, RefreshCw, Sparkles, Camera, Upload, Loader2 } from 'lucide-react';
 import StudentNavbar from '@/pages/Student/StudentNavbar';
 
 const Profile = () => {
     // Get current user from Redux store
     const currentUser = useSelector((state) => state.auth.user);
+    const navigate = useNavigate();
+
+    // File input ref and upload state
+    const fileInputRef = useRef(null);
+    const [uploadError, setUploadError] = useState(null);
+    const [profileImageUrl, setProfileImageUrl] = useState(null);
 
     // Fetch user profile details from backend
     const {
@@ -27,6 +34,116 @@ const Profile = () => {
             skip: !currentUser?.username && !currentUser?.registrationNumber, // Skip if no user logged in
         }
     );
+
+    const { data: courses, isLoading: isCoursesLoading, isError: isCoursesError } = useGetAllCourseByStudentIdQuery(profile?.userId, {
+        skip: !profile?.userId
+    });
+    console.log('Courses enrolled:', courses);
+
+    // Upload profile photo mutation
+    const [uploadProfilePhoto, { isLoading: isUploading }] = useUploadProfilePhotoMutation(profile?.userId);
+    console.log('Profile component - upload mutation state:', uploadProfilePhoto);
+
+    // Debug: Log profile data
+    useEffect(() => {
+        console.log('=== Profile Component Debug Info ===');
+        console.log('Profile data loaded:', profile);
+        console.log('Profile ID:', profile?.userId);
+        console.log('Current user:', currentUser);
+        console.log('Current user ID:', currentUser?.id);
+        console.log('Student ID available:', profile?.userId || currentUser?.id || 'NONE');
+        console.log('===================================');
+    }, [profile, currentUser]);
+
+    // Initialize profile image URL when profile loads
+    useEffect(() => {
+        if (profile?.fileUrl || profile?.profilePicture) {
+            setProfileImageUrl(profile.fileUrl || profile.profilePicture);
+        }
+    }, [profile?.fileUrl, profile?.profilePicture]);
+
+    // Handle file selection and upload
+    const handleFileChange = async (event) => {
+        console.log('File input changed');
+        const file = event.target.files?.[0];
+        console.log('Selected file:', file?.name, file?.type, file?.size);
+
+        if (!file) return;
+
+        // Get student ID from profile or currentUser as fallback
+        const studentId = profile?.userId || currentUser?.id;
+
+        // Check if we have a student ID
+        // if (!profile?.userId) {
+        //     setUploadError('Unable to identify student. Please try logging in again.');
+        //     console.error('No student ID available');
+        //     return;
+        // }
+
+        // Validate file type
+        if (!file.type.startsWith('image/')) {
+            setUploadError('Please select an image file');
+            return;
+        }
+
+        // Validate file size (max 5MB)
+        if (file.size > 5 * 1024 * 1024) {
+            setUploadError('Image size should be less than 5MB');
+            return;
+        }
+
+        try {
+            setUploadError(null);
+            console.log('Uploading profile photo for student ID:', studentId);
+
+            const response = await uploadProfilePhoto({
+                studentId: studentId,
+                file
+            }).unwrap();
+
+            console.log('Upload response:', response);
+
+            // Set the new profile image URL from response
+            if (response?.fileUrl) {
+                setProfileImageUrl(response.fileUrl);
+            }
+
+            // Refetch profile to update other data
+            refetch();
+        } catch (err) {
+            setUploadError(err?.data?.message || 'Failed to upload profile photo');
+            console.error('Upload error:', err);
+        } finally {
+            // Reset file input to allow re-uploading the same file
+            if (fileInputRef.current) {
+                fileInputRef.current.value = '';
+            }
+        }
+    };
+
+    // Trigger file input click
+    const handleCameraClick = () => {
+        console.log('Camera button clicked');
+        console.log('Profile object:', profile);
+        console.log('Profile ID:', profile?.userId);
+        console.log('Current user ID:', currentUser?.id);
+        console.log('File input ref:', fileInputRef.current);
+
+        // Clear previous errors
+        setUploadError(null);
+
+        // Check if we have a student ID from either profile or currentUser
+        const studentId = profile?.userId || currentUser?.id;
+
+        // if (!studentId) {
+        //     setUploadError('Unable to identify student. Please try logging in again.');
+        //     console.warn('No student ID available. Profile:', profile, 'User:', currentUser);
+        //     return;
+        // }
+
+        console.log('Using student ID:', studentId);
+        fileInputRef.current?.click();
+    };
 
     // Loading state
     if (isLoading) {
@@ -129,15 +246,41 @@ const Profile = () => {
 
                         <CardHeader className="relative z-10">
                             <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
-                                {/* Avatar with Ring */}
-                                <div className="relative">
+                                {/* Avatar with Ring and Camera Icon */}
+                                <div className="relative group">
                                     <div className="absolute inset-0 bg-white rounded-full blur-md opacity-50" />
                                     <Avatar className="h-28 w-28 relative border-4 border-white shadow-xl ring-4 ring-white/20">
-                                        <AvatarImage src={profile?.profilePicture} alt={fullName} />
+                                        <AvatarImage src={profileImageUrl || profile?.fileUrl || profile?.profilePicture} alt={fullName} />
                                         <AvatarFallback className="text-3xl bg-slate-900 text-white font-bold">
                                             {getInitials(fullName)}
                                         </AvatarFallback>
                                     </Avatar>
+
+                                    {/* Hidden File Input */}
+                                    <input
+                                        ref={fileInputRef}
+                                        id="profile-photo-upload"
+                                        type="file"
+                                        accept="image/*,image/png,image/jpeg,image/jpg,image/gif"
+                                        onChange={handleFileChange}
+                                        style={{ display: 'none' }}
+                                        aria-label="Upload profile photo"
+                                    />
+
+                                    {/* Camera Icon Overlay with Loading State */}
+                                    <button
+                                        type="button"
+                                        className={`absolute bottom-0 right-0 bg-blue-600 hover:bg-blue-700 rounded-full p-2 shadow-lg transition-all duration-200 hover:scale-110 border-2 border-white disabled:opacity-50 disabled:cursor-not-allowed ${isUploading ? 'animate-pulse' : ''}`}
+                                        onClick={handleCameraClick}
+                                        disabled={isUploading}
+                                        title={isUploading ? "Uploading..." : "Change profile photo"}
+                                    >
+                                        {isUploading ? (
+                                            <Loader2 className="h-4 w-4 text-white animate-spin" />
+                                        ) : (
+                                            <Camera className="h-4 w-4 text-white" />
+                                        )}
+                                    </button>
                                 </div>
 
                                 {/* User Info */}
@@ -154,13 +297,36 @@ const Profile = () => {
                                     </div>
                                     {profile?.role && (
                                         <Badge variant="outline"
-                                            className="bg-green-700 backdrop-blur-sm border-white/40 text-white hover:bg-white/30 transition-colors">
+                                            className="bg-green-700 backdrop-blur-sm text-base p-2 border-white/40 text-white hover:bg-white/30 transition-colors">
                                             <Shield className="h-3 w-3 mr-1" />
                                             {profile.role}
                                         </Badge>
                                     )}
+
+                                    {/* Edit Profile Button */}
+                                    <div className="mt-3">
+                                        <Button
+                                            type="button"
+                                            onClick={() => navigate('/update-details')}
+                                            variant="outline"
+                                            className="bg-white/20 hover:bg-white/30 text-white border-white/40"
+                                        >
+                                            <Edit className="h-4 w-4 mr-2" />
+                                            Edit Profile
+                                        </Button>
+                                    </div>
                                 </div>
                             </div>
+
+                            {/* Upload Error Message */}
+                            {uploadError && (
+                                <div className="mt-4 p-3 bg-red-500/10 border border-red-500/30 rounded-lg">
+                                    <p className="text-red-200 text-sm flex items-center gap-2">
+                                        <span className="text-lg">⚠️</span>
+                                        {uploadError}
+                                    </p>
+                                </div>
+                            )}
                         </CardHeader>
                     </Card>
 
@@ -208,104 +374,27 @@ const Profile = () => {
                                         <p className="font-bold text-lg text-gray-800">{profile.email}</p>
                                     </div>
                                 )}
-
-                                {/* Phone */}
-                                {profile?.phoneNumber && (
-                                    <div className="group space-y-2 p-4 rounded-lg hover:bg-indigo-50/50 transition-colors">
-                                        <div className="flex items-center gap-2 text-indigo-600 text-sm font-semibold">
-                                            <Phone className="h-4 w-4" />
-                                            Phone Number
-                                        </div>
-                                        <p className="font-bold text-lg text-gray-800">{profile.phoneNumber}</p>
-                                    </div>
-                                )}
-
-                                {/* Address */}
-                                {profile?.address && (
-                                    <div className="group space-y-2 p-4 rounded-lg hover:bg-purple-50/50 transition-colors md:col-span-2">
-                                        <div className="flex items-center gap-2 text-purple-600 text-sm font-semibold">
-                                            <MapPin className="h-4 w-4" />
-                                            Address
-                                        </div>
-                                        <p className="font-bold text-lg text-gray-800">{profile.address}</p>
-                                    </div>
-                                )}
-
-                                {/* Date of Birth */}
-                                {profile?.dateOfBirth && (
-                                    <div className="group space-y-2 p-4 rounded-lg hover:bg-pink-50/50 transition-colors">
-                                        <div className="flex items-center gap-2 text-pink-600 text-sm font-semibold">
-                                            <Calendar className="h-4 w-4" />
-                                            Date of Birth
-                                        </div>
-                                        <p className="font-bold text-lg text-gray-800">
-                                            {new Date(profile.dateOfBirth).toLocaleDateString()}
-                                        </p>
-                                    </div>
-                                )}
                             </div>
                         </CardContent>
-                    </Card>
-
-                    {/* Academic Information Card */}
-                    {(profile?.department || profile?.batch || profile?.faculty || profile?.degree) && (
-                        <Card className="backdrop-blur-sm bg-white/80 border-none shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
-                            <CardHeader className="bg-gradient-to-r from-purple-500/10 to-pink-500/10">
-                                <CardTitle className="flex items-center gap-2 text-2xl">
-                                    <div className="p-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg">
-                                        <GraduationCap className="h-5 w-5 text-white" />
-                                    </div>
-                                    Academic Information
-                                </CardTitle>
+                        <Card className="mt-6">
+                            <CardHeader>
+                                <CardTitle>Enrolled Courses</CardTitle>
                             </CardHeader>
-                            <CardContent className="space-y-6 pt-6">
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    {profile?.faculty && (
-                                        <div className="group space-y-2 p-4 rounded-lg hover:bg-purple-50/50 transition-colors">
-                                            <p className="text-purple-600 text-sm font-semibold">Faculty</p>
-                                            <p className="font-bold text-lg text-gray-800">{profile.faculty}</p>
+                            <CardContent>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    {courses?.courseResponseDtoList?.map((course) => (
+                                        <div key={course.courseId} className="p-4 bg-slate-100 rounded-lg border border-slate-200">
+                                            <div className="font-bold text-blue-600">{course.courseCode}</div>
+                                            <div className="text-gray-700">{course.courseName}</div>
                                         </div>
-                                    )}
-
-                                    {profile?.department && (
-                                        <div className="group space-y-2 p-4 rounded-lg hover:bg-pink-50/50 transition-colors">
-                                            <p className="text-pink-600 text-sm font-semibold">Department</p>
-                                            <p className="font-bold text-lg text-gray-800">{profile.department}</p>
-                                        </div>
-                                    )}
-
-                                    {profile?.degree && (
-                                        <div className="group space-y-2 p-4 rounded-lg hover:bg-indigo-50/50 transition-colors">
-                                            <p className="text-indigo-600 text-sm font-semibold">Degree Program</p>
-                                            <p className="font-bold text-lg text-gray-800">{profile.degree}</p>
-                                        </div>
-                                    )}
-
-                                    {profile?.batch && (
-                                        <div className="group space-y-2 p-4 rounded-lg hover:bg-purple-50/50 transition-colors">
-                                            <p className="text-purple-600 text-sm font-semibold">Batch</p>
-                                            <p className="font-bold text-lg text-gray-800">{profile.batch}</p>
-                                        </div>
-                                    )}
-
-                                    {profile?.level && (
-                                        <div className="group space-y-2 p-4 rounded-lg hover:bg-pink-50/50 transition-colors">
-                                            <p className="text-pink-600 text-sm font-semibold">Current Level</p>
-                                            <p className="font-bold text-lg text-gray-800">{profile.level}</p>
-                                        </div>
-                                    )}
-
-                                    {profile?.semester && (
-                                        <div className="group space-y-2 p-4 rounded-lg hover:bg-indigo-50/50 transition-colors">
-                                            <p className="text-indigo-600 text-sm font-semibold">Current Semester</p>
-                                            <p className="font-bold text-lg text-gray-800">{profile.semester}</p>
-                                        </div>
+                                    ))}
+                                    {(!courses?.courseResponseDtoList || courses?.courseResponseDtoList.length === 0) && (
+                                        <p>No courses found.</p>
                                     )}
                                 </div>
                             </CardContent>
                         </Card>
-                    )}
-
+                    </Card>
                 </div>
             </div>
         </div>

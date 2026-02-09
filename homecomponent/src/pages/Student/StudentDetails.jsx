@@ -1,7 +1,7 @@
 import Lab from "../../assets/lab.jpg";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { Input } from "@/components/ui/input";
+import { Input } from "../../components/ui/input";
 import { Search } from "lucide-react";
 import { useGetCoursesQuery, useGetEnrollmentByStudentNumberAndCourseCodeQuery } from "../../services/api";
 import { useSelector } from "react-redux";
