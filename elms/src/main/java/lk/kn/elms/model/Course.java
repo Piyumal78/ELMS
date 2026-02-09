@@ -15,7 +15,7 @@ import java.util.List;
 @Table(name = "courses")
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString(exclude = {"courseEnrollments", "sessions", "labManuals", "lecturer"})
+@ToString(exclude = {"courseEnrollments", "sessions", "lecturer"})
 @EntityListeners(AuditingEntityListener.class)
 public class Course {
 
@@ -29,18 +29,24 @@ public class Course {
     @Column(name = "course_name",nullable = false)
     private String courseName;
 
-    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
-    private List<CourseEnrollment> courseEnrollments;
-
-    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
-    private List<Session> sessions;
+    @Column(name = "academic_year", nullable = false)
+    private String academicYear;
 
     @ManyToOne
     @JoinColumn(name = "lecturer_id", nullable = false)
     private Lecturer lecturer;
 
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
-    private List<LabManual> labManuals;
+    private List<CourseEnrollment> courseEnrollments;
+
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
+    private List<Session> sessions;
+
+//    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
+//    private List<LabManual> labManuals;
+
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
+    private List<Announcement> announcements;
 
     @CreatedDate
     @Column(name = "created_at", updatable = false, nullable = false)

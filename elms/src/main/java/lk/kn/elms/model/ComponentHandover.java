@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @Table(name = "component_handovers")
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString(exclude = {"student", "experimentComponent"})
+@ToString(exclude = {"student", "sessionComponent"})
 @EntityListeners(AuditingEntityListener.class)
 public class ComponentHandover {
 
@@ -32,8 +32,8 @@ public class ComponentHandover {
     private Student student;
 
     @ManyToOne
-    @JoinColumn(name = "experiment_component_id", nullable = false)
-    private ExperimentComponent experimentComponent;
+    @JoinColumn(name = "session_component_id", nullable = false)
+    private SessionComponent sessionComponent;
 
     @CreatedDate
     @Column(name = "created_at", updatable = false, nullable = false)

@@ -37,4 +37,5 @@ public class CourseEnrollment {
     @LastModifiedDate
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+    
 }

@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Table(name = "lab_manuals")
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString(exclude = {"course", "session"})
+@ToString(exclude = {"session"})
 @EntityListeners(AuditingEntityListener.class)
 public class LabManual {
 
@@ -22,18 +22,11 @@ public class LabManual {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "title")
-    private String title;
-
-    @Column(name = "experiment_number")
-    private Integer experimentNumber;
-
     @Column(name = "file_url")
     private String fileUrl;
 
-    @ManyToOne
-    @JoinColumn(name = "course_id", nullable = false)
-    private Course course;
+    @Column(name = "file_public_id")
+    private String filePublicId;
 
     @OneToOne
     @JoinColumn(name = "session_id", nullable = false)
