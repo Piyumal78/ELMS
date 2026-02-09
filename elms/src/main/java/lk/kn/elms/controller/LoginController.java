@@ -36,13 +36,4 @@ public class LoginController {
         return ResponseEntity.status(HttpStatus.OK).body(loginResponse);
     }
 
-    @RolesAllowed({ "STUDENT", "LECTURER", "ADMIN", "STAFF" })
-    @GetMapping("/users/profile")
-    public ResponseEntity<UserResponseDto> getCurrentUserProfile(@RequestParam String registrationNumber)
-            throws ResourceNotFoundException {
-        // Service එකෙන් දැන් ලැබෙන්නේ DTO එකක්
-        UserResponseDto userDto = loginService.getCurrentUserProfile(registrationNumber);
-        return ResponseEntity.status(HttpStatus.OK).body(userDto);
-    }
-
 }

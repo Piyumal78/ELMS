@@ -1,4 +1,4 @@
-package lk.kn.elms.service;
+package lk.kn.elms.service.impl;
 
 import lk.kn.elms.repository.InventoryRepository;
 import lk.kn.elms.repository.RequestRepository;
@@ -99,8 +99,8 @@ public class DashboardService {
         stats.put("activeSessions", activeSessions);
 
         // Pending Reports
-        long pendingReports = reportSubmissionRepository.countPendingReportsByDemonstratorId(demonstratorId);
-        stats.put("pendingReports", pendingReports);
+//        long pendingReports = reportSubmissionRepository.countPendingReportsByDemonstratorId(demonstratorId);
+//        stats.put("pendingReports", pendingReports);
 
         // My Courses (distinct courses assigned to demonstrator)
         long myCourses = sessionRepository.countDistinctCoursesByDemonstratorId(demonstratorId);

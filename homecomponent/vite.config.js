@@ -16,6 +16,9 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
       "react": path.resolve(__dirname, "./node_modules/react"),
       "react-dom": path.resolve(__dirname, "./node_modules/react-dom"),
+      "@mui/icons-material": path.resolve(__dirname, "./node_modules/@mui/icons-material"),
+      "@mui/material": path.resolve(__dirname, "./node_modules/@mui/material"),
+      "@mui/x-data-grid": path.resolve(__dirname, "./node_modules/@mui/x-data-grid"),
     },
   },
 });

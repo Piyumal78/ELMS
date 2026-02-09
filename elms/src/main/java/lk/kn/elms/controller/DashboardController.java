@@ -1,6 +1,6 @@
 package lk.kn.elms.controller;
 
-import lk.kn.elms.service.DashboardService;
+import lk.kn.elms.service.impl.DashboardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
