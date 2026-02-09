@@ -104,6 +104,17 @@ export const api = createApi({
       invalidatesTags: ['Student'],
     }),
 
+    getProfileImageUrl: builder.query({
+      query: (studentId) => ({
+        url: '/students/profile-photos/url',
+        method: 'GET',
+        params: { studentId }, // මෙතනින් තමයි ?studentId=12 කොටස හැදෙන්නේ
+      }),
+      providesTags: (result, error, studentId) => [
+        { type: 'Student', id: `profilePhoto-${studentId}` }
+      ],
+    }),
+
     // Upload profile photo - Uploads student profile picture
     uploadProfilePhoto: builder.mutation({
       query: ({ studentId, file }) => {
@@ -115,7 +126,7 @@ export const api = createApi({
           body: formData,
         };
       },
-      invalidatesTags: ['Student'],
+      invalidatesTags: (result, error, { studentId }) => [{ type: 'Student', id: `profilePhoto-${studentId}` }],
     }),
 
     // Get student by ID - Fetches student details using student ID
@@ -348,6 +359,7 @@ export const {
   useCreateStudentMutation,
   useUpdateStudentMutation,
   useGetStudentByIdQuery,
+  useGetProfileImageUrlQuery,
   useGetAllCourseByStudentIdQuery,
   useGetCoursesQuery,
   useGetCourseByIdQuery,

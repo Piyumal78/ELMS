@@ -57,10 +57,17 @@ public class StudentController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    //@RolesAllowed({"STUDENT"})
+    @RolesAllowed({"STUDENT"})
     @PatchMapping("/students/profile-photos/{studentId}")
     public ResponseEntity<String> deleteProfilePhoto(@PathVariable Long studentId) throws ResourceNotFoundException {
         studentService.deleteProfilePhoto(studentId);
         return ResponseEntity.status(HttpStatus.OK).body("Profile photo deleted successfully!");
+    }
+
+    @RolesAllowed({"STUDENT"})
+    @GetMapping("/students/profile-photos/url")
+    public ResponseEntity<String> getProfilePhotoUrl(@RequestParam Long studentId) throws ResourceNotFoundException {
+        String url = studentService.getImageUrl(studentId);
+        return ResponseEntity.status(HttpStatus.OK).body(url);
     }
 }

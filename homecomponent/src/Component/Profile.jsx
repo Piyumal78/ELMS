@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { useGetCurrentUserProfileQuery, useUploadProfilePhotoMutation, useGetAllCourseByStudentIdQuery } from '../services/api';
+import { useGetCurrentUserProfileQuery, useUploadProfilePhotoMutation, useGetAllCourseByStudentIdQuery,useGetProfileImageUrlQuery } from '../services/api';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '../components/ui/avatar';
 import { Badge } from '../components/ui/badge';
@@ -44,6 +44,14 @@ const Profile = () => {
     const [uploadProfilePhoto, { isLoading: isUploading }] = useUploadProfilePhotoMutation(profile?.userId);
     console.log('Profile component - upload mutation state:', uploadProfilePhoto);
 
+    const { data: profilePhotoUrl } = useGetProfileImageUrlQuery(profile?.userId, { skip: !profile?.userId });
+    useEffect(() => {
+        if (profilePhotoUrl) {
+            setProfileImageUrl(profilePhotoUrl);
+        }
+    }, [profilePhotoUrl]);
+
+    console.log('Profile component - profile photo URL:', profilePhotoUrl);
     // Debug: Log profile data
     useEffect(() => {
         console.log('=== Profile Component Debug Info ===');
@@ -383,9 +391,9 @@ const Profile = () => {
                             <CardContent>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     {courses?.courseResponseDtoList?.map((course) => (
-                                        <div key={course.courseId} className="p-4 bg-slate-100 rounded-lg border border-slate-200">
-                                            <div className="font-bold text-blue-600">{course.courseCode}</div>
-                                            <div className="text-gray-700">{course.courseName}</div>
+                                        <div key={course.courseId} className="p-4 bg-slate-900 rounded-lg border border-slate-200">
+                                            <div className="font-bold text-white">{course.courseCode}</div>
+                                            <div className="text-gray-400">{course.courseName}</div>
                                         </div>
                                     ))}
                                     {(!courses?.courseResponseDtoList || courses?.courseResponseDtoList.length === 0) && (

@@ -162,4 +162,10 @@ public class StudentServiceImpl implements StudentService {
         student.setFileUrl(null);
         studentRepository.save(student);
     }
+
+    @Override
+    public String getImageUrl(Long studentId) throws ResourceNotFoundException {
+        Student student = studentRepository.findById(studentId).orElseThrow(()->new ResourceNotFoundException("Student not found"));
+        return student.getFileUrl();
+    }
 }

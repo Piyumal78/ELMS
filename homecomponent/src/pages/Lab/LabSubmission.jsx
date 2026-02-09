@@ -41,7 +41,7 @@ const LabSubmission = () => {
     console.log("Current User Profile:", currentUser);
 
     // Submit report mutation
-    const [submitReport, { isLoading: isSubmitting }] = useSubmitReportMutation(currentUser?.id, state?.sessionId);
+    const [submitReport, { isLoading: isSubmitting }] = useSubmitReportMutation();
 
     const handleDragOver = (e) => {
         e.preventDefault();
@@ -102,7 +102,7 @@ const LabSubmission = () => {
         }
 
         // Check authentication - use currentUser from API which has the id
-        if (!currentUser?.id) {
+        if (!currentUser?.userId) {
             console.error('User authentication issue:', { user, token, currentUser });
             setSubmitError('User profile not loaded. Please refresh the page.');
             return;
@@ -123,7 +123,7 @@ const LabSubmission = () => {
 
             // Submit to API
             await submitReport({
-                studentId: currentUser.id,
+                studentId: currentUser.userId,
                 sessionId: state?.sessionId,
                 formData: formData
             }).unwrap();

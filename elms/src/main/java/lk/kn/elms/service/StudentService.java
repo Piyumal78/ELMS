@@ -21,4 +21,6 @@ public interface StudentService {
 
     void deleteProfilePhoto(Long studentId) throws ResourceNotFoundException;
 
+    String getImageUrl(Long studentId) throws ResourceNotFoundException;
+
 }
