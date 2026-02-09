@@ -1,6 +1,5 @@
 package lk.kn.elms.service.impl;
 
-import lk.kn.elms.dto.request.CourseEnrollmentRequestDto;
 import lk.kn.elms.dto.response.CourseEnrollmentListResponseDto;
 import lk.kn.elms.dto.response.CourseEnrollmentResponseDto;
 import lk.kn.elms.exception.ResourceAlreadyExistsException;
@@ -13,6 +12,8 @@ import lk.kn.elms.repository.CourseRepository;
 import lk.kn.elms.repository.StudentRepository;
 import lk.kn.elms.service.CourseEnrollmentService;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -27,15 +28,20 @@ public class CourseEnrollmentServiceImpl implements CourseEnrollmentService {
     private CourseRepository courseRepository;
 
     @Override
-    public CourseEnrollmentResponseDto enrollInCourse(CourseEnrollmentRequestDto courseEnrollmentRequestDto) throws ResourceNotFoundException,ResourceAlreadyExistsException {
+    public CourseEnrollmentResponseDto enrollInCourse(Long courseId) throws ResourceNotFoundException,ResourceAlreadyExistsException {
 
-        if (courseEnrollmentRepository.existsByStudentIdAndCourseId(courseEnrollmentRequestDto.getStudentId(), courseEnrollmentRequestDto.getCourseId())) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String registrationNumber = authentication.getName();
+
+        Student student = studentRepository.findByRegistrationNumber(registrationNumber)
+                .orElseThrow(() -> new ResourceNotFoundException("Student not found with : " + registrationNumber));
+
+        if (courseEnrollmentRepository.existsByStudentIdAndCourseId(student.getId(), courseId)) {
             throw new ResourceAlreadyExistsException("Already enrolled");
         }
-        Student student = studentRepository.findById(courseEnrollmentRequestDto.getStudentId())
-                .orElseThrow(() -> new ResourceNotFoundException("Student not found with ID: " + courseEnrollmentRequestDto.getStudentId()));
-        Course course = courseRepository.findById(courseEnrollmentRequestDto.getCourseId())
-                .orElseThrow(() -> new ResourceNotFoundException("Course not found with ID: " + courseEnrollmentRequestDto.getCourseId()));
+
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new ResourceNotFoundException("Course not found with ID: " + courseId));
 
         CourseEnrollment courseEnrollment = new CourseEnrollment();
         courseEnrollment.setStudent(student);

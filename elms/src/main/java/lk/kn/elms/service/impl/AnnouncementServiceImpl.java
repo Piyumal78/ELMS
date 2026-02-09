@@ -11,6 +11,8 @@ import lk.kn.elms.repository.CourseRepository;
 import lk.kn.elms.repository.UserRepository;
 import lk.kn.elms.service.AnnouncementService;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -24,13 +26,14 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     private final UserRepository userRepository;
     private final CourseRepository courseRepository;
 
-    //**************************************************
-    //Should get the user by security context
     @Override
     public AnnouncementResponseDto createAnnouncement(AnnouncementRequestDto announcementRequestDto) throws ResourceNotFoundException {
 
-        User announcer = userRepository.findById(announcementRequestDto.getUserId())
-                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + announcementRequestDto.getUserId()));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String registrationNumber = authentication.getName();
+
+        User announcer = userRepository.findByRegistrationNumber(registrationNumber)
+                .orElseThrow(() -> new ResourceNotFoundException("Authenticated user not found: " + registrationNumber));
 
         Course course = courseRepository.findById(announcementRequestDto.getCourseId())
                 .orElseThrow(() -> new ResourceNotFoundException("Course not found with id: " + announcementRequestDto.getCourseId()));
