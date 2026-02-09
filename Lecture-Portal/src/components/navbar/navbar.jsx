@@ -42,7 +42,7 @@ const Navbar = () => {
               E-Lab Portal
             </Link>
             <span className="ml-3 px-2 py-0.5 bg-slate-700 text-slate-300 text-xs font-medium rounded">
-              Lecturer
+              LECTURER
             </span>
           </div>
 
