@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Layout from '../../components/Layout';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import './DemonstratorProfile.css';
 
 const DemonstratorProfile = () => {
     const [user, setUser] = useState(null);
@@ -30,7 +31,7 @@ const DemonstratorProfile = () => {
     if (!user) {
         return (
             <Layout menuItems={demonstratorMenu} title="🎓 Demonstrator">
-                <div className="p-6">Loading Profile...</div>
+                <div className="loading-message">Loading Profile...</div>
             </Layout>
         );
     }
@@ -38,41 +39,38 @@ const DemonstratorProfile = () => {
     return (
         <Layout menuItems={demonstratorMenu}>
             <ToastContainer />
-            <div className="p-6">
-                <h2 className="text-2xl font-bold mb-6 text-gray-800">My Profile</h2>
+            <div className="profile-container">
+                <h2 className="profile-title">My Profile</h2>
 
-                <div className="bg-white p-8 rounded-lg shadow-md max-w-2xl">
-                    <div className="flex items-center space-x-6 mb-8">
-                        <div className="w-24 h-24 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 text-4xl font-bold">
+                <div className="profile-card">
+                    <div className="profile-header">
+                        <div className="profile-avatar">
                             {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
                         </div>
-                        <div>
-                            <h3 className="text-2xl font-semibold text-gray-800">{user.name}</h3>
-                            <p className="text-gray-500">{user.role || 'Demonstrator'}</p>
-                            <p className="text-gray-500 text-sm">{user.email}</p>
+                        <div className="profile-info">
+                            <h3>{user.name}</h3>
+                            <p className="role">{user.role || 'Demonstrator'}</p>
+                            <p className="email">{user.email}</p>
                         </div>
                     </div>
 
-                    <div className="border-t border-gray-200 pt-6">
-                        <h4 className="text-lg font-medium text-gray-700 mb-4">Account Details</h4>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <label className="block text-sm font-medium text-gray-500">User ID</label>
-                                <p className="mt-1 text-gray-900">{user.id}</p>
+                    <div className="profile-details">
+                        <h4 className="details-title">Account Details</h4>
+                        <div className="details-grid">
+                            <div className="detail-item">
+                                <label>User ID</label>
+                                <p>{user.id}</p>
                             </div>
-                            <div>
-                                <label className="block text-sm font-medium text-gray-500">Username</label>
-                                <p className="mt-1 text-gray-900">{user.username || user.email}</p>
+                            <div className="detail-item">
+                                <label>Username</label>
+                                <p>{user.username || user.email}</p>
                             </div>
                             {/* Add more fields as needed */}
                         </div>
                     </div>
 
-                    <div className="mt-8 flex justify-end">
-                        <button
-                            onClick={handleLogout}
-                            className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-6 rounded transition"
-                        >
+                    <div className="profile-actions">
+                        <button onClick={handleLogout} className="logout-btn">
                             Logout
                         </button>
                     </div>
