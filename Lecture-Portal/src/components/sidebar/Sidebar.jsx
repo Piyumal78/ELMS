@@ -54,13 +54,13 @@ const Sidebar = () => {
   ];
 
   return (
-    <div className="h-full bg-[#0f172a] flex flex-col">
+    <div className="h-full bg-[#0f172a] flex flex-col border-r border-slate-800">
     
       {/* Header */}
-      <div className="px-6 py-8 border-b border-slate-700">
-        <p className="text-xs font-medium text-slate-400 uppercase tracking-widest mb-1">Welcome</p>
+      <div className="px-6 py-8 border-b border-slate-800">
+        <p className="text-xs font-medium text-slate-500 uppercase tracking-widest mb-1">Welcome</p>
         <h3 className="text-base font-semibold text-white">{getUserName()}</h3>
-        <p className="text-sm text-slate-300">Lecturer</p>
+        <p className="text-sm text-slate-400">Lecturer</p>
       </div>
 
       {/* Navigation Menu */}
@@ -75,13 +75,13 @@ const Sidebar = () => {
               <Link
                 key={item.path}
                 to={item.path}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-150 ${
+                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-150 relative ${
                   isActive(item.path)
-                    ? 'bg-slate-700 text-white'
-                    : 'text-slate-300 hover:bg-slate-800 hover:text-white'
+                    ? 'bg-slate-800 text-white border-l-2 border-indigo-500'
+                    : 'text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 border-l-2 border-transparent'
                 }`}
               >
-                <span className={isActive(item.path) ? 'text-white' : 'text-slate-400'}>
+                <span className={isActive(item.path) ? 'text-indigo-400' : 'text-slate-500'}>
                   {item.icon}
                 </span>
                 <span className="text-sm font-medium">{item.label}</span>
@@ -100,17 +100,17 @@ const Sidebar = () => {
               <Link
                 key={item.path}
                 to={item.path}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-150 ${
+                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-150 relative ${
                   isActive(item.path)
-                    ? 'bg-slate-700 text-white'
-                    : 'text-slate-300 hover:bg-slate-800 hover:text-white'
+                    ? 'bg-slate-800 text-white border-l-2 border-indigo-500'
+                    : 'text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 border-l-2 border-transparent'
                 }`}
               >
-                <span className={isActive(item.path) ? 'text-white' : 'text-slate-400'}>
+                <span className={isActive(item.path) ? 'text-indigo-400' : 'text-slate-500'}>
                   {item.icon}
                 </span>
                 <span className="text-sm font-medium">{item.label}</span>
-                <span className="ml-auto text-[10px] text-slate-400 bg-slate-800 px-1.5 py-0.5 rounded">Mock</span>
+                <span className="ml-auto text-[10px] text-slate-500 bg-slate-800/50 px-1.5 py-0.5 rounded">Mock</span>
               </Link>
             ))}
           </div>
@@ -126,13 +126,13 @@ const Sidebar = () => {
               <Link
                 key={item.path}
                 to={item.path}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-150 ${
+                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-150 relative ${
                   isActive(item.path)
-                    ? 'bg-slate-700 text-white'
-                    : 'text-slate-300 hover:bg-slate-800 hover:text-white'
+                    ? 'bg-slate-800 text-white border-l-2 border-indigo-500'
+                    : 'text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 border-l-2 border-transparent'
                 }`}
               >
-                <span className={isActive(item.path) ? 'text-white' : 'text-slate-400'}>
+                <span className={isActive(item.path) ? 'text-indigo-400' : 'text-slate-500'}>
                   {item.icon}
                 </span>
                 <span className="text-sm font-medium">{item.label}</span>
@@ -151,13 +151,13 @@ const Sidebar = () => {
               <Link
                 key={item.path}
                 to={item.path}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-150 ${
+                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-150 relative ${
                   isActive(item.path)
-                    ? 'bg-slate-700 text-white'
-                    : 'text-slate-300 hover:bg-slate-800 hover:text-white'
+                    ? 'bg-slate-800 text-white border-l-2 border-indigo-500'
+                    : 'text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 border-l-2 border-transparent'
                 }`}
               >
-                <span className={isActive(item.path) ? 'text-white' : 'text-slate-400'}>
+                <span className={isActive(item.path) ? 'text-indigo-400' : 'text-slate-500'}>
                   {item.icon}
                 </span>
                 <span className="text-sm font-medium">{item.label}</span>
@@ -168,12 +168,12 @@ const Sidebar = () => {
       </nav>
 
       {/* Logout Button */}
-      <div className="px-4 py-4 border-t border-slate-700">
+      <div className="px-4 py-4 border-t border-slate-800">
         <button 
           onClick={handleLogout}
-          className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition-all duration-150 w-full"
+          className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 transition-all duration-150 w-full"
         >
-          <LogoutIcon sx={{ fontSize: 20 }} className="text-slate-400" />
+          <LogoutIcon sx={{ fontSize: 20 }} className="text-slate-500" />
           <span className="text-sm font-medium">Logout</span>
         </button>
       </div>
