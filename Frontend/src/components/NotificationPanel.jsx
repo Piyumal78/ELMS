@@ -70,34 +70,51 @@ const NotificationPanel = ({ role = 'LAB_ASSISTANT' }) => {
             {notifications.length === 0 ? (
               <p className="no-notif">No new notifications</p>
             ) : (
-              notifications.map(notif => (
-                <div key={notif.id} className="notification-item">
-                  <div className="notif-content-wrapper">
-                    <div className="notif-title">{notif.title}</div>
-                    <div className="notif-message">{notif.message}</div>
-                    <div className="notif-time">
-                      {new Date(notif.createdAt).toLocaleString()}
+              notifications.map(notif => {
+                const getRelativeTime = (timestamp) => {
+                  const now = new Date()
+                  const notifTime = new Date(timestamp)
+                  const diffMs = now - notifTime
+                  const diffMins = Math.floor(diffMs / 60000)
+
+                  if (diffMins < 1) return 'Just now'
+                  if (diffMins < 60) return `${diffMins} minute${diffMins > 1 ? 's' : ''} ago`
+
+                  const diffHours = Math.floor(diffMins / 60)
+                  if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`
+
+                  const diffDays = Math.floor(diffHours / 24)
+                  return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`
+                }
+
+                return (
+                  <div key={notif.id} className="notification-item">
+                    <div className="notif-content-wrapper">
+                      <div className="notif-message">{notif.message}</div>
+                      <div className="notif-time">
+                        {getRelativeTime(notif.timestamp)} • {new Date(notif.timestamp).toLocaleString()}
+                      </div>
+                    </div>
+                    <div className="notif-actions">
+                      <button
+                        className="mark-read-btn"
+                        onClick={() => markAsRead(notif.id)}
+                        title="Mark as Read"
+                      >
+                        ✓
+                      </button>
+                      <button
+                        className="delete-btn"
+                        onClick={() => deleteNotification(notif.id)}
+                        title="Delete"
+                        style={{ color: '#ef4444', background: 'none', border: 'none', cursor: 'pointer', fontSize: '1.2rem' }}
+                      >
+                        <IoIosTrash />
+                      </button>
                     </div>
                   </div>
-                  <div className="notif-actions">
-                    <button
-                      className="mark-read-btn"
-                      onClick={() => markAsRead(notif.id)}
-                      title="Mark as Read"
-                    >
-                      ✓
-                    </button>
-                    <button
-                      className="delete-btn"
-                      onClick={() => deleteNotification(notif.id)}
-                      title="Delete"
-                      style={{ color: '#ef4444', background: 'none', border: 'none', cursor: 'pointer', fontSize: '1.2rem' }}
-                    >
-                      <IoIosTrash />
-                    </button>
-                  </div>
-                </div>
-              ))
+                )
+              })
             )}
           </div>
         </div>

@@ -10,6 +10,7 @@ import lk.kn.elms.repository.LabManualRepository;
 import lk.kn.elms.repository.SessionRepository;
 import lk.kn.elms.service.CloudinaryService;
 import lk.kn.elms.service.LabManualService;
+import lk.kn.elms.service.NotificationService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,6 +24,7 @@ public class LabManualServiceImpl implements LabManualService {
     private LabManualRepository labManualRepository;
     private SessionRepository sessionRepository;
     private CloudinaryService cloudinaryService;
+    private NotificationService notificationService;
 
     @Override
     public LabManualCreateResponseDto uploadLabManual(Long sessionId, MultipartFile file)
@@ -58,6 +60,53 @@ public class LabManualServiceImpl implements LabManualService {
         labManual.setSession(session);
 
         labManualRepository.save(labManual);
+
+        // Create detailed notification for lab assistants
+        StringBuilder notificationMessage = new StringBuilder();
+        notificationMessage.append("📚 New Lab Manual Uploaded\n\n");
+
+        // Session info
+        if (session.getTitle() != null) {
+            notificationMessage.append("Session: ");
+            if (session.getExperimentNumber() != null) {
+                notificationMessage.append("Exp #").append(session.getExperimentNumber()).append(" - ");
+            }
+            notificationMessage.append(session.getTitle()).append("\n");
+        }
+
+        // Course info
+        if (session.getCourse() != null) {
+            notificationMessage.append("Course: ");
+            if (session.getCourse().getCourseCode() != null) {
+                notificationMessage.append(session.getCourse().getCourseCode()).append(" - ");
+            }
+            if (session.getCourse().getCourseName() != null) {
+                notificationMessage.append(session.getCourse().getCourseName());
+            }
+            notificationMessage.append("\n");
+        }
+
+        // Date and time
+        if (session.getDate() != null) {
+            notificationMessage.append("Date: ").append(session.getDate());
+            if (session.getStartTime() != null && session.getEndTime() != null) {
+                notificationMessage.append(" at ").append(session.getStartTime())
+                        .append("-").append(session.getEndTime());
+            }
+            notificationMessage.append("\n");
+        }
+
+        // Uploaded by
+        if (session.getCreatedUser() != null) {
+            notificationMessage.append("Uploaded by: ");
+            if (session.getCreatedUser().getName() != null) {
+                notificationMessage.append(session.getCreatedUser().getName());
+            } else if (session.getCreatedUser().getRegistrationNumber() != null) {
+                notificationMessage.append(session.getCreatedUser().getRegistrationNumber());
+            }
+        }
+
+        notificationService.createNotification(notificationMessage.toString(), "LAB_ASSISTANT");
 
         LabManualCreateResponseDto labManualCreateResponseDto = new LabManualCreateResponseDto();
         labManualCreateResponseDto.setLabManualId(labManual.getId());
