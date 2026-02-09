@@ -22,5 +22,6 @@ public class LabReservationResponseDto {
     private Long studentId;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private String registrationNumber;
 
 }

@@ -5,8 +5,8 @@ import NotificationPanel from '../components/NotificationPanel'
 import './LabAssistantDashboard.css'
 import { IoIosCube, IoIosWarning, IoIosClipboard, IoIosConstruct } from "react-icons/io";
 
+
 const LabAssistantDashboard = () => {
-  console.log('LabAssistantDashboard rendering...');
   const [stats, setStats] = useState({
     totalItems: 0,
     lowStockCount: 0,

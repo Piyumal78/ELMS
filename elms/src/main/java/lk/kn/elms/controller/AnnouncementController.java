@@ -40,6 +40,15 @@ public class AnnouncementController {
     }
 
     @RolesAllowed({"LECTURER","DEMONSTRATOR","STUDENT"})
+    @GetMapping(value = "/courses/code/{courseCode}/announcements")
+    public ResponseEntity<List<AnnouncementResponseDto>> getAllAnnouncementsByCourseCodeAlt(
+            @PathVariable String courseCode) throws ResourceNotFoundException{
+
+        List<AnnouncementResponseDto> announcementResponseDtoList = announcementService.getAllAnnouncementsByCourseCode(courseCode);
+        return ResponseEntity.status(HttpStatus.OK).body(announcementResponseDtoList);
+    }
+
+    @RolesAllowed({"LECTURER","DEMONSTRATOR","STUDENT"})
     @GetMapping(value = "/announcements/{id}")
     public ResponseEntity<AnnouncementResponseDto> getAnnouncementsById(@PathVariable Long id)
             throws ResourceNotFoundException{
@@ -64,5 +73,4 @@ public class AnnouncementController {
         announcementService.deleteAnnouncement(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Announcement deleted successfully!");
     }
-
 }
