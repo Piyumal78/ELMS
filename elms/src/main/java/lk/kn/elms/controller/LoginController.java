@@ -9,6 +9,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import lk.kn.elms.exception.ResourceNotFoundException;
+import lk.kn.elms.exception.ResourceAlreadyExistsException;
 
 import java.util.Map;
 
@@ -28,9 +30,9 @@ public class LoginController {
     }
 
     @PostMapping(value = "/login")
-    public ResponseEntity<Map<String,String>> login(@Valid @RequestBody AuthRequestDto authRequestDto){
-         Map<String,String> loginResponse = loginService.login(authRequestDto);
-         return ResponseEntity.status(HttpStatus.OK).body(loginResponse);
+    public ResponseEntity<Map<String, String>> login(@Valid @RequestBody AuthRequestDto authRequestDto) {
+        Map<String, String> loginResponse = loginService.login(authRequestDto);
+        return ResponseEntity.status(HttpStatus.OK).body(loginResponse);
     }
 
 }
