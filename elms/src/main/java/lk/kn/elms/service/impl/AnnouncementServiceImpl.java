@@ -93,6 +93,18 @@ public class AnnouncementServiceImpl implements AnnouncementService {
 
     }
 
+    @Override
+    public List<AnnouncementResponseDto> getAllAnnouncementsByCourseCode(String courseCode) throws ResourceNotFoundException {
+
+        List<Announcement> announcements = announcementRepository.findByCourseCourseCode(courseCode);
+
+        if(announcements.isEmpty()){
+            throw new ResourceNotFoundException("There are no announcements for this course!");
+        }
+
+        return mapEntityListToResponseDtoList(announcements);
+    }
+
     private AnnouncementResponseDto mapEntityToResponseDto(Announcement announcement) {
         AnnouncementResponseDto responseDto = new AnnouncementResponseDto();
         responseDto.setAnnouncementId(announcement.getId());
@@ -122,5 +134,6 @@ public class AnnouncementServiceImpl implements AnnouncementService {
         }
         return announcementResponseDtoList;
     }
+
 
 }

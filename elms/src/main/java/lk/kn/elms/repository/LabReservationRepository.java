@@ -25,5 +25,7 @@ public interface LabReservationRepository extends JpaRepository<LabReservation, 
 
     List<LabReservation> findAllByReservationDate(LocalDate reservationDate);
 
+    List<LabReservation> findAllByStudentId(Long studentId);
+
 
 }

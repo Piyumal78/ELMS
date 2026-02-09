@@ -17,4 +17,6 @@ public interface AnnouncementService {
     AnnouncementResponseDto updateAnnouncement(Long id, AnnouncementRequestDto announcementRequestDto) throws ResourceNotFoundException;
 
     void deleteAnnouncement (Long id) throws ResourceNotFoundException;
+
+    List<AnnouncementResponseDto> getAllAnnouncementsByCourseCode(String courseCode) throws ResourceNotFoundException;
 }

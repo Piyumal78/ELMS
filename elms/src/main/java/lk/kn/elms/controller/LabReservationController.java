@@ -97,7 +97,14 @@ public class LabReservationController {
         return ResponseEntity.status(HttpStatus.OK).body(responseDtoList);
     }
 
-    @RolesAllowed({"ADMIN","STAFF"})
+    @RolesAllowed({"STUDENT"})
+    @GetMapping("/lab-reservations/student/{studentId}")
+    public ResponseEntity<List<LabReservationResponseDto>> getLabReservationsByStudentId(@PathVariable Long studentId) throws ResourceNotFoundException {
+        List<LabReservationResponseDto> responseDtoList = labReservationService.getLabReservationsByStudentId(studentId);
+        return ResponseEntity.status(HttpStatus.OK).body(responseDtoList);
+    }
+
+    @RolesAllowed({"ADMIN","STAFF","STUDENT"})
     @DeleteMapping("/lab-reservations/{reservationId}/delete")
     public ResponseEntity<String> deleteLabReservation(@PathVariable Long reservationId) throws ResourceNotFoundException {
         labReservationService.deleteLabReservation(reservationId);

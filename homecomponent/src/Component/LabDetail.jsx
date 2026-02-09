@@ -10,10 +10,11 @@ import { Button } from "@/components/ui/button";
 import { useNavigate, useParams } from "react-router-dom";
 import { useGetCourseByCourseCodeQuery, useGetSessionByCourseCodeQuery } from "@/services/api";
 import { useMemo } from "react";
+import StudentNavbar from "@/pages/Student/StudentNavbar";
 
 const LabDetails = () => {
     const navigate = useNavigate();
-    const { courseCode } = useParams();
+    const { courseCode , sessionId } = useParams();
 
     // Fetch course details by courseCode
     const { data: course, isLoading: courseLoading, error: courseError } = useGetCourseByCourseCodeQuery(courseCode);
@@ -42,7 +43,7 @@ const LabDetails = () => {
     if (courseLoading || sessionsLoading) {
         return (
             <div className="flex flex-col bg-slate-200 h-screen">
-                <Navbar />
+                <StudentNavbar/>
                 <div className="flex items-center justify-center h-full">
                     <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
                     <span className="ml-2 text-lg">Loading course details...</span>
@@ -55,7 +56,7 @@ const LabDetails = () => {
     if (courseError || sessionsError) {
         return (
             <div className="flex flex-col bg-slate-200 h-screen">
-                <Navbar />
+                <StudentNavbar/>
                 <div className="flex items-center justify-center h-full">
                     <div className="text-center">
                         <p className="text-red-600 text-xl">Error loading course details</p>
@@ -70,7 +71,7 @@ const LabDetails = () => {
 
     return (
         <div className="flex flex-col bg-slate-200 min-h-screen">
-            <Navbar />
+            <StudentNavbar />
             <div className="px-20 py-4">
                 <h1 className="text-4xl font-bold">
                     {course?.courseCode} - {course?.courseName}

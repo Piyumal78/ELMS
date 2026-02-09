@@ -1,5 +1,6 @@
 package lk.kn.elms.controller;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import lk.kn.elms.dto.request.AuthRequestDto;
 import lk.kn.elms.exception.ResourceAlreadyExistsException;
@@ -9,6 +10,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import lk.kn.elms.model.User;
+import lk.kn.elms.dto.response.UserResponseDto;
 
 import java.util.Map;
 
@@ -28,9 +31,18 @@ public class LoginController {
     }
 
     @PostMapping(value = "/login")
-    public ResponseEntity<Map<String,String>> login(@Valid @RequestBody AuthRequestDto authRequestDto){
-         Map<String,String> loginResponse = loginService.login(authRequestDto);
-         return ResponseEntity.status(HttpStatus.OK).body(loginResponse);
+    public ResponseEntity<Map<String, String>> login(@Valid @RequestBody AuthRequestDto authRequestDto) {
+        Map<String, String> loginResponse = loginService.login(authRequestDto);
+        return ResponseEntity.status(HttpStatus.OK).body(loginResponse);
+    }
+
+    @RolesAllowed({ "STUDENT", "LECTURER", "ADMIN", "STAFF" })
+    @GetMapping("/users/profile")
+    public ResponseEntity<UserResponseDto> getCurrentUserProfile(@RequestParam String registrationNumber)
+            throws ResourceNotFoundException {
+        // Service එකෙන් දැන් ලැබෙන්නේ DTO එකක්
+        UserResponseDto userDto = loginService.getCurrentUserProfile(registrationNumber);
+        return ResponseEntity.status(HttpStatus.OK).body(userDto);
     }
 
 }

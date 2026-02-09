@@ -29,8 +29,9 @@ public class ReportSubmissionServiceImpl implements ReportSubmissionService {
     private SessionRepository sessionRepository;
     private Cloudinary cloudinary;
 
-    // ********************************
-    // Need to set student from security context
+
+    //************
+    //Need to set student from security context
     @Override
     public ReportSubmissionCreateResponseDto createSubmission(Long studentId, Long sessionId, MultipartFile file)
             throws ResourceAlreadyExistsException, ResourceNotFoundException, FileUploadingException {
@@ -57,7 +58,9 @@ public class ReportSubmissionServiceImpl implements ReportSubmissionService {
                     file.getBytes(),
                     Map.of(
                             "public_id", UUID.randomUUID().toString(),
-                            "folder", uploadFolder));
+                            "folder", uploadFolder
+                    )
+            );
         } catch (IOException e) {
             throw new FileUploadingException("Failed to read uploaded file");
         }
@@ -82,28 +85,5 @@ public class ReportSubmissionServiceImpl implements ReportSubmissionService {
         reportSubmissionCreateResponseDto.setSubmittedAt(reportSubmission.getSubmittedAt());
 
         return reportSubmissionCreateResponseDto;
-    }
-
-    @Override
-    public java.util.List<lk.kn.elms.dto.response.ReportSubmissionResponseDto> getSubmissionsBySessionId(
-            Long sessionId) {
-        java.util.List<ReportSubmission> submissions = reportSubmissionRepository.findBySessionId(sessionId);
-
-        return submissions.stream().map(submission -> {
-            lk.kn.elms.dto.response.ReportSubmissionResponseDto dto = new lk.kn.elms.dto.response.ReportSubmissionResponseDto();
-            dto.setId(submission.getId());
-            dto.setStudentId(submission.getStudent().getId());
-            dto.setStudentName(submission.getStudent().getName());
-            dto.setFileUrl(submission.getFileUrl());
-            dto.setStatus(submission.getStatus());
-            dto.setSubmittedAt(submission.getSubmittedAt());
-
-            if (submission.getLabReportReview() != null) {
-                dto.setGrade(submission.getLabReportReview().getGrade());
-                dto.setComments(submission.getLabReportReview().getComments());
-            }
-
-            return dto;
-        }).collect(java.util.stream.Collectors.toList());
     }
 }

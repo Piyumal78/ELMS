@@ -6,4 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface ReportSubmissionRepository extends JpaRepository<ReportSubmission, Long> {
 
     boolean existsByStudentIdAndSessionId(Long studentId, Long sessionId);
+
+
 }

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class InventoryService {
@@ -18,7 +19,7 @@ public class InventoryService {
     public List<Inventory> getAllItems() {
         return inventoryRepository.findAll().stream()
                 .filter(item -> !"Deleted".equals(item.getStatus()))
-                .toList();
+                .collect(Collectors.toList());
     }
 
     public Optional<Inventory> getItemById(Long id) {
@@ -57,6 +58,6 @@ public class InventoryService {
         return allItems.stream()
                 .filter(item -> !"Deleted".equals(item.getStatus()))
                 .filter(item -> item.getQuantity() < item.getMinimumStock())
-                .toList();
+                .collect(Collectors.toList());
     }
 }

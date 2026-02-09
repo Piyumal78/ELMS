@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -44,7 +45,7 @@ public class ProcurementController {
             return ResponseEntity.ok(procurementService.approveRequest(id));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest()
-                    .body(java.util.Map.of("message", e.getMessage()));
+                    .body(Collections.singletonMap("message", e.getMessage()));
         }
     }
 
@@ -54,7 +55,7 @@ public class ProcurementController {
             return ResponseEntity.ok(procurementService.rejectRequest(id));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest()
-                    .body(java.util.Map.of("message", e.getMessage()));
+                    .body(Collections.singletonMap("message", e.getMessage()));
         }
     }
 
@@ -64,7 +65,7 @@ public class ProcurementController {
             return ResponseEntity.ok(procurementService.receiveRequest(id));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest()
-                    .body(java.util.Map.of("message", e.getMessage()));
+                    .body(Collections.singletonMap("message", e.getMessage()));
         }
     }
 }

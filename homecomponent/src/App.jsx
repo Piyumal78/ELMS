@@ -25,6 +25,11 @@ import CreateRequestPage from '../../Frontend/src/pages/CreateRequestPage.jsx'
 import LoginExample from './components/LoginExample.jsx'
 import { StudentRoute, StaffRoute, ProtectedRoute } from './components/ProtectedRoute'
 import CourseEnrollPage from './pages/Student/CourseEnroll'
+import Grades from './pages/Student/Grades'
+import LabBooking from './pages/Lab/Labbooking'
+import Announcements from './Component/Announcements'
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 // Import Demonstrator Pages
 import DemonstratorDashboard from '../../Frontend/src/pages/Demonstrator/DemonstratorDashboard.jsx'
@@ -37,6 +42,7 @@ function App() {
 
   return (
     <BrowserRouter>
+      <ToastContainer position="top-right" autoClose={5000} />
       <Routes>
         {/* Public and Student Routes using RootLayout */}
         <Route element={<RootLayout />}>
@@ -74,7 +80,25 @@ function App() {
             </StudentRoute>
           } />
 
+          <Route path='/grades' element={
+            <StudentRoute>
+              <Grades />
+            </StudentRoute>
+          } />
 
+          <Route path='/lab-booking' element={
+            <StudentRoute>
+              <LabBooking />
+            </StudentRoute>
+          } />
+
+          <Route path='/announcements' element={
+            <StudentRoute>
+              <Announcements />
+            </StudentRoute>
+          } />
+
+          <Route path='/login' element={<LoginExample />} />
         </Route>
 
         {/* Lab Assistant Routes using Frontend Layout */}
