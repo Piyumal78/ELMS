@@ -2,7 +2,6 @@ import React from 'react'
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import ScienceIcon from '@mui/icons-material/Science';
 import PeopleIcon from '@mui/icons-material/People';
-import EventNoteIcon from '@mui/icons-material/EventNote';
 import FolderIcon from '@mui/icons-material/Folder';
 import PersonIcon from '@mui/icons-material/Person';
 import LogoutIcon from '@mui/icons-material/Logout';
@@ -42,15 +41,14 @@ const Sidebar = () => {
 
   // Menu items configuration
   const menuItems = [
-    { path: '/lecturer', icon: <DashboardIcon sx={{ fontSize: 20 }} />, label: 'Dashboard', section: 'MAIN' },
-    { path: '/lecturer/courses', icon: <SchoolIcon sx={{ fontSize: 20 }} />, label: 'Courses', section: 'MAIN' },
-    { path: '/lecturer/labsessions', icon: <ScienceIcon sx={{ fontSize: 20 }} />, label: 'Lab Sessions', section: 'MAIN' },
-    { path: '/lecturer/reservations', icon: <CalendarMonthIcon sx={{ fontSize: 20 }} />, label: 'Reservations', section: 'MAIN' },
-    { path: '/lecturer/announcements', icon: <CampaignIcon sx={{ fontSize: 20 }} />, label: 'Announcements', section: 'MAIN' },
-    { path: '/lecturer/students', icon: <PeopleIcon sx={{ fontSize: 20 }} />, label: 'Students', section: 'OTHER' },
-    { path: '/lecturer/attendance', icon: <EventNoteIcon sx={{ fontSize: 20 }} />, label: 'Attendance', section: 'OTHER' },
-    { path: '/lecturer/resources', icon: <FolderIcon sx={{ fontSize: 20 }} />, label: 'Resources', section: 'RESOURCES' },
-    { path: '/lecturer/profile', icon: <PersonIcon sx={{ fontSize: 20 }} />, label: 'Settings', section: 'USER' },
+    { path: '/', icon: <DashboardIcon sx={{ fontSize: 20 }} />, label: 'Dashboard', section: 'MAIN' },
+    { path: '/courses', icon: <SchoolIcon sx={{ fontSize: 20 }} />, label: 'Courses', section: 'MAIN' },
+    { path: '/labsessions', icon: <ScienceIcon sx={{ fontSize: 20 }} />, label: 'Lab Sessions', section: 'MAIN' },
+    { path: '/reservations', icon: <CalendarMonthIcon sx={{ fontSize: 20 }} />, label: 'Reservations', section: 'MAIN' },
+    { path: '/announcements', icon: <CampaignIcon sx={{ fontSize: 20 }} />, label: 'Announcements', section: 'MAIN' },
+    { path: '/students', icon: <PeopleIcon sx={{ fontSize: 20 }} />, label: 'Students', section: 'OTHER' },
+    { path: '/resources', icon: <FolderIcon sx={{ fontSize: 20 }} />, label: 'Resources', section: 'RESOURCES' },
+    { path: '/profile', icon: <PersonIcon sx={{ fontSize: 20 }} />, label: 'Settings', section: 'USER' },
   ];
 
   return (
