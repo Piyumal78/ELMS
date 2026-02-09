@@ -61,7 +61,7 @@ const Sidebar = () => {
       <div className="px-6 py-8 border-b border-slate-800">
         <p className="text-xs font-medium text-slate-500 uppercase tracking-widest mb-1">Welcome</p>
         <h3 className="text-base font-semibold text-white">{getUserName()}</h3>
-        <p className="text-sm text-slate-400">Lecturer</p>
+        <p className="text-sm text-slate-400"></p>
       </div>
 
       {/* Navigation Menu */}
