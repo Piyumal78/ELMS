@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { CircuitBoard } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
 
 const Navbar = () => {
@@ -38,8 +39,13 @@ const Navbar = () => {
         
           {/* Left Side - Title */}
           <div className="flex items-center">
-            <Link to="/" className="text-xl font-semibold text-white tracking-tight">
-              E-Lab Portal
+            <Link to="/" className="flex items-center gap-2 group">
+              <div className="p-1.5 bg-gradient-to-r from-teal-400 to-blue-500 rounded-lg transition-transform group-hover:scale-110">
+                <CircuitBoard size={28} className="text-white" />
+              </div>
+              <span className="bg-gradient-to-r from-teal-400 to-blue-500 bg-clip-text text-transparent text-2xl font-bold">
+                ELMS
+              </span>
             </Link>
             <span className="ml-3 px-2 py-0.5 bg-slate-700 text-slate-300 text-xs font-medium rounded">
               LECTURER
