@@ -28,6 +28,7 @@ import CourseEnrollPage from './pages/Student/CourseEnroll'
 import Grades from './pages/Student/Grades'
 import LabBooking from './pages/Lab/Labbooking'
 import Announcements from './Component/Announcements'
+import Profile from './Component/Profile.jsx'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
@@ -95,6 +96,12 @@ function App() {
           <Route path='/announcements' element={
             <StudentRoute>
               <Announcements />
+            </StudentRoute>
+          } />
+
+          <Route path='/profile' element={
+            <StudentRoute>
+              <Profile />
             </StudentRoute>
           } />
 
