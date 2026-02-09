@@ -45,7 +45,9 @@ const SignIn = () => {
                 navigate("/student");
             } else if (userRole.includes('DEMONSTRATOR')) {
                 navigate("/demonstrator/dashboard");
-            } else if (userRole.includes('LECTURER') || userRole.includes('STAFF') || userRole.includes('ADMIN') || userRole.includes('LAB_ASSISTANT')) {
+            } else if (userRole.includes('LECTURER')) {
+                navigate("/lecturer");
+            } else if (userRole.includes('STAFF') || userRole.includes('ADMIN') || userRole.includes('LAB_ASSISTANT')) {
                 navigate("/dashboard");
             } else {
                 navigate("/");
