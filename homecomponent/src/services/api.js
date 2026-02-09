@@ -36,7 +36,7 @@ export const api = createApi({
       }
       
       // Special handling for file uploads - browser sets Content-Type with boundary automatically
-      if (endpoint !== 'submitReport') {
+      if (endpoint !== 'submitReport' && endpoint !== 'analyzeLabReport') {
         headers.set('Content-Type', 'application/json');
       }
       return headers;
@@ -274,6 +274,23 @@ export const api = createApi({
       query: (studentId) => `/report-reviews/student/${studentId}`,
       providesTags: (result, error, studentId) => [{ type: 'ReportReview', studentId }],
     }),
+
+    // ============ AI Chat Endpoints ============
+    
+    // Analyze lab report with AI - Uploads PDF and sends question to AI agent
+    analyzeLabReport: builder.mutation({
+      query: ({ file, question }) => {
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('question', question);
+        return {
+          url: '/ai/analyze-report',
+          method: 'POST',
+          body: formData,
+          formData: true,
+        };
+      },
+    }),
   }),
 });
 
@@ -320,4 +337,5 @@ export const {
   useGetSubmissionByIdQuery,
   useGetReportReviewBySubmissionIdQuery,
   useGetReviewsByStudentIdQuery,
+  useAnalyzeLabReportMutation,
 } = api;

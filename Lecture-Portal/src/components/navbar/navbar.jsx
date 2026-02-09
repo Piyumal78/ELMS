@@ -32,13 +32,13 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-white border-b border-gray-200">
+    <nav className="bg-slate-900 border-b border-gray-200">
       <div className="px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
         
           {/* Left Side - Title */}
           <div className="flex items-center">
-            <Link to="/" className="text-xl font-semibold text-gray-900 tracking-tight">
+            <Link to="/" className="text-xl font-semibold text-white tracking-tight">
               E-Lab Portal
             </Link>
             <span className="ml-3 px-2 py-0.5 bg-indigo-100 text-indigo-600 text-xs font-medium rounded">

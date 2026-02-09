@@ -9,7 +9,8 @@ import {
     HelpCircle,
     ChevronDown,
     Bell,
-    Search
+    Search,
+    Bot
 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -70,6 +71,7 @@ const StudentNavbar = () => {
         { to: "/student", label: "My Labs", icon: BookOpen },
         { to: "/grades", label: "Grades", icon: Award },
         { to: "/lab-booking", label: "Lab Booking", icon: Calendar },
+        { to: "/ai-chat", label: "AI Assistant", icon: Bot },
     ];
 
     const isActive = (path) => location.pathname === path;
