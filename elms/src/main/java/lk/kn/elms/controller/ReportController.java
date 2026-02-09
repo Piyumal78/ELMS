@@ -1,6 +1,6 @@
 package lk.kn.elms.controller;
 
-import lk.kn.elms.service.ReportService;
+import lk.kn.elms.service.impl.ReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;

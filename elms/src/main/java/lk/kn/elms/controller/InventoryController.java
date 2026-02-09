@@ -1,7 +1,7 @@
 package lk.kn.elms.controller;
 
 import lk.kn.elms.model.Inventory;
-import lk.kn.elms.service.InventoryService;
+import lk.kn.elms.service.impl.InventoryService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

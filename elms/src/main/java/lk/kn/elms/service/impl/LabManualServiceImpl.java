@@ -10,7 +10,6 @@ import lk.kn.elms.repository.LabManualRepository;
 import lk.kn.elms.repository.SessionRepository;
 import lk.kn.elms.service.CloudinaryService;
 import lk.kn.elms.service.LabManualService;
-import lk.kn.elms.service.NotificationService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
