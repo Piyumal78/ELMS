@@ -26,9 +26,11 @@ const SignIn = () => {
             dispatch(setCredentials({
                 token: result.token,
                 user: {
+                    id: result.user?.id,
                     username: result.user?.username || data.username,
                     role: userRole,
-                    registrationNumber: data.username
+                    registrationNumber: data.username,
+                    email: result.user?.email
                 }
             }));
 

@@ -14,6 +14,8 @@ import lk.kn.elms.repository.ReportSubmissionRepository;
 import lk.kn.elms.service.LabReportReviewService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -49,6 +51,15 @@ public class LabReportReviewServiceImpl implements LabReportReviewService {
         return mapEntityToResponseDto(labReportReview);
     }
 
+    @Override
+    public LabReportReviewResponseDto getReviewBySubmissionId(Long submissionId)
+            throws ResourceNotFoundException {
+        
+        LabReportReview labReportReview = labReportReviewRepository.findByReportSubmissionId(submissionId)
+                .orElseThrow(() -> new ResourceNotFoundException("Review not found for submission ID: " + submissionId));
+        
+        return mapEntityToResponseDto(labReportReview);
+    }
 
 
     private LabReportReviewResponseDto mapEntityToResponseDto(LabReportReview labReportReview) {
@@ -63,4 +74,20 @@ public class LabReportReviewServiceImpl implements LabReportReviewService {
         labReportReviewResponseDto.setReviewedAt(labReportReview.getReviewedAt());
         return labReportReviewResponseDto;
     }
+
+    @Override
+    public List<LabReportReviewResponseDto> getReviewsByStudentId(Long studentId)
+            throws ResourceNotFoundException {
+        
+        List<LabReportReview> labReportReviews = labReportReviewRepository.findByReportSubmissionStudentIdOrderByReviewedAtDesc(studentId);
+        
+        if (labReportReviews.isEmpty()) {
+            throw new ResourceNotFoundException("No reviews found for student ID: " + studentId);
+        }
+        
+        return labReportReviews.stream()
+                .map(this::mapEntityToResponseDto)
+                .collect(Collectors.toList());
+    }
+
 }

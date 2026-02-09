@@ -11,14 +11,12 @@ import Student from './pages/Student/Student'
 import Lab from './pages/Lab/Lab'
 import LabDetails from './Component/LabDetail'
 import LabSubmission from './pages/Lab/LabSubmission'
-import LabAssistantDashboard from './components/labassistant/LabAssistantDashboard'
-import InventoryPage from './pages/LabAssistant/InventoryPage'
-import RequestsPage from './pages/LabAssistant/RequestsPage'
-import ProcurementPage from './pages/LabAssistant/ProcurementPage'
-import MaintenancePage from './pages/LabAssistant/MaintenancePage'
 import LoginExample from './components/LoginExample.jsx'
 import { StudentRoute, StaffRoute, ProtectedRoute } from './components/ProtectedRoute'
 import CourseEnrollPage from './pages/Student/CourseEnroll'
+import Grades from './pages/Student/Grades'
+import LabBooking from './pages/Lab/Labbooking'
+import Announcements from './Component/Announcements'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -61,36 +59,26 @@ function App() {
             </StudentRoute>
           } />
           
-          {/* Staff only access routes */}
-          <Route path="/dashboard" element={
-            <StaffRoute>
-              <LabAssistantDashboard />
-            </StaffRoute>
+          <Route path='/grades' element={
+            <StudentRoute>
+              <Grades />
+            </StudentRoute>
           } />
-          <Route path="/inventory" element={
-            <StaffRoute>
-              <InventoryPage />
-            </StaffRoute>
+          
+          <Route path='/lab-booking' element={
+            <StudentRoute>
+              <LabBooking />
+            </StudentRoute>
           } />
-          <Route path="/requests" element={
-            <StaffRoute>
-              <RequestsPage />
-            </StaffRoute>
-          } />
-          <Route path="/procurement" element={
-            <StaffRoute>
-              <ProcurementPage />
-            </StaffRoute>
-          } />
-          <Route path="/maintenance" element={
-            <StaffRoute>
-              <MaintenancePage />
-            </StaffRoute>
+          
+          <Route path='/announcements' element={
+            <StudentRoute>
+              <Announcements />
+            </StudentRoute>
           } />
           
           <Route path='/login' element={<LoginExample />} />
         </Route>
-        <Route path='/lab-assistant' element={<LabAssistantDashboard user={{name: "Lab Assistant"}} onLogout={() => window.location.href='/'} />} />
       </Routes>
     </BrowserRouter>
   )

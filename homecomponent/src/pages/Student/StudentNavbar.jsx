@@ -1,18 +1,18 @@
 import {
-    CheckIcon,
-    CreditCardIcon,
-    InfoIcon,
-    MailIcon,
-    SearchIcon,
-    StarIcon,
+    Home,
+    BookOpen,
+    Award,
+    Calendar,
+    FileText,
+    MessageSquare,
+    Settings,
+    HelpCircle,
+    ChevronDown,
+    Bell,
+    Search
 } from "lucide-react"
 
-import {
-    InputGroup,
-    InputGroupAddon,
-    InputGroupInput,
-} from "@/components/ui/input-group"
-import { Button} from "@/components/ui/button"
+import { Button } from "@/components/ui/button"
 import * as React from "react"
 import {
   Select,
@@ -23,18 +23,24 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import {LogOut} from "lucide-react"
-import { Link, useNavigate } from "react-router-dom"
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { CircuitBoard, LogOut, User } from "lucide-react";
+import { Link, useNavigate, useLocation } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
 import { logout } from "../../lib/redux/store"
 
 
 const StudentNavbar = () => {
-    const [search, setSearch] = React.useState(""); 
-    const filteredLabs = [];
-    
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const location = useLocation();
     const { user } = useSelector((state) => state.auth);
 
     const handleLogout = () => {
@@ -42,14 +48,14 @@ const StudentNavbar = () => {
         navigate('/signin');
     };
 
-    // User ගේ first letters නගන්න
+    // get user initials for avatar (e.g. from registration number or username)
     const getInitials = (username) => {
         if (!username) return "U";
         const parts = username.split('/');
         return parts[parts.length - 1]?.substring(0, 2).toUpperCase() || "U";
     };
-    
-    // Role එකෙන් display name එක get කරන්න
+
+    // get display name from role
     const getRoleDisplay = (role) => {
         if (!role) return "User";
         if (role.includes('STUDENT')) return "Student";
@@ -60,72 +66,120 @@ const StudentNavbar = () => {
         return "User";
     };
 
+    const navLinks = [
+        { to: "/", label: "Home", icon: Home },
+        { to: "/student", label: "My Labs", icon: BookOpen },
+        { to: "/grades", label: "Grades", icon: Award },
+        { to: "/lab-booking", label: "Lab Booking", icon: Calendar },
+        { to: "#", label: "Feedback", icon: MessageSquare },
+    ];
+
+    const isActive = (path) => location.pathname === path;
+
     return (
-        
-        <div className="flex justify-center gap-100 w-full max-w-6xl px-200 ">
-            {/* <InputGroup className=" h-12">
-                <InputGroupInput placeholder="Search labs..." />
-                <InputGroupAddon >
-                    <SearchIcon />
-                </InputGroupAddon>
-            </InputGroup> */}
-            <div className="flex gap-5  font-medium text-lg mt-2">
-                <Link to="/" >
-                    Home
-                </Link>
-                <Link to="/">
-                    Dashbord
-                </Link>
-                <Link to="/student">
-                    My Labs
-                </Link>
-            </div>
-            <Button className="flex items-center gap-2 p-3 bg-slate-800 hover:bg-gray-900 border-0 focus:ring-0 h-12">
-                <div className="flex flex-row gap-4">
-                    <div className="rounded-full bg-blue-600 h-9 w-9 flex items-center justify-center">
-                        <span className=" text-center px-2 text-lg font-bold text-white">
-                            {getInitials(user?.username)}
+        <nav className="sticky top-0 z-50 w-full bg-slate-900/95 backdrop-blur-md border-b border-slate-800 shadow-lg">
+            <div className="max-w-7xl mx-auto px-4 py-2">
+                <div className="flex items-center justify-between gap-16 h-16">
+                    {/* Logo */}
+                    <Link to="/" className="flex items-center gap-3 group">
+                        <div className="p-1.5 bg-gradient-to-r from-teal-400 to-blue-500 rounded-lg transition-transform group-hover:scale-110">
+                            <CircuitBoard size={28} className="text-white" />
+                        </div>
+                        <span className="bg-gradient-to-r from-teal-400 to-blue-500 bg-clip-text text-transparent text-2xl font-bold">
+                            ELMS
                         </span>
+                    </Link>
+
+                    {/* Navigation Links */}
+                    <div className="hidden md:flex items-center gap-1">
+                        {navLinks.map((link) => {
+                            const Icon = link.icon;
+                            const active = isActive(link.to);
+                            return (
+                                <Link
+                                    key={link.to}
+                                    to={link.to}
+                                    className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all ${
+                                        active
+                                            ? "bg-gradient-to-r from-teal-400 to-blue-500 text-white shadow-md"
+                                            : "text-gray-300 hover:text-white hover:bg-slate-800"
+                                    }`}
+                                >
+                                    <Icon size={18} />
+                                    <span>{link.label}</span>
+                                </Link>
+                            );
+                        })}
                     </div>
-                    <div className="flex flex-col items-start w-full text-white">
-                        <span className="flex text-lg font-bold">{user?.username || "Student"}</span>
-                        <span className="text-xs text-gray-300">{getRoleDisplay(user?.role)}</span>
-                    </div>
-                    <div>
-                        <Select>
-                            <SelectTrigger className="w-[40px] border-0 hover:border-0 hover:bg-gray-900 mt-1">
-                                <SelectValue/>
-                            </SelectTrigger>
-                            <SelectContent className="bg-slate-900 text-white">
-                                <SelectGroup className="p-4">
-                                    <SelectItem value="name">{user?.username || "Student"}</SelectItem>
-                                    <SelectItem value="email">{user?.email || "student@example.com"}</SelectItem>
-                                    <div className="mt-2 border-1 "></div>
-                                    <div className=" flex flex-col gap-2 mt-2"> 
-                                        <Button className="bg-slate-900 text-white hover:bg-gray-100 hover:text-black">
-                                            Profile Settings
-                                        </Button>
-                                        <Button className="bg-slate-900 text-white hover:bg-gray-100 hover:text-black">
-                                            Preferences
-                                        </Button>
-                                        <Button className="bg-slate-900 text-white hover:bg-gray-100 hover:text-black">
-                                            Help & Support
-                                        </Button>
+
+                    {/* Right Section */}
+                    <div className="flex items-center gap-4">
+                        {/* Notifications */}
+                        <Link to="/announcements" className="relative p-2 text-gray-300 hover:text-white hover:bg-slate-800 rounded-lg transition-colors">
+                            <Bell size={20} />
+                            <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                        </Link>
+
+                        {/* User Dropdown */}
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <button className="flex items-center gap-3 px-3 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg transition-colors">
+                                    <div className="w-9 h-9 rounded-full bg-gradient-to-r from-teal-400 to-blue-500 flex items-center justify-center">
+                                        <span className="text-white font-bold text-sm">
+                                            {getInitials(user?.username)}
+                                        </span>
                                     </div>
-                                    <div className="mt-2 border-1"></div>
-                                        <button
-                                            className="bg-white text-red-600 hover:bg-gray-100 w-full mt-2 flex items-center justify-center flex-row"
-                                            onClick={handleLogout}
-                                        >
-                                            <LogOut className="mr-2 h-4 w-4"/> Logout
-                                        </button>
-                                </SelectGroup>
-                            </SelectContent>
-                        </Select>
+                                    <div className="hidden lg:flex flex-col items-start">
+                                        <span className="text-white font-semibold text-sm">
+                                            {user?.username || "Student"}
+                                        </span>
+                                        <span className="text-gray-400 text-xs">
+                                            {getRoleDisplay(user?.role)}
+                                        </span>
+                                    </div>
+                                    <ChevronDown size={20} className="text-gray-400" />
+                                </button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent 
+                                className="w-56 bg-slate-900 border-slate-800 text-white"
+                            >
+                                <DropdownMenuLabel className="font-normal">
+                                    <div className="flex flex-col space-y-1">
+                                        <p className="text-sm font-medium leading-none">
+                                            {user?.username || "Student"}
+                                        </p>
+                                        <p className="text-xs leading-none text-gray-400">
+                                            {user?.email || "student@example.com"}
+                                        </p>
+                                    </div>
+                                </DropdownMenuLabel>
+                                <DropdownMenuSeparator className="bg-slate-800" />
+                                <DropdownMenuItem className="hover:bg-slate-800 cursor-pointer">
+                                    <User className="mr-2 h-4 w-4" />
+                                    <span>Profile</span>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem className="hover:bg-slate-800 cursor-pointer">
+                                    <Settings className="mr-2 h-4 w-4" />
+                                    <span>Settings</span>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem className="hover:bg-slate-800 cursor-pointer">
+                                    <HelpCircle className="mr-2 h-4 w-4" />
+                                    <span>Help & Support</span>
+                                </DropdownMenuItem>
+                                <DropdownMenuSeparator className="bg-slate-800" />
+                                <DropdownMenuItem 
+                                    onClick={handleLogout}
+                                    className="text-red-400 hover:bg-red-500/10 hover:text-red-300 cursor-pointer"
+                                >
+                                    <LogOut className="mr-2 h-4 w-4" />
+                                    <span>Log out</span>
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
                     </div>
                 </div>
-            </Button>
-        </div>
+            </div>
+        </nav>
     )
 }
 export default StudentNavbar;

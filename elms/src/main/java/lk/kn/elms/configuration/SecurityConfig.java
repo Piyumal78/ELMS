@@ -41,10 +41,13 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/elms/api/login").permitAll()
                         .requestMatchers("/elms/api/auth/activate").permitAll()
+                        .requestMatchers("/submissions/student/*/session/*").permitAll()
+                        //.requestMatchers("/elms/api/announcements/course-code/*").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+
                 );
 
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

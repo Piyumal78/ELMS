@@ -10,4 +10,6 @@ public interface LabManualService {
 
     LabManualCreateResponseDto uploadLabManual(Long sessionId, MultipartFile file)
             throws ResourceAlreadyExistsException, ResourceNotFoundException, FileUploadingException;
+
+    LabManualCreateResponseDto getLabManualBySessionId(Long sessionId) throws ResourceNotFoundException;
 }

@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @AllArgsConstructor
 @CrossOrigin("*")
@@ -26,5 +28,21 @@ public class LabReportReviewController {
             throws ResourceAlreadyExistsException, ResourceNotFoundException {
         LabReportReviewResponseDto responseDto = labReportReviewService.reviewLabReport(labReportReviewRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
+    }
+
+    @RolesAllowed({"DEMONSTRATOR","LECTURER","STUDENT"})
+    @GetMapping(value = "/report-reviews/submission/{submissionId}")
+    public ResponseEntity<LabReportReviewResponseDto> getReviewBySubmissionId(@PathVariable Long submissionId)
+            throws ResourceNotFoundException {
+        LabReportReviewResponseDto responseDto = labReportReviewService.getReviewBySubmissionId(submissionId);
+        return ResponseEntity.ok(responseDto);
+    }
+
+    @RolesAllowed({"DEMONSTRATOR","LECTURER","STUDENT"})
+    @GetMapping(value = "/report-reviews/student/{studentId}")
+    public ResponseEntity<List<LabReportReviewResponseDto>> getReviewsByStudentId(@PathVariable Long studentId)
+            throws ResourceNotFoundException {
+        List<LabReportReviewResponseDto> responseDto = labReportReviewService.getReviewsByStudentId(studentId);
+        return ResponseEntity.ok(responseDto);
     }
 }

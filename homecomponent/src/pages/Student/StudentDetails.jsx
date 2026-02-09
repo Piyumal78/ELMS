@@ -16,6 +16,7 @@ const StudentDetails = () => {
   const studentNumber = user?.registrationNumber || user?.username;
 
   console.log('User:', user);
+  console.log('Username:', user.username);
   console.log('Student Number:', studentNumber);
 
   const { data: courses, error, isLoading } = useGetCoursesQuery();
@@ -101,10 +102,10 @@ const StudentDetails = () => {
   // );
 
   return (
-    <div className="w-full px-4">
+    <div className="w-full mt-8 px-16">
       <div className="flex flex-col mb-4">
-        <span className="text-2xl sm:text-4xl font-semibold">
-          Welcome Back, Lahiru Sanjana! 👋
+        <span className="text-2xl sm:text-4xl font-bold">
+          Welcome Back, {user?.registrationNumber && user.username || "User" }! 👋
         </span>
         <span className="text-sm text-gray-600 mb-4">
           Here's what's happening with your labs this semester

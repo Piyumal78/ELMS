@@ -74,4 +74,19 @@ public class LabManualServiceImpl implements LabManualService {
 
         return labManualCreateResponseDto;
     }
+
+    @Override
+    public LabManualCreateResponseDto getLabManualBySessionId(Long sessionId) throws ResourceNotFoundException {
+        LabManual labManual = labManualRepository.findBySessionId(sessionId)
+                .orElseThrow(() -> new ResourceNotFoundException("Lab manual not found for the given session id"));
+
+        LabManualCreateResponseDto labManualCreateResponseDto = new LabManualCreateResponseDto();
+        labManualCreateResponseDto.setLabManualId(labManual.getId());
+        labManualCreateResponseDto.setFileUrl(labManual.getFileUrl());
+        labManualCreateResponseDto.setFilePublicId(labManual.getFilePublicId());
+        labManualCreateResponseDto.setSessionId(labManual.getSession().getId());
+        labManualCreateResponseDto.setUploadedAt(labManual.getCreatedAt());
+
+        return labManualCreateResponseDto;
+    }
 }
