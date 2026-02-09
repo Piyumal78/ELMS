@@ -6,5 +6,6 @@ public enum UserRole {
     ROLE_STAFF,
     ROLE_LECTURER,
     ROLE_DEMONSTRATOR,
-    ROLE_ADMIN
+    ROLE_ADMIN,
+    ROLE_LAB_ASSISTANT
 }

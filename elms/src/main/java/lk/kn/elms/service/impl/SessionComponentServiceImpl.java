@@ -30,7 +30,8 @@ public class SessionComponentServiceImpl implements SessionComponentService {
     private SessionRepository sessionRepository;
 
     @Override
-    public SessionComponentResponseDto createSessionComponent(Long sessionId, SessionComponentRequestDto sessionComponentRequestDto)
+    public SessionComponentResponseDto createSessionComponent(Long sessionId,
+            SessionComponentRequestDto sessionComponentRequestDto)
             throws ResourceNotFoundException, ResourceInsufficientException, ResourceAlreadyExistsException {
 
         Session session = sessionRepository.findById(sessionId)
@@ -40,18 +41,21 @@ public class SessionComponentServiceImpl implements SessionComponentService {
             throw new ResourceAlreadyExistsException("Session component already exists with session id: " + sessionId);
         }
 
-        List <SessionComponentItem> sessionComponentItems = new ArrayList<>();
-        for(SessionComponentItemRequestDto sessionComponentItemRequestDto : sessionComponentRequestDto.getSessionComponentItems()){
+        List<SessionComponentItem> sessionComponentItems = new ArrayList<>();
+        for (SessionComponentItemRequestDto sessionComponentItemRequestDto : sessionComponentRequestDto
+                .getSessionComponentItems()) {
             SessionComponentItem sessionComponentItem = new SessionComponentItem();
 
             Component component = componentRepository.findById(sessionComponentItemRequestDto.getComponentId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Component not found with id: " + sessionComponentItemRequestDto.getComponentId()));
+                    .orElseThrow(() -> new ResourceNotFoundException(
+                            "Component not found with id: " + sessionComponentItemRequestDto.getComponentId()));
 
-            Integer requiredQuantity = sessionComponentItemRequestDto.getQuantity() * sessionComponentRequestDto.getAmount();
+            Integer requiredQuantity = sessionComponentItemRequestDto.getQuantity()
+                    * sessionComponentRequestDto.getAmount();
             Integer existingQuantity = component.getQuantity();
 
             if (existingQuantity < requiredQuantity) {
-                throw new ResourceInsufficientException("Insufficient quantity of " +component.getComponentName());
+                throw new ResourceInsufficientException("Insufficient quantity of " + component.getComponentName());
             }
             sessionComponentItem.setQuantity(sessionComponentItemRequestDto.getQuantity());
             sessionComponentItem.setComponent(component);
@@ -63,7 +67,7 @@ public class SessionComponentServiceImpl implements SessionComponentService {
         sessionComponent.setAmount(sessionComponentRequestDto.getAmount());
         sessionComponent.setSessionComponentItems(sessionComponentItems);
 
-        for(SessionComponentItem sessionComponentItem : sessionComponentItems){
+        for (SessionComponentItem sessionComponentItem : sessionComponentItems) {
             sessionComponentItem.setSessionComponent(sessionComponent);
         }
         sessionComponentRepository.save(sessionComponent);
@@ -73,17 +77,21 @@ public class SessionComponentServiceImpl implements SessionComponentService {
     }
 
     @Override
-    public SessionComponentResponseDto updateSessionComponent(Long sessionId, SessionComponentRequestDto sessionComponentRequestDto) throws ResourceNotFoundException {
+    public SessionComponentResponseDto updateSessionComponent(Long sessionId,
+            SessionComponentRequestDto sessionComponentRequestDto) throws ResourceNotFoundException {
 
         SessionComponent sessionComponent = sessionComponentRepository.findBySessionId(sessionId)
-                .orElseThrow(() -> new ResourceNotFoundException("SessionComponent not found for session id: " + sessionId));
+                .orElseThrow(
+                        () -> new ResourceNotFoundException("SessionComponent not found for session id: " + sessionId));
 
-        List <SessionComponentItem> sessionComponentItems = new ArrayList<>();
-        for(SessionComponentItemRequestDto sessionComponentItemRequestDto : sessionComponentRequestDto.getSessionComponentItems()){
+        List<SessionComponentItem> sessionComponentItems = new ArrayList<>();
+        for (SessionComponentItemRequestDto sessionComponentItemRequestDto : sessionComponentRequestDto
+                .getSessionComponentItems()) {
             SessionComponentItem sessionComponentItem = new SessionComponentItem();
 
             Component component = componentRepository.findById(sessionComponentItemRequestDto.getComponentId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Component not found with id: " + sessionComponentItemRequestDto.getComponentId()));
+                    .orElseThrow(() -> new ResourceNotFoundException(
+                            "Component not found with id: " + sessionComponentItemRequestDto.getComponentId()));
             sessionComponentItem.setComponent(component);
             sessionComponentItem.setQuantity(sessionComponentItemRequestDto.getQuantity());
             sessionComponentItems.add(sessionComponentItem);
@@ -100,7 +108,8 @@ public class SessionComponentServiceImpl implements SessionComponentService {
     public SessionComponentResponseDto getSessionComponentBySessionId(Long sessionId) throws ResourceNotFoundException {
 
         SessionComponent sessionComponent = sessionComponentRepository.findBySessionId(sessionId)
-                .orElseThrow(() -> new ResourceNotFoundException("SessionComponent not found for session id: " + sessionId));
+                .orElseThrow(
+                        () -> new ResourceNotFoundException("SessionComponent not found for session id: " + sessionId));
 
         return mapEntityToResponseDto(sessionComponent);
     }
@@ -110,12 +119,12 @@ public class SessionComponentServiceImpl implements SessionComponentService {
 
         List<SessionComponent> sessionComponents = sessionComponentRepository.findAll();
 
-        if (sessionComponents.isEmpty()){
+        if (sessionComponents.isEmpty()) {
             throw new ResourceNotFoundException("No session components found!");
         }
 
         List<SessionComponentResponseDto> sessionComponentResponseDtoList = new ArrayList<>();
-        for(SessionComponent sessionComponent : sessionComponents){
+        for (SessionComponent sessionComponent : sessionComponents) {
 
             SessionComponentResponseDto dto = mapEntityToResponseDto(sessionComponent);
             sessionComponentResponseDtoList.add(dto);
@@ -128,16 +137,17 @@ public class SessionComponentServiceImpl implements SessionComponentService {
     public void deleteSessionComponent(Long sessionId) throws ResourceNotFoundException {
 
         SessionComponent sessionComponent = sessionComponentRepository.findBySessionId(sessionId)
-                .orElseThrow(() -> new ResourceNotFoundException("SessionComponent not found for session id: " + sessionId));
+                .orElseThrow(
+                        () -> new ResourceNotFoundException("SessionComponent not found for session id: " + sessionId));
 
         sessionComponentRepository.delete(sessionComponent);
 
     }
 
-    private SessionComponentResponseDto mapEntityToResponseDto(SessionComponent sessionComponent){
+    private SessionComponentResponseDto mapEntityToResponseDto(SessionComponent sessionComponent) {
 
         List<SessionComponentItemResponseDto> sessionComponentItemResponseDtoList = new ArrayList<>();
-        for(SessionComponentItem sessionComponentItem : sessionComponent.getSessionComponentItems()){
+        for (SessionComponentItem sessionComponentItem : sessionComponent.getSessionComponentItems()) {
             SessionComponentItemResponseDto itemResponseDto = new SessionComponentItemResponseDto();
             itemResponseDto.setSessionComponentItemId(sessionComponentItem.getId());
             itemResponseDto.setQuantity(sessionComponentItem.getQuantity());
@@ -146,7 +156,7 @@ public class SessionComponentServiceImpl implements SessionComponentService {
             itemResponseDto.setCreatedDate(sessionComponentItem.getCreatedAt());
             itemResponseDto.setUpdatedDate(sessionComponentItem.getUpdatedAt());
             sessionComponentItemResponseDtoList.add(itemResponseDto);
-    }
+        }
 
         SessionComponentResponseDto responseDto = new SessionComponentResponseDto();
         responseDto.setSessionComponentId(sessionComponent.getId());
@@ -156,6 +166,5 @@ public class SessionComponentServiceImpl implements SessionComponentService {
         responseDto.setUpdatedDate(sessionComponent.getUpdatedAt());
         return responseDto;
     }
-
 
 }

@@ -11,22 +11,24 @@ import java.util.List;
 
 public interface SessionRepository extends JpaRepository<Session, Long> {
 
-    @Query("""
-    SELECT COUNT(s) > 0
-    FROM Session s
-    WHERE s.date = :date
-      AND s.startTime <= :endTime
-      AND s.endTime >= :startTime
-      """)
-    boolean existsOverlappingSession(
-            @Param("date") LocalDate date,
-            @Param("startTime") LocalTime startTime,
-            @Param("endTime") LocalTime endTime
-    );
+  @Query("""
+      SELECT COUNT(s) > 0
+      FROM Session s
+      WHERE s.date = :date
+        AND s.startTime <= :endTime
+        AND s.endTime >= :startTime
+        """)
+  boolean existsOverlappingSession(
+      @Param("date") LocalDate date,
+      @Param("startTime") LocalTime startTime,
+      @Param("endTime") LocalTime endTime);
 
-    boolean existsByCourse_CourseCodeAndExperimentNumber(String courseCode, Integer experimentNumber);
+  boolean existsByCourse_CourseCodeAndExperimentNumber(String courseCode, Integer experimentNumber);
 
-    @Query("SELECT s FROM Session s WHERE s.course.courseCode = :courseCode")
-    List<Session> getSessionsByCourseCode(@Param("courseCode") String courseCode);
+  boolean existsByCourse_IdAndExperimentNumber(Long courseId, Integer experimentNumber);
 
+  @Query("SELECT s FROM Session s WHERE s.course.courseCode = :courseCode")
+  List<Session> getSessionsByCourseCode(@Param("courseCode") String courseCode);
+
+  List<Session> findByDate(LocalDate date);
 }

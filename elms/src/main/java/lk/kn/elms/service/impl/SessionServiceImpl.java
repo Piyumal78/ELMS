@@ -20,9 +20,11 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.Map;
 import java.util.UUID;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
+@Transactional
 public class SessionServiceImpl implements SessionService {
 
     private SessionRepository sessionRepository;
@@ -30,82 +32,89 @@ public class SessionServiceImpl implements SessionService {
     private CourseRepository courseRepository;
     private Cloudinary cloudinary;
 
-    //********************************************
-    //User need to get from security context
+    // ********************************************
+    // User need to get from security context
 
-
-//    @Override
-//    public SessionCreateResponseDto createSession(SessionRequestDto sessionRequestDto, MultipartFile file)
-//            throws FileUploadingException, ResourceAlreadyExistsException, ResourceNotFoundException {
-//
-//        boolean existsOverlappingSession = sessionRepository.existsOverlappingSession(
-//                sessionRequestDto.getDate(),
-//                sessionRequestDto.getStartTime(),
-//                sessionRequestDto.getEndTime());
-//
-//        if (existsOverlappingSession) {
-//            throw new ResourceAlreadyExistsException("There is already an existing session on this date and time");
-//        }
-//
-//        User user = userRepository.findById(sessionRequestDto.getUserId())
-//                .orElseThrow(() -> new ResourceNotFoundException("There is no user with user id " + sessionRequestDto.getUserId()));
-//
-//        Course course = courseRepository.findByCourseCode(sessionRequestDto.getCourseCode())
-//                .orElseThrow(()-> new ResourceNotFoundException("There is no course with course code " + sessionRequestDto.getCourseCode()));
-//
-//        if (file == null || file.isEmpty()) {
-//            throw new FileUploadingException("File is empty");
-//        }
-//
-//        String uploadFolder = "ELMS/Lab Manuals";
-//        Map uploadResult;
-//
-//        try {
-//            uploadResult = cloudinary.uploader().upload(
-//                    file.getBytes(),
-//                    Map.of(
-//                            "public_id", UUID.randomUUID().toString(),
-//                            "folder", uploadFolder
-//                    )
-//            );
-//        } catch (IOException e) {
-//            throw new FileUploadingException("Failed to read uploaded file");
-//        }
-//
-//        String fileUrl = uploadResult.get("secure_url").toString();
-//        String publicId = uploadResult.get("public_id").toString();
-//
-//        Session session = new Session();
-//        session.setDate(sessionRequestDto.getDate());
-//        session.setStartTime(sessionRequestDto.getStartTime());
-//        session.setEndTime(sessionRequestDto.getEndTime());
-//        session.setFileUrl(fileUrl);
-//        session.setFilePublicId(publicId);
-//        session.setCourse(course);
-//        session.setCreatedUser(user);
-//
-//        sessionRepository.save(session);
-//
-//        SessionCreateResponseDto sessionCreateResponseDto = new SessionCreateResponseDto();
-//        sessionCreateResponseDto.setSessionId(session.getId());
-//        sessionCreateResponseDto.setDate(session.getDate());
-//        sessionCreateResponseDto.setStartTime(session.getStartTime());
-//        sessionCreateResponseDto.setEndTime(session.getEndTime());
-//        sessionCreateResponseDto.setFileUrl(session.getFileUrl());
-//        sessionCreateResponseDto.setFilePublicId(session.getFilePublicId());
-//        sessionCreateResponseDto.setCourseId(course.getId());
-//        sessionCreateResponseDto.setCourseCode(course.getCourseCode());
-//        sessionCreateResponseDto.setCourseName(course.getCourseName());
-//        sessionCreateResponseDto.setCreatedAt(session.getCreatedAt());
-//        sessionCreateResponseDto.setUpdatedAt(session.getUpdatedAt());
-//
-//        return sessionCreateResponseDto;
-//
-//    }
-
+    // @Override
+    // public SessionCreateResponseDto createSession(SessionRequestDto
+    // sessionRequestDto, MultipartFile file)
+    // throws FileUploadingException, ResourceAlreadyExistsException,
+    // ResourceNotFoundException {
+    //
+    // boolean existsOverlappingSession =
+    // sessionRepository.existsOverlappingSession(
+    // sessionRequestDto.getDate(),
+    // sessionRequestDto.getStartTime(),
+    // sessionRequestDto.getEndTime());
+    //
+    // if (existsOverlappingSession) {
+    // throw new ResourceAlreadyExistsException("There is already an existing
+    // session on this date and time");
+    // }
+    //
+    // User user = userRepository.findById(sessionRequestDto.getUserId())
+    // .orElseThrow(() -> new ResourceNotFoundException("There is no user with user
+    // id " + sessionRequestDto.getUserId()));
+    //
+    // Course course =
+    // courseRepository.findByCourseCode(sessionRequestDto.getCourseCode())
+    // .orElseThrow(()-> new ResourceNotFoundException("There is no course with
+    // course code " + sessionRequestDto.getCourseCode()));
+    //
+    // if (file == null || file.isEmpty()) {
+    // throw new FileUploadingException("File is empty");
+    // }
+    //
+    // String uploadFolder = "ELMS/Lab Manuals";
+    // Map uploadResult;
+    //
+    // try {
+    // uploadResult = cloudinary.uploader().upload(
+    // file.getBytes(),
+    // Map.of(
+    // "public_id", UUID.randomUUID().toString(),
+    // "folder", uploadFolder
+    // )
+    // );
+    // } catch (IOException e) {
+    // throw new FileUploadingException("Failed to read uploaded file");
+    // }
+    //
+    // String fileUrl = uploadResult.get("secure_url").toString();
+    // String publicId = uploadResult.get("public_id").toString();
+    //
+    // Session session = new Session();
+    // session.setDate(sessionRequestDto.getDate());
+    // session.setStartTime(sessionRequestDto.getStartTime());
+    // session.setEndTime(sessionRequestDto.getEndTime());
+    // session.setFileUrl(fileUrl);
+    // session.setFilePublicId(publicId);
+    // session.setCourse(course);
+    // session.setCreatedUser(user);
+    //
+    // sessionRepository.save(session);
+    //
+    // SessionCreateResponseDto sessionCreateResponseDto = new
+    // SessionCreateResponseDto();
+    // sessionCreateResponseDto.setSessionId(session.getId());
+    // sessionCreateResponseDto.setDate(session.getDate());
+    // sessionCreateResponseDto.setStartTime(session.getStartTime());
+    // sessionCreateResponseDto.setEndTime(session.getEndTime());
+    // sessionCreateResponseDto.setFileUrl(session.getFileUrl());
+    // sessionCreateResponseDto.setFilePublicId(session.getFilePublicId());
+    // sessionCreateResponseDto.setCourseId(course.getId());
+    // sessionCreateResponseDto.setCourseCode(course.getCourseCode());
+    // sessionCreateResponseDto.setCourseName(course.getCourseName());
+    // sessionCreateResponseDto.setCreatedAt(session.getCreatedAt());
+    // sessionCreateResponseDto.setUpdatedAt(session.getUpdatedAt());
+    //
+    // return sessionCreateResponseDto;
+    //
+    // }
 
     @Override
-    public SessionCreateResponseDto createSession(SessionRequestDto sessionRequestDto) throws ResourceAlreadyExistsException, ResourceNotFoundException {
+    public SessionCreateResponseDto createSession(SessionRequestDto sessionRequestDto)
+            throws ResourceAlreadyExistsException, ResourceNotFoundException {
 
         boolean existsOverlappingSession = sessionRepository.existsOverlappingSession(
                 sessionRequestDto.getDate(),
@@ -116,15 +125,19 @@ public class SessionServiceImpl implements SessionService {
             throw new ResourceAlreadyExistsException("There is already an existing session on this date and time");
         }
 
-        if (sessionRepository.existsByCourse_CourseCodeAndExperimentNumber(sessionRequestDto.getCourseCode(), sessionRequestDto.getExperimentNumber())) {
-            throw new ResourceAlreadyExistsException("Experiment number " + sessionRequestDto.getExperimentNumber() + "  already exists for this session");
+        if (sessionRepository.existsByCourse_CourseCodeAndExperimentNumber(sessionRequestDto.getCourseCode(),
+                sessionRequestDto.getExperimentNumber())) {
+            throw new ResourceAlreadyExistsException("Experiment number " + sessionRequestDto.getExperimentNumber()
+                    + "  already exists for this session");
         }
 
         User user = userRepository.findById(sessionRequestDto.getUserId())
-                .orElseThrow(() -> new ResourceNotFoundException("There is no user with user id " + sessionRequestDto.getUserId()));
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "There is no user with user id " + sessionRequestDto.getUserId()));
 
         Course course = courseRepository.findByCourseCode(sessionRequestDto.getCourseCode())
-                .orElseThrow(()-> new ResourceNotFoundException("There is no course with course code " + sessionRequestDto.getCourseCode()));
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "There is no course with course code " + sessionRequestDto.getCourseCode()));
 
         Session session = new Session();
         session.setDate(sessionRequestDto.getDate());
@@ -154,7 +167,8 @@ public class SessionServiceImpl implements SessionService {
     }
 
     @Override
-    public java.util.List<SessionCreateResponseDto> getSessionsByCourseCode(String courseCode) throws ResourceNotFoundException {
+    public java.util.List<SessionCreateResponseDto> getSessionsByCourseCode(String courseCode)
+            throws ResourceNotFoundException {
         courseRepository.findByCourseCode(courseCode)
                 .orElseThrow(() -> new ResourceNotFoundException("There is no course with course code " + courseCode));
 
