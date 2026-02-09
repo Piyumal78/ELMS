@@ -105,7 +105,7 @@ const LabAssistantDashboard = () => {
             className="btn-secondary"
             style={{ padding: '8px 12px', fontSize: '0.8rem' }}
           >
-            Simulate Upload (Today)
+            Upload (Today)
           </button>
           <NotificationPanel />
         </div>
