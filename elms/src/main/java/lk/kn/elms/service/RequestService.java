@@ -85,20 +85,29 @@ public class RequestService {
 
         // Fetch Inventory (by name from request)
         Inventory inventory = inventoryRepository.findByName(request.getItemName())
-                .orElseThrow(() -> new RuntimeException("Inventory item not found: " + request.getItemName()));
+                .orElse(null);
 
-        // STRICT Validation: Check quantity
-        if (inventory.getQuantity() < request.getQuantity()) {
+        // Check if item exists in inventory
+        if (inventory == null) {
+            // Auto-reject if item not found
+            request.setStatus("REJECTED");
+            requestRepository.save(request);
             throw new ResourceInsufficientException(
-                    "Operation failed! Insufficient stock. Available: " + inventory.getQuantity() +
+                    "Item not available in inventory: " + request.getItemName());
+        }
+
+        // Check if sufficient quantity available
+        if (inventory.getQuantity() < request.getQuantity()) {
+            // Auto-reject if insufficient stock
+            request.setStatus("REJECTED");
+            requestRepository.save(request);
+            throw new ResourceInsufficientException(
+                    "Insufficient stock. Available: " + inventory.getQuantity() +
                             ", Requested: " + request.getQuantity());
         }
 
-        // Deduct Stock
-        inventory.setQuantity(inventory.getQuantity() - request.getQuantity());
-        inventoryRepository.save(inventory);
-
-        // Update Request
+        // If validation passes, approve WITHOUT deducting stock
+        // Stock will be deducted when item is ISSUED
         request.setStatus("APPROVED");
         return requestRepository.save(request);
     }
@@ -115,9 +124,27 @@ public class RequestService {
     public Request issueRequest(Long requestId) {
         Request request = requestRepository.findById(requestId)
                 .orElseThrow(() -> new RuntimeException("Request not found"));
+
         if (!"APPROVED".equals(request.getStatus())) {
             throw new RuntimeException("Request must be APPROVED before issuing");
         }
+
+        // Deduct stock from inventory when issuing
+        Inventory inventory = inventoryRepository.findById(request.getInventoryId())
+                .orElseThrow(() -> new RuntimeException("Inventory item not found"));
+
+        // Final validation before deducting (in case stock changed between approval and
+        // issue)
+        if (inventory.getQuantity() < request.getQuantity()) {
+            throw new RuntimeException("Insufficient stock at issue time. Available: " +
+                    inventory.getQuantity() + ", Requested: " + request.getQuantity());
+        }
+
+        // Deduct stock
+        inventory.setQuantity(inventory.getQuantity() - request.getQuantity());
+        inventoryRepository.save(inventory);
+
+        // Update request status
         request.setStatus("ISSUED");
         return requestRepository.save(request);
     }

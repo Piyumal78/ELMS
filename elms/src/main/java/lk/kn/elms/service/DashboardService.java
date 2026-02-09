@@ -3,9 +3,11 @@ package lk.kn.elms.service;
 import lk.kn.elms.repository.InventoryRepository;
 import lk.kn.elms.repository.RequestRepository;
 import lk.kn.elms.repository.EquipmentRepository;
+import lk.kn.elms.repository.ReportSubmissionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,6 +25,9 @@ public class DashboardService {
 
     @Autowired
     private lk.kn.elms.repository.SessionRepository sessionRepository;
+
+    @Autowired
+    private ReportSubmissionRepository reportSubmissionRepository;
 
     public Map<String, Object> getStats() {
         Map<String, Object> stats = new HashMap<>();
@@ -59,6 +64,45 @@ public class DashboardService {
         }).collect(java.util.stream.Collectors.toList());
 
         stats.put("todaySessions", todaySessions);
+
+        return stats;
+    }
+
+    public Map<String, Object> getDemonstratorStats(Long demonstratorId) {
+        Map<String, Object> stats = new HashMap<>();
+
+        // Calculate semester dates (assuming current semester is Feb-Jun or Aug-Dec)
+        LocalDate today = LocalDate.now();
+        LocalDate semesterStart;
+        LocalDate semesterEnd;
+
+        int currentMonth = today.getMonthValue();
+        if (currentMonth >= 2 && currentMonth <= 6) {
+            // First semester (Feb-Jun)
+            semesterStart = LocalDate.of(today.getYear(), 2, 1);
+            semesterEnd = LocalDate.of(today.getYear(), 6, 30);
+        } else {
+            // Second semester (Aug-Dec) or Jan (from previous semester)
+            if (currentMonth == 1) {
+                semesterStart = LocalDate.of(today.getYear() - 1, 8, 1);
+                semesterEnd = LocalDate.of(today.getYear() - 1, 12, 31);
+            } else {
+                semesterStart = LocalDate.of(today.getYear(), 8, 1);
+                semesterEnd = LocalDate.of(today.getYear(), 12, 31);
+            }
+        }
+
+        // Active Sessions (sessions in current semester)
+        long activeSessions = sessionRepository.countActiveSessions(demonstratorId, semesterStart, semesterEnd);
+        stats.put("activeSessions", activeSessions);
+
+        // Pending Reports
+        long pendingReports = reportSubmissionRepository.countPendingReportsByDemonstratorId(demonstratorId);
+        stats.put("pendingReports", pendingReports);
+
+        // My Courses (distinct courses assigned to demonstrator)
+        long myCourses = sessionRepository.countDistinctCoursesByDemonstratorId(demonstratorId);
+        stats.put("myCourses", myCourses);
 
         return stats;
     }

@@ -30,52 +30,61 @@ public class RequestController {
             Request request = requestService.createRequest(dto);
             return new ResponseEntity<>(request, HttpStatus.CREATED);
         } catch (ResourceInsufficientException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(java.util.Map.of("message", e.getMessage()));
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(java.util.Map.of("message", e.getMessage()));
         }
     }
 
     @PutMapping("/{id}/approve")
-    public ResponseEntity<?> approveRequest(@PathVariable Long id) {
+    public ResponseEntity<?> approveRequest(@PathVariable("id") Long id) {
         try {
             Request request = requestService.approveRequest(id);
             return ResponseEntity.ok(request);
         } catch (ResourceInsufficientException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            // Return error as JSON object
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(java.util.Map.of("message", e.getMessage()));
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(java.util.Map.of("message", e.getMessage()));
         }
     }
 
     @PutMapping("/{id}/reject")
-    public ResponseEntity<?> rejectRequest(@PathVariable Long id) {
+    public ResponseEntity<?> rejectRequest(@PathVariable("id") Long id) {
         try {
             Request request = requestService.rejectRequest(id);
             return ResponseEntity.ok(request);
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(java.util.Map.of("message", e.getMessage()));
         }
     }
 
     @PutMapping("/{id}/issue")
-    public ResponseEntity<?> issueRequest(@PathVariable Long id) {
+    public ResponseEntity<?> issueRequest(@PathVariable("id") Long id) {
         try {
             Request request = requestService.issueRequest(id);
             return ResponseEntity.ok(request);
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(java.util.Map.of("message", e.getMessage()));
         }
     }
 
     @PutMapping("/{id}/return")
-    public ResponseEntity<?> returnRequest(@PathVariable Long id, @RequestParam(required = false) Boolean isDamaged) {
+    public ResponseEntity<?> returnRequest(@PathVariable("id") Long id,
+            @RequestParam(required = false) Boolean isDamaged) {
         try {
             Request request = requestService.returnRequest(id, isDamaged);
             return ResponseEntity.ok(request);
         } catch (RuntimeException e) {
             // "Request must be ISSUED before returning" or "Inventory not found"
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(java.util.Map.of("message", e.getMessage()));
         }
     }
 }
