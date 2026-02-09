@@ -12,9 +12,6 @@ public class AnnouncementRequestDto {
     @NotNull(message = "Course ID is required!")
     private Long courseId;
 
-    @NotNull(message = "User ID is required!")
-    private Long userId;
-
     @NotBlank(message = "Announcement content is required!")
     private String content;
 

@@ -1,16 +1,13 @@
 package lk.kn.elms.service;
 
-import lk.kn.elms.dto.request.CourseEnrollmentRequestDto;
 import lk.kn.elms.dto.response.CourseEnrollmentListResponseDto;
 import lk.kn.elms.dto.response.CourseEnrollmentResponseDto;
 import lk.kn.elms.exception.ResourceAlreadyExistsException;
 import lk.kn.elms.exception.ResourceNotFoundException;
 
-import java.util.List;
-
 public interface CourseEnrollmentService {
 
-    CourseEnrollmentResponseDto enrollInCourse(CourseEnrollmentRequestDto courseEnrollmentRequestDto) throws ResourceNotFoundException, ResourceAlreadyExistsException;
+    CourseEnrollmentResponseDto enrollInCourse(Long courseId) throws ResourceNotFoundException, ResourceAlreadyExistsException;
 
     void unEnrollFromCourse(Long enrollmentId) throws ResourceNotFoundException;
 

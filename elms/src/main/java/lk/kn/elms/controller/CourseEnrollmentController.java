@@ -2,7 +2,6 @@ package lk.kn.elms.controller;
 
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
-import lk.kn.elms.dto.request.CourseEnrollmentRequestDto;
 import lk.kn.elms.dto.response.CourseEnrollmentListResponseDto;
 import lk.kn.elms.dto.response.CourseEnrollmentResponseDto;
 import lk.kn.elms.exception.ResourceAlreadyExistsException;
@@ -22,11 +21,10 @@ public class CourseEnrollmentController {
     private CourseEnrollmentService courseEnrollmentService;
 
     @RolesAllowed({"STUDENT"})
-    @PostMapping("/enrollments")
-    public ResponseEntity<CourseEnrollmentResponseDto> enrollInCourse(
-            @Valid @RequestBody CourseEnrollmentRequestDto courseEnrollmentRequestDto)
+    @PostMapping("/course/{courseId}/enrollments")
+    public ResponseEntity<CourseEnrollmentResponseDto> enrollInCourse(@PathVariable Long courseId)
             throws ResourceNotFoundException, ResourceAlreadyExistsException {
-        CourseEnrollmentResponseDto responseDto = courseEnrollmentService.enrollInCourse(courseEnrollmentRequestDto);
+        CourseEnrollmentResponseDto responseDto = courseEnrollmentService.enrollInCourse(courseId);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 
