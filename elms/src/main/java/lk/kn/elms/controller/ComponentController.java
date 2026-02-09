@@ -22,37 +22,40 @@ public class ComponentController {
 
     private ComponentService componentService;
 
-    @RolesAllowed({"STAFF"})
+    @RolesAllowed({ "STAFF", "LAB_ASSISTANT", "ADMIN" })
     @PostMapping(value = "/components/additions")
-    public ResponseEntity<ComponentResponseDto> addComponent(@Valid @RequestBody ComponentRequestDto componentRequestDto) {
+    public ResponseEntity<ComponentResponseDto> addComponent(
+            @Valid @RequestBody ComponentRequestDto componentRequestDto) {
         ComponentResponseDto responseDto = componentService.addComponent(componentRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 
-    @RolesAllowed({"STAFF"})
+    @RolesAllowed({ "STAFF", "LAB_ASSISTANT", "ADMIN" })
     @PostMapping(value = "/components/deductions")
-    public ResponseEntity<ComponentResponseDto> deductComponent(@Valid @RequestBody ComponentRequestDto componentRequestDto)
+    public ResponseEntity<ComponentResponseDto> deductComponent(
+            @Valid @RequestBody ComponentRequestDto componentRequestDto)
             throws ResourceNotFoundException, ResourceInsufficientException {
         ComponentResponseDto responseDto = componentService.deductComponent(componentRequestDto);
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 
-    @RolesAllowed({"STAFF"})
+    @RolesAllowed({ "STAFF", "LAB_ASSISTANT", "ADMIN" })
     @PutMapping(value = "/components")
-    public ResponseEntity<ComponentResponseDto> updateComponent(@Valid @RequestBody ComponentRequestDto componentRequestDto)
+    public ResponseEntity<ComponentResponseDto> updateComponent(
+            @Valid @RequestBody ComponentRequestDto componentRequestDto)
             throws ResourceNotFoundException {
         ComponentResponseDto responseDto = componentService.updateComponent(componentRequestDto);
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 
-    @RolesAllowed({"STAFF"})
+    @RolesAllowed({ "STAFF", "LAB_ASSISTANT", "ADMIN" })
     @GetMapping(value = "/components")
     public ResponseEntity<List<ComponentResponseDto>> getAllComponents() throws ResourceNotFoundException {
         List<ComponentResponseDto> componentResponseDtoList = componentService.getAllComponents();
         return ResponseEntity.status(HttpStatus.OK).body(componentResponseDtoList);
     }
 
-    @RolesAllowed({"STAFF"})
+    @RolesAllowed({ "STAFF", "LAB_ASSISTANT", "ADMIN" })
     @GetMapping(value = "/components/name/{componentName}")
     public ResponseEntity<List<ComponentResponseDto>> getComponentByName(@PathVariable String componentName)
             throws ResourceNotFoundException {
@@ -60,7 +63,7 @@ public class ComponentController {
         return ResponseEntity.status(HttpStatus.OK).body(componentResponseDtoList);
     }
 
-    @RolesAllowed({"STAFF"})
+    @RolesAllowed({ "STAFF", "LAB_ASSISTANT", "ADMIN" })
     @GetMapping(value = "/components/name/{componentName}/type/{type}")
     public ResponseEntity<ComponentResponseDto> getComponentByNameAndType(
             @PathVariable String componentName,
@@ -69,16 +72,17 @@ public class ComponentController {
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 
-    @RolesAllowed({"STAFF"})
+    @RolesAllowed({ "STAFF", "LAB_ASSISTANT", "ADMIN" })
     @GetMapping(value = "/components/{id}")
-    public ResponseEntity<ComponentResponseDto> getComponentById(@PathVariable Long id) throws ResourceNotFoundException{
+    public ResponseEntity<ComponentResponseDto> getComponentById(@PathVariable Long id)
+            throws ResourceNotFoundException {
         ComponentResponseDto responseDto = componentService.getComponentById(id);
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 
-    @RolesAllowed({"STAFF"})
+    @RolesAllowed({ "STAFF", "LAB_ASSISTANT", "ADMIN" })
     @DeleteMapping(value = "/components/{id}")
-    public ResponseEntity<String> deleteComponent(@PathVariable Long id) throws ResourceNotFoundException{
+    public ResponseEntity<String> deleteComponent(@PathVariable Long id) throws ResourceNotFoundException {
         componentService.deleteComponent(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Component deleted!");
     }

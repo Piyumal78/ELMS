@@ -31,4 +31,17 @@ public interface SessionRepository extends JpaRepository<Session, Long> {
   List<Session> getSessionsByCourseCode(@Param("courseCode") String courseCode);
 
   List<Session> findByDate(LocalDate date);
+
+  // Demonstrator Dashboard Statistics
+  @Query("SELECT COUNT(s) FROM Session s WHERE s.createdUser.id = :demonstratorId AND s.date BETWEEN :semesterStart AND :semesterEnd")
+  long countActiveSessions(
+      @Param("demonstratorId") Long demonstratorId,
+      @Param("semesterStart") LocalDate semesterStart,
+      @Param("semesterEnd") LocalDate semesterEnd);
+
+  @Query("SELECT s FROM Session s WHERE s.createdUser.id = :demonstratorId")
+  List<Session> findByDemonstratorId(@Param("demonstratorId") Long demonstratorId);
+
+  @Query("SELECT COUNT(DISTINCT s.course) FROM Session s WHERE s.createdUser.id = :demonstratorId")
+  long countDistinctCoursesByDemonstratorId(@Param("demonstratorId") Long demonstratorId);
 }
