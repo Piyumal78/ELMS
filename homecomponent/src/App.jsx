@@ -29,6 +29,7 @@ import Grades from './pages/Student/Grades'
 import LabBooking from './pages/Lab/Labbooking'
 import Announcements from './Component/Announcements'
 import Profile from './Component/Profile.jsx'
+import HelpSupport from './pages/HelpSupport.jsx'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
@@ -104,6 +105,13 @@ function App() {
               <Profile />
             </StudentRoute>
           } />
+
+          <Route path='/help' element={
+            <StudentRoute>
+              <HelpSupport />
+            </StudentRoute>
+          } />
+          
 
           <Route path='/login' element={<LoginExample />} />
         </Route>
