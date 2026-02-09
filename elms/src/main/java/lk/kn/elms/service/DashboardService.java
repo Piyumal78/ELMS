@@ -32,8 +32,10 @@ public class DashboardService {
     public Map<String, Object> getStats() {
         Map<String, Object> stats = new HashMap<>();
 
-        // Total items
-        long totalItems = inventoryRepository.count();
+        // Total items (excluding deleted items)
+        long totalItems = inventoryRepository.findAll().stream()
+                .filter(item -> !"Deleted".equals(item.getStatus()))
+                .count();
         stats.put("totalItems", totalItems);
 
         // Low stock count (Optimized Query)

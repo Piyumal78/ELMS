@@ -77,7 +77,7 @@ public class RequestController {
 
     @PutMapping("/{id}/return")
     public ResponseEntity<?> returnRequest(@PathVariable("id") Long id,
-            @RequestParam(required = false) Boolean isDamaged) {
+            @RequestParam(value = "isDamaged", required = false) Boolean isDamaged) {
         try {
             Request request = requestService.returnRequest(id, isDamaged);
             return ResponseEntity.ok(request);

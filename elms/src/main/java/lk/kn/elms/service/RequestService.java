@@ -26,6 +26,9 @@ public class RequestService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private lk.kn.elms.repository.EquipmentRepository equipmentRepository;
+
     public List<Request> getAllRequests() {
         return requestRepository.findAll();
     }
@@ -162,9 +165,20 @@ public class RequestService {
         Inventory inventory = inventoryRepository.findById(request.getInventoryId())
                 .orElseThrow(() -> new RuntimeException("Inventory not found"));
 
-        // If not damaged, add back to stock. If damaged, maybe don't add back or mark
-        // as damaged (logic can be expanded later)
-        if (isDamaged == null || !isDamaged) {
+        // Handle damaged vs good condition returns
+        if (isDamaged != null && isDamaged) {
+            // Item is damaged - create equipment maintenance entry
+            lk.kn.elms.model.Equipment equipment = new lk.kn.elms.model.Equipment();
+            equipment.setName(inventory.getName());
+            equipment.setStatus("Damaged");
+            equipment.setLocation("Lab - Awaiting Repair");
+            equipment.setLastMaintenanceDate(java.time.LocalDate.now());
+            equipment.setSerialNumber("REQ-" + requestId);
+            equipmentRepository.save(equipment);
+
+            // Do NOT return damaged items to available stock
+        } else {
+            // Item is in good condition - return to inventory stock
             inventory.setQuantity(inventory.getQuantity() + request.getQuantity());
             inventoryRepository.save(inventory);
         }
