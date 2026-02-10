@@ -161,7 +161,7 @@ public class LabReservationServiceImpl implements LabReservationService {
         }
 
         return mapEntityListToDtoList(approvedReservations);
-    }
+    }  
 
     @Override
     public List<LabReservationResponseDto> getLabReservationsByDate(LocalDate reservationDate) throws ResourceNotFoundException {
@@ -174,6 +174,18 @@ public class LabReservationServiceImpl implements LabReservationService {
 
         return mapEntityListToDtoList(reservationsByDate);
     }
+
+    @Override
+    public List<LabReservationResponseDto> getLabReservationsByStudentId(Long userId) throws ResourceNotFoundException {
+
+        List<LabReservation> reservationsByUserId = labReservationRepository.findAllByStudentId(userId);
+
+        if (reservationsByUserId.isEmpty()) {
+            throw new ResourceNotFoundException("No lab reservations found for user ID: " + userId);
+        }
+
+        return mapEntityListToDtoList(reservationsByUserId);
+    } 
 
     @Override
     public void deleteLabReservation(Long reservationId) throws ResourceNotFoundException {

@@ -14,6 +14,8 @@ import lk.kn.elms.repository.ReportSubmissionRepository;
 import lk.kn.elms.service.LabReportReviewService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -23,8 +25,8 @@ public class LabReportReviewServiceImpl implements LabReportReviewService {
     private DemonstratorRepository demonstratorRepository;
     private ReportSubmissionRepository reportSubmissionRepository;
 
-    // *********************************************
-    // Need to set demonstrator from security context
+    //*********************************************
+    //Need to set demonstrator from security context
     @Override
     public LabReportReviewResponseDto reviewLabReport(LabReportReviewRequestDto labReportReviewRequestDto)
             throws ResourceAlreadyExistsException, ResourceNotFoundException {
@@ -34,13 +36,10 @@ public class LabReportReviewServiceImpl implements LabReportReviewService {
         }
 
         Demonstrator demonstrator = demonstratorRepository.findById(labReportReviewRequestDto.getDemonstratorId())
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        "Demonstrator not found for id: " + labReportReviewRequestDto.getDemonstratorId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Demonstrator not found for id: " + labReportReviewRequestDto.getDemonstratorId()));
 
-        ReportSubmission reportSubmission = reportSubmissionRepository
-                .findById(labReportReviewRequestDto.getReportSubmissionId())
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        "ReportSubmission not found for id: " + labReportReviewRequestDto.getReportSubmissionId()));
+        ReportSubmission reportSubmission = reportSubmissionRepository.findById(labReportReviewRequestDto.getReportSubmissionId())
+                .orElseThrow(()-> new ResourceNotFoundException("ReportSubmission not found for id: " + labReportReviewRequestDto.getReportSubmissionId()));
 
         LabReportReview labReportReview = new LabReportReview();
         labReportReview.setComments(labReportReviewRequestDto.getComments());
@@ -49,11 +48,19 @@ public class LabReportReviewServiceImpl implements LabReportReviewService {
         labReportReview.setReportSubmission(reportSubmission);
         labReportReviewRepository.save(labReportReview);
 
-        reportSubmission.setStatus(lk.kn.elms.model.enums.Status.GRADED);
-        reportSubmissionRepository.save(reportSubmission);
-
         return mapEntityToResponseDto(labReportReview);
     }
+
+    @Override
+    public LabReportReviewResponseDto getReviewBySubmissionId(Long submissionId)
+            throws ResourceNotFoundException {
+        
+        LabReportReview labReportReview = labReportReviewRepository.findByReportSubmissionId(submissionId)
+                .orElseThrow(() -> new ResourceNotFoundException("Review not found for submission ID: " + submissionId));
+        
+        return mapEntityToResponseDto(labReportReview);
+    }
+
 
     private LabReportReviewResponseDto mapEntityToResponseDto(LabReportReview labReportReview) {
 
@@ -67,4 +74,20 @@ public class LabReportReviewServiceImpl implements LabReportReviewService {
         labReportReviewResponseDto.setReviewedAt(labReportReview.getReviewedAt());
         return labReportReviewResponseDto;
     }
+
+    @Override
+    public List<LabReportReviewResponseDto> getReviewsByStudentId(Long studentId)
+            throws ResourceNotFoundException {
+        
+        List<LabReportReview> labReportReviews = labReportReviewRepository.findByReportSubmissionStudentIdOrderByReviewedAtDesc(studentId);
+        
+        if (labReportReviews.isEmpty()) {
+            throw new ResourceNotFoundException("No reviews found for student ID: " + studentId);
+        }
+        
+        return labReportReviews.stream()
+                .map(this::mapEntityToResponseDto)
+                .collect(Collectors.toList());
+    }
+
 }

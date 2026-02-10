@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Calendar, Clock, MapPin, Users, BookOpen, CheckCircle, XCircle } from "lucide-react";
-import { Labnavbar } from "./Labnavbar";
+
 
 const Lab = () => {
   const [selectedTab, setSelectedTab] = useState("all");

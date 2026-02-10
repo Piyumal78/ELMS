@@ -21,7 +21,7 @@ public class LabManualController {
 
     private LabManualService labManualService;
 
-    @RolesAllowed({"DEMONSTRATOR","LECTURER"})
+   @RolesAllowed({"DEMONSTRATOR","LECTURER","STUDENT"})
     @PostMapping(value = "/lab-manuals/session/{sessionId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<LabManualCreateResponseDto> uploadLabManual(
             @PathVariable Long sessionId,
@@ -32,5 +32,14 @@ public class LabManualController {
                 labManualService.uploadLabManual(sessionId, file);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @RolesAllowed({"STUDENT","DEMONSTRATOR","LECTURER"})
+    @GetMapping("/lab-manuals/session/{sessionId}")
+    public ResponseEntity<LabManualCreateResponseDto> getLabManualBySessionId(
+            @PathVariable Long sessionId) throws ResourceNotFoundException {
+
+        LabManualCreateResponseDto responseDto = labManualService.getLabManualBySessionId(sessionId);
+        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 }

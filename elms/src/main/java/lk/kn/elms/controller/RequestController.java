@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -31,10 +32,10 @@ public class RequestController {
             return new ResponseEntity<>(request, HttpStatus.CREATED);
         } catch (ResourceInsufficientException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(java.util.Map.of("message", e.getMessage()));
+                    .body(Collections.singletonMap("message", e.getMessage()));
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(java.util.Map.of("message", e.getMessage()));
+                    .body(Collections.singletonMap("message", e.getMessage()));
         }
     }
 
@@ -46,10 +47,10 @@ public class RequestController {
         } catch (ResourceInsufficientException e) {
             // Return error as JSON object
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(java.util.Map.of("message", e.getMessage()));
+                    .body(Collections.singletonMap("message", e.getMessage()));
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(java.util.Map.of("message", e.getMessage()));
+                    .body(Collections.singletonMap("message", e.getMessage()));
         }
     }
 
@@ -60,7 +61,7 @@ public class RequestController {
             return ResponseEntity.ok(request);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(java.util.Map.of("message", e.getMessage()));
+                    .body(Collections.singletonMap("message", e.getMessage()));
         }
     }
 
@@ -71,7 +72,7 @@ public class RequestController {
             return ResponseEntity.ok(request);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(java.util.Map.of("message", e.getMessage()));
+                    .body(Collections.singletonMap("message", e.getMessage()));
         }
     }
 
@@ -84,7 +85,7 @@ public class RequestController {
         } catch (RuntimeException e) {
             // "Request must be ISSUED before returning" or "Inventory not found"
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(java.util.Map.of("message", e.getMessage()));
+                    .body(Collections.singletonMap("message", e.getMessage()));
         }
     }
 }

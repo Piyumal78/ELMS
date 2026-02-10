@@ -1,6 +1,7 @@
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { FileUp, Upload, X, FileText } from "lucide-react";
+import { useSelector } from "react-redux";
+import { FileUp, Upload, X, FileText, Download, Clock, CheckCircle2, AlertCircle, Home, BookOpen, Loader2 } from "lucide-react";
 import {
     Breadcrumb,
     BreadcrumbItem,
@@ -11,18 +12,36 @@ import {
 } from "@/components/ui/breadcrumb"
 import Navbar from "./Navbar";
 import { Button } from "@/components/ui/button";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableRow,
-} from "@/components/ui/table"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { useGetLabManualBySessionIdQuery, useSubmitReportMutation,useGetCurrentUserProfileQuery } from "@/services/api";
+import StudentNavbar from "../Student/StudentNavbar";
 
 const LabSubmission = () => {
     const { state } = useLocation();
-    const [isSubmitting, setIsSubmitting] = useState(false);
-    const [files, setFiles] = useState([]);
+    const navigate = useNavigate();
+    const { user, token } = useSelector((state) => state.auth);
+    const [file, setFile] = useState(null);
     const [isDragging, setIsDragging] = useState(false);
+    const [submitSuccess, setSubmitSuccess] = useState(false);
+    const [submitError, setSubmitError] = useState(null);
+
+    // Debug: Log user info to console
+    console.log('Current User from Auth State:', user);
+    console.log('Has Token:', !!token);
+
+    // Fetch lab manual using sessionId
+    const { data: labManual, isLoading: labManualLoading } = useGetLabManualBySessionIdQuery(state?.sessionId, {
+        skip: !state?.sessionId
+    });
+    console.log("Lab Manual Data:", labManual);
+    const { data: currentUser } = useGetCurrentUserProfileQuery(user?.username, {
+        skip: !user?.username
+    });
+    console.log("Current User Profile:", currentUser);
+
+    // Submit report mutation
+    const [submitReport, { isLoading: isSubmitting }] = useSubmitReportMutation(currentUser?.id, state?.sessionId);
 
     const handleDragOver = (e) => {
         e.preventDefault();
@@ -37,179 +56,384 @@ const LabSubmission = () => {
         e.preventDefault();
         setIsDragging(false);
         const droppedFiles = Array.from(e.dataTransfer.files);
-        setFiles([...files, ...droppedFiles]);
+        
+        if (droppedFiles.length > 0) {
+            const droppedFile = droppedFiles[0];
+            // Validate file type and size
+            const isValidType = droppedFile.type === 'application/pdf' || 
+                               droppedFile.type === 'application/zip' || 
+                               droppedFile.type === 'application/x-zip-compressed' ||
+                               droppedFile.name.endsWith('.rar');
+            const isValidSize = droppedFile.size <= 10 * 1024 * 1024; // 10MB
+            
+            if (isValidType && isValidSize) {
+                setFile(droppedFile);
+            } else {
+                setSubmitError('Invalid file type or file too large (max 10MB)');
+            }
+        }
     };
 
     const handleFileSelect = (e) => {
         const selectedFiles = Array.from(e.target.files);
-        setFiles([...files, ...selectedFiles]);
+        
+        if (selectedFiles.length > 0) {
+            const selectedFile = selectedFiles[0];
+            // Validate file
+            const isValidSize = selectedFile.size <= 10 * 1024 * 1024;
+            
+            if (isValidSize) {
+                setFile(selectedFile);
+                setSubmitError(null);
+            } else {
+                setSubmitError('File too large (max 10MB)');
+            }
+        }
     };
 
-    const removeFile = (index) => {
-        const newFiles = files.filter((_, i) => i !== index);
-        setFiles(newFiles);
+    const removeFile = () => {
+        setFile(null);
     };
 
-    console.log("STATE RECEIVED:", state);
+    const handleSubmit = async () => {
+        if (!file) {
+            setSubmitError('Please select a file to submit');
+            return;
+        }
+
+        // Check authentication - use currentUser from API which has the id
+        if (!currentUser?.id) {
+            console.error('User authentication issue:', { user, token, currentUser });
+            setSubmitError('User profile not loaded. Please refresh the page.');
+            return;
+        }
+
+        try {
+            setSubmitError(null);
+            
+            console.log('Submitting report:', {
+                studentId: currentUser.id,
+                sessionId: state?.sessionId,
+                fileName: file.name
+            });
+            
+            // Create FormData and append file with correct parameter name
+            const formData = new FormData();
+            formData.append('file', file);
+
+            // Submit to API
+            await submitReport({
+                studentId: currentUser.id,
+                sessionId: state?.sessionId,
+                formData: formData
+            }).unwrap();
+
+            // Show success message
+            setSubmitSuccess(true);
+            setFile(null);
+            
+            // Hide success message and redirect after 3 seconds
+            setTimeout(() => {
+                setSubmitSuccess(false);
+                navigate(`/lab-details/${state?.courseCode}`);
+            }, 3000);
+        } catch (error) {
+            console.error('Submission failed:', error);
+            setSubmitError(error?.data?.message || 'Failed to submit assignment. Please try again.');
+        }
+    };
 
     return (
-        <div className="bg-slate-200 min-h-screen"> 
-            <Navbar />
-            <div className="flex flex-col px-20 py-8 gap-6">
-                <div className="flex justify-between items-center ">
-                <div>
-                    <FileUp className="text-4xl text-rose-400 mb-4" />
-                    <span className="text-3xl font-bold">{state?.title || "NO STATE RECEIVED"}</span>
-                </div>
-                <div>
-                    <Breadcrumb>
-                        <BreadcrumbList>
-                            <BreadcrumbItem>
-                                <BreadcrumbLink href="/">Home</BreadcrumbLink>
-                            </BreadcrumbItem>
-                            <BreadcrumbSeparator />
-                            <BreadcrumbItem>
-                                <BreadcrumbLink href="/components">Components</BreadcrumbLink>
-                            </BreadcrumbItem>
-                            <BreadcrumbSeparator />
-                            <BreadcrumbItem>
-                                <BreadcrumbPage>Breadcrumb</BreadcrumbPage>
-                            </BreadcrumbItem>
-                        </BreadcrumbList>
-                    </Breadcrumb>
-                </div>
-                </div>
-            <div className="bg-white rounded-xl p-6">
-                <div className="flex flex-col gap-2 p-8 text-base text-slate-700 bg-slate-200 rounded-2xl">
-                    <span><b>Opened:</b> Monday, 8 December 2025, 12:00 AM</span>
-                    <span><b>Due:</b> Wednesday, 17 December 2025, 12:00 AM</span>
-                    <div className="border-b-2 border-gray-400"></div>
-                    <div className="flex gap-32 items-start">
-                        <Button>Download</Button>
-                        <span className="">8 December 2025, 8:07 AM</span>
+        <div className="bg-slate-100 min-h-screen">
+            <StudentNavbar />
+            
+            <div className="max-w-7xl mx-auto px-6 py-8">
+                {/* Breadcrumb */}
+                <Breadcrumb className="mb-6">
+                    <BreadcrumbList>
+                        <BreadcrumbItem>
+                            <BreadcrumbLink href="/" className="flex items-center gap-1">
+                                <Home className="w-4 h-4" />
+                                Home
+                            </BreadcrumbLink>
+                        </BreadcrumbItem>
+                        <BreadcrumbSeparator />
+                        <BreadcrumbItem>
+                            <BreadcrumbLink href={`/lab-details/${state?.courseCode}`} className="flex items-center gap-1">
+                                <BookOpen className="w-4 h-4" />
+                                {state?.courseCode}
+                            </BreadcrumbLink>
+                        </BreadcrumbItem>
+                        <BreadcrumbSeparator />
+                        <BreadcrumbItem>
+                            <BreadcrumbPage>Experiment {state?.experimentNumber}</BreadcrumbPage>
+                        </BreadcrumbItem>
+                    </BreadcrumbList>
+                </Breadcrumb>
+
+                {/* Header */}
+                <div className="mb-8">
+                    <div className="flex items-center gap-3 mb-2">
+                        <FileUp className="w-8 h-8 text-blue-600" />
+                        <h1 className="text-3xl font-bold text-slate-800">
+                            {state?.title || "Assignment Submission"}
+                        </h1>
                     </div>
+                    <p className="text-slate-600">
+                        Course: <span className="font-semibold">{state?.courseCode}</span> | 
+                        Experiment: <span className="font-semibold">{state?.experimentNumber}</span>
+                    </p>
                 </div>
 
-                {!isSubmitting ? (
-                    <Button 
-                        onClick={() => setIsSubmitting(true)}
-                        className="mt-6 bg-blue-600 text-white px-20 py-2 rounded-md hover:bg-blue-700 transition-colors duration-200 flex items-center gap-2"
-                    >
-                        <FileUp />
-                        <span>Submit Assignment</span>
-                    </Button>
-                ) : (
-                    <div className="mt-6 border-2 border-slate-200 rounded-xl p-6 bg-slate-50">
-                        <h3 className="text-lg font-semibold mb-4">File Submission</h3>
-                        
-                        <div
-                            onDragOver={handleDragOver}
-                            onDragLeave={handleDragLeave}
-                            onDrop={handleDrop}
-                            className={`border-2 border-dashed rounded-xl p-8 text-center transition-colors mb-4 ${
-                                isDragging ? 'border-blue-500 bg-blue-50' : 'border-slate-300 hover:border-slate-400'
-                            }`}
-                        >
-                            <div className="flex flex-col items-center gap-3">
-                                <div className="p-3 bg-slate-100 rounded-full">
-                                    <Upload className="text-slate-600" size={24} />
-                                </div>
-                                <div>
-                                    <p className="text-slate-700 font-medium">Drag and drop your files here</p>
-                                    <p className="text-slate-500 text-sm">or</p>
-                                </div>
-                                <label className="cursor-pointer">
-                                    <span className="bg-slate-800 text-white px-4 py-2 rounded-md hover:bg-slate-700 transition-colors text-sm font-medium">
-                                        Browse Files
-                                    </span>
-                                    <input
-                                        type="file"
-                                        className="hidden"
-                                        multiple
-                                        onChange={handleFileSelect}
-                                    />
-                                </label>
-                                <p className="text-xs text-slate-400 mt-2">Accepted file types: PDF, DOCX, ZIP (Max 10MB)</p>
-                            </div>
-                        </div>
-
-                        {files.length > 0 && (
-                            <div className="space-y-2 mb-4">
-                                <h4 className="text-sm font-medium text-slate-700">Selected Files:</h4>
-                                {files.map((file, index) => (
-                                    <div key={index} className="flex items-center justify-between bg-white p-3 rounded-lg border border-slate-200">
+                {/* Success Alert */}
+                {submitSuccess && (
+                    <Alert className="mb-6 bg-green-50 border-green-200">
+                        <CheckCircle2 className="h-4 w-4 text-green-600" />
+                        <AlertDescription className="text-green-800">
+                            Assignment submitted successfully! Your submission has been recorded.
+                        </AlertDescription>
+                    </Alert>
+                )}
+                {/* Error Alert */}
+                {submitError && (
+                    <Alert className="mb-6 bg-red-50 border-red-200">
+                        <AlertCircle className="h-4 w-4 text-red-600" />
+                        <AlertDescription className="text-red-800">
+                            {submitError}
+                        </AlertDescription>
+                    </Alert>
+                )}
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    {/* Main Content */}
+                    <div className="lg:col-span-2 space-y-6">
+                        {/* Lab Manual Card */}
+                        <Card>
+                            <CardHeader>
+                                <CardTitle className="flex items-center gap-2">
+                                    <FileText className="w-5 h-5 text-blue-600" />
+                                    Lab Manual
+                                </CardTitle>
+                                <CardDescription>
+                                    Download the lab manual to complete your assignment
+                                </CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                {labManualLoading ? (
+                                    <div className="text-center py-4 text-slate-500">
+                                        Loading lab manual...
+                                    </div>
+                                ) : labManual?.fileUrl ? (
+                                    <div className="flex items-center justify-between p-4 bg-slate-50 rounded-lg">
                                         <div className="flex items-center gap-3">
-                                            <FileText className="text-blue-500" size={20} />
+                                            <div className="p-2 bg-blue-100 rounded-lg">
+                                                <FileText className="w-6 h-6 text-blue-600" />
+                                            </div>
                                             <div>
-                                                <p className="text-sm font-medium text-slate-700">{file.name}</p>
-                                                <p className="text-xs text-slate-500">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
+                                                <p className="font-medium text-slate-800">Lab Manual PDF</p>
+                                                <p className="text-sm text-slate-500">Click to download or view</p>
                                             </div>
                                         </div>
-                                        <button
-                                            onClick={() => removeFile(index)}
-                                            className="text-slate-400 hover:text-red-500 transition-colors"
+                                        <Button
+                                            onClick={() => window.open(labManual.fileUrl, '_blank')}
+                                            className="bg-blue-600 hover:bg-blue-700"
                                         >
-                                            <X size={18} />
-                                        </button>
+                                            <Download className="w-4 h-4 mr-2" />
+                                            Download
+                                        </Button>
                                     </div>
-                                ))}
-                            </div>
-                        )}
+                                ) : (
+                                    <Alert>
+                                        <AlertCircle className="h-4 w-4" />
+                                        <AlertDescription>
+                                            No lab manual available for this experiment yet.
+                                        </AlertDescription>
+                                    </Alert>
+                                )}
+                            </CardContent>
+                        </Card>
 
-                        <div className="flex gap-4 justify-end">
-                            <Button 
-                                variant="outline" 
-                                onClick={() => setIsSubmitting(false)}
-                            >
-                                Cancel
-                            </Button>
-                            <Button 
-                                className="bg-blue-600 hover:bg-blue-700 text-white"
-                                onClick={() => {
-                                    alert("Assignment Submitted Successfully!");
-                                    setIsSubmitting(false);
-                                    setFiles([]);
-                                }}
-                            >
-                                Save Changes
-                            </Button>
-                        </div>
+                        {/* File Submission Card */}
+                        <Card>
+                            <CardHeader>
+                                <CardTitle className="flex items-center gap-2">
+                                    <Upload className="w-5 h-5 text-blue-600" />
+                                    Submit Your Work
+                                </CardTitle>
+                                <CardDescription>
+                                    Upload your completed assignment files
+                                </CardDescription>
+                            </CardHeader>
+                            <CardContent className="space-y-4">
+                                {/* Drag & Drop Area */}
+                                <div
+                                    onDragOver={handleDragOver}
+                                    onDragLeave={handleDragLeave}
+                                    onDrop={handleDrop}
+                                    className={`border-2 border-dashed rounded-xl p-8 text-center transition-all ${
+                                        isDragging 
+                                            ? 'border-blue-500 bg-blue-50 scale-105' 
+                                            : 'border-slate-300 hover:border-blue-400 hover:bg-slate-50'
+                                    }`}
+                                >
+                                    <div className="flex flex-col items-center gap-4">
+                                        <div className="p-4 bg-blue-100 rounded-full">
+                                            <Upload className="w-8 h-8 text-blue-600" />
+                                        </div>
+                                        <div>
+                                            <p className="text-lg font-medium text-slate-700">
+                                                Drag and drop your files here
+                                            </p>
+                                            <p className="text-slate-500">or</p>
+                                        </div>
+                                        <label className="cursor-pointer">
+                                            <span className="inline-block bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium">
+                                                Browse Files
+                                            </span>
+                                            <input
+                                                type="file"
+                                                className="hidden"
+                                                accept=".pdf,.zip,.rar"
+                                                onChange={handleFileSelect}
+                                            />
+                                        </label>
+                                        <p className="text-xs text-slate-400">
+                                            Accepted: PDF, ZIP, RAR • Max size: 10MB per file
+                                        </p>
+                                    </div>
+                                </div>
+
+                                {/* Selected File */}
+                                {file && (
+                                    <div className="space-y-2">
+                                        <h4 className="font-medium text-slate-700">Selected File</h4>
+                                        <div className="flex items-center justify-between p-4 bg-white border rounded-lg hover:shadow-sm transition-shadow">
+                                            <div className="flex items-center gap-3 flex-1">
+                                                <div className="p-2 bg-blue-50 rounded">
+                                                    <FileText className="w-5 h-5 text-blue-600" />
+                                                </div>
+                                                <div className="flex-1 min-w-0">
+                                                    <p className="font-medium text-slate-800 truncate">
+                                                        {file.name}
+                                                    </p>
+                                                    <p className="text-sm text-slate-500">
+                                                        {(file.size / 1024 / 1024).toFixed(2)} MB
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <button
+                                                onClick={removeFile}
+                                                className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                                            >
+                                                <X className="w-5 h-5" />
+                                            </button>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Submit Button */}
+                                <div className="flex gap-3 pt-4">
+                                    <Button
+                                        variant="outline"
+                                        onClick={() => navigate(`/lab-details/${state?.courseCode}`)}
+                                        className="flex-1"
+                                        disabled={isSubmitting}
+                                    >
+                                        Cancel
+                                    </Button>
+                                    <Button
+                                        onClick={handleSubmit}
+                                        disabled={!file || isSubmitting}
+                                        className="flex-1 bg-blue-600 hover:bg-blue-700"
+                                    >
+                                        {isSubmitting ? (
+                                            <>
+                                                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                                Submitting...
+                                            </>
+                                        ) : (
+                                            <>
+                                                <CheckCircle2 className="w-4 h-4 mr-2" />
+                                                Submit Assignment
+                                            </>
+                                        )}
+                                    </Button>
+                                </div>
+                            </CardContent>
+                        </Card>
                     </div>
-                )}
-                <div className="mt-8">
-                    <h3 className="text-lg font-semibold mb-4">Submission status</h3>
-                    <div className="rounded-md border bg-white overflow-hidden">
-                        <Table>
-                            <TableBody>
-                                <TableRow className="hover:bg-transparent">
-                                    <TableCell className="font-semibold border-r bg-slate-50 w-1/3 p-4">Attempt number</TableCell>
-                                    <TableCell className="p-4">This is attempt 1 ( 3 attempts allowed ).</TableCell>
-                                </TableRow>
-                                <TableRow className="hover:bg-transparent border-t">
-                                    <TableCell className="font-semibold border-r bg-slate-50 p-4">Submission status</TableCell>
-                                    <TableCell className="p-4">No submissions have been made yet</TableCell>
-                                </TableRow>
-                                <TableRow className="hover:bg-transparent border-t">
-                                    <TableCell className="font-semibold border-r bg-slate-50 p-4">Grading status</TableCell>
-                                    <TableCell className="p-4">Not graded</TableCell>
-                                </TableRow>
-                                <TableRow className="hover:bg-transparent border-t">
-                                    <TableCell className="font-semibold border-r bg-slate-50 p-4">Time remaining</TableCell>
-                                    <TableCell className="p-4">8 days 2 hours remaining</TableCell>
-                                </TableRow>
-                                <TableRow className="hover:bg-transparent border-t">
-                                    <TableCell className="font-semibold border-r bg-slate-50 p-4">Last modified</TableCell>
-                                    <TableCell className="p-4">Not submitted yet</TableCell>
-                                </TableRow>
-                                <TableRow className="hover:bg-transparent border-t">
-                                    <TableCell className="font-semibold border-r bg-slate-50 p-4">Submission comments</TableCell>
-                                    <TableCell className="p-4">Comment</TableCell>
-                                </TableRow>
-                            </TableBody>
-                        </Table>
+
+                    {/* Sidebar */}
+                    <div className="space-y-6">
+                        {/* Submission Guidelines */}
+                        <Card>
+                            <CardHeader>
+                                <CardTitle className="text-lg">Submission Guidelines</CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-3 text-sm">
+                                <div className="flex gap-2">
+                                    <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+                                    <p>Submit files as a <strong>ZIP or RAR</strong> archive</p>
+                                </div>
+                                <div className="flex gap-2">
+                                    <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+                                    <p>Include MATLAB scripts (.m files) and plots (.jpeg)</p>
+                                </div>
+                                <div className="flex gap-2">
+                                    <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+                                    <div>
+                                        <p className="mb-1">File naming format:</p>
+                                        <code className="block bg-slate-100 px-2 py-1 rounded text-xs">
+                                            StudentID_E{state?.experimentNumber?.toString().padStart(2, '0')}.zip
+                                        </code>
+                                        <p className="text-slate-500 mt-1">
+                                            Example: EC_2021_123_E{state?.experimentNumber?.toString().padStart(2, '0')}.zip
+                                        </p>
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </Card>
+
+                        {/* Deadline Info */}
+                        <Card>
+                            <CardHeader>
+                                <CardTitle className="text-lg flex items-center gap-2">
+                                    <Clock className="w-5 h-5 text-orange-600" />
+                                    Deadline
+                                </CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <Alert className="border-orange-200 bg-orange-50">
+                                    <AlertDescription className="text-orange-800">
+                                        <p className="font-semibold mb-1">Due Date</p>
+                                        <p>Wednesday, 17 December 2025</p>
+                                        <p>11:59 PM</p>
+                                    </AlertDescription>
+                                </Alert>
+                            </CardContent>
+                        </Card>
+
+                        {/* Submission Status */}
+                        <Card>
+                            <CardHeader>
+                                <CardTitle className="text-lg">Status</CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-3 text-sm">
+                                <div className="flex justify-between">
+                                    <span className="text-slate-600">Attempts</span>
+                                    <span className="font-semibold">0 / 3</span>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span className="text-slate-600">Status</span>
+                                    <span className="text-orange-600 font-semibold">Not Submitted</span>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span className="text-slate-600">Grade</span>
+                                    <span className="text-slate-500">Not Graded</span>
+                                </div>
+                            </CardContent>
+                        </Card>
                     </div>
                 </div>
-            </div>
             </div>
         </div>
     );

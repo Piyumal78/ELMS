@@ -1,5 +1,6 @@
 package lk.kn.elms.controller;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import lk.kn.elms.dto.request.AuthRequestDto;
 import lk.kn.elms.exception.ResourceAlreadyExistsException;
@@ -9,8 +10,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import lk.kn.elms.exception.ResourceNotFoundException;
-import lk.kn.elms.exception.ResourceAlreadyExistsException;
+import lk.kn.elms.model.User;
+import lk.kn.elms.dto.response.UserResponseDto;
 
 import java.util.Map;
 

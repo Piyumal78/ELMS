@@ -25,7 +25,7 @@ const SignUpForm = () => {
     
     try {
       if (isActivating) {
-        // Account Activation කරන්න
+        // Account Activation 
         await activateAccount({
           username: data.username,
           password: data.password,
@@ -34,26 +34,26 @@ const SignUpForm = () => {
         alert("Account activated successfully! Please login now.");
         navigate("/signin");
       } else {
-        // Login කරන්න
+        // Login 
         const result = await login({
           username: data.username,
           password: data.password,
         }).unwrap();
         
-        // Backend එකෙන් ආපු role එක use කරන්න (frontend selection එක නෙමෙයි)
+        // Backend role  use
         const userRole = result.user?.role || 'ROLE_STUDENT';
         
-        // Token එක Redux සහ localStorage එකේ save කරන්න
+        // Token save in redux and localStorage
         dispatch(setCredentials({ 
           token: result.token, 
           user: { 
             username: result.user?.username || data.username,
-            role: userRole, // Backend එකෙන් ආපු ACTUAL role එක
+            role: userRole, // Backend actual role
             registrationNumber: data.username
           } 
         }));
         
-        // ACTUAL role එකට අනුව redirect කරන්න (frontend selection එක නෙමෙයි)
+        // redirect based on actual role
         if (userRole.includes('STUDENT')) {
           navigate("/student");
         } else if (userRole.includes('LECTURER') || userRole.includes('STAFF') || userRole.includes('ADMIN')) {
@@ -84,7 +84,7 @@ const SignUpForm = () => {
             : "Sign in to access your dashboard"}
         </p>
         
-        {/* Role selection remove කරලා තියෙනවා - Backend එකෙන් role එක determine වෙනවා */}
+        {/* Role selection removed - Backend determines the role */}
 
         {errorMessage && (
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
