@@ -11,4 +11,6 @@ public interface ReportSubmissionService {
 
     ReportSubmissionCreateResponseDto createSubmission(Long studentId, Long sessionId, MultipartFile file)
             throws ResourceAlreadyExistsException, ResourceNotFoundException, FileUploadingException;
+
+    java.util.List<lk.kn.elms.dto.response.ReportSubmissionResponseDto> getSubmissionsBySessionId(Long sessionId);
 }

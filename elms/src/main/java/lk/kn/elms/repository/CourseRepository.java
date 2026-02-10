@@ -8,7 +8,9 @@ import java.util.Optional;
 public interface CourseRepository extends JpaRepository<Course, Long> {
 
     boolean existsByCourseCodeAndAcademicYear(String courseCode, String academicYear);
-    
+
+    boolean existsByCourseCode(String courseCode);
+
     Optional<Course> findByCourseCode(String courseCode);
 
 }
