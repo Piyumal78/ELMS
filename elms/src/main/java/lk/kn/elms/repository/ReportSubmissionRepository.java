@@ -9,13 +9,10 @@ public interface ReportSubmissionRepository extends JpaRepository<ReportSubmissi
 
     boolean existsByStudentIdAndSessionId(Long studentId, Long sessionId);
 
-<<<<<<< HEAD
     java.util.List<ReportSubmission> findBySessionId(Long sessionId);
+
 
     // Demonstrator Dashboard Statistics
     @Query("SELECT COUNT(rs) FROM ReportSubmission rs WHERE rs.session.createdUser.id = :demonstratorId AND rs.status = lk.kn.elms.model.enums.Status.PENDING")
     long countPendingReportsByDemonstratorId(@Param("demonstratorId") Long demonstratorId);
-=======
-
->>>>>>> c2daadd9639a49787152b4375fbef58fb1726d19
 }

@@ -1,7 +1,7 @@
 package lk.kn.elms.controller;
 
 import lk.kn.elms.model.Procurement;
-import lk.kn.elms.service.ProcurementService;
+import lk.kn.elms.service.impl.ProcurementService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
