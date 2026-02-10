@@ -1,4 +1,4 @@
-package lk.kn.elms.service;
+package lk.kn.elms.service.impl;
 
 import lk.kn.elms.model.Equipment;
 import lk.kn.elms.repository.EquipmentRepository;

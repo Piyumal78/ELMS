@@ -3,7 +3,7 @@ package lk.kn.elms.controller;
 import lk.kn.elms.dto.RequestDTO;
 import lk.kn.elms.exception.ResourceInsufficientException;
 import lk.kn.elms.model.Request;
-import lk.kn.elms.service.RequestService;
+import lk.kn.elms.service.impl.RequestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
