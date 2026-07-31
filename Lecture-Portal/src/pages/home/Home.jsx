@@ -95,7 +95,7 @@ const Home = () => {
           <div className="bg-white border border-gray-200 rounded-lg mb-8">
             <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
               <h2 className="text-base font-medium text-gray-900">Recent Lab Sessions</h2>
-              <Link to="/labsessions" className="text-sm text-indigo-600 hover:text-indigo-700">
+              <Link to="/lecturer/labsessions" className="text-sm text-indigo-600 hover:text-indigo-700">
                 View All →
               </Link>
             </div>
@@ -133,7 +133,7 @@ const Home = () => {
               ) : (
                 <div className="text-center py-8">
                   <p className="text-gray-500">No sessions found. Create a course and add sessions.</p>
-                  <Link to="/courses" className="inline-block mt-4 px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 transition-colors">
+                  <Link to="/lecturer/courses" className="inline-block mt-4 px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 transition-colors">
                     Create Course
                   </Link>
                 </div>
@@ -146,7 +146,7 @@ const Home = () => {
             <p className="text-sm font-medium text-gray-400 uppercase tracking-widest mb-4">Quick Actions</p>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {/* Quick Action Card 1 */}
-              <Link to="/courses" className="bg-white border border-gray-200 rounded-lg p-5 hover:border-gray-300 transition-colors cursor-pointer group">
+              <Link to="/lecturer/courses" className="bg-white border border-gray-200 rounded-lg p-5 hover:border-gray-300 transition-colors cursor-pointer group">
                 <div className="flex items-center justify-between">
                   <div>
                     <h4 className="font-medium text-gray-900 group-hover:text-gray-700">Create Course</h4>
@@ -161,7 +161,7 @@ const Home = () => {
               </Link>
 
               {/* Quick Action Card 2 */}
-              <Link to="/announcements" className="bg-white border border-gray-200 rounded-lg p-5 hover:border-gray-300 transition-colors cursor-pointer group">
+              <Link to="/lecturer/announcements" className="bg-white border border-gray-200 rounded-lg p-5 hover:border-gray-300 transition-colors cursor-pointer group">
                 <div className="flex items-center justify-between">
                   <div>
                     <h4 className="font-medium text-gray-900 group-hover:text-gray-700">Post Announcement</h4>
@@ -176,7 +176,7 @@ const Home = () => {
               </Link>
 
               {/* Quick Action Card 3 */}
-              <Link to="/reservations" className="bg-white border border-gray-200 rounded-lg p-5 hover:border-gray-300 transition-colors cursor-pointer group">
+              <Link to="/lecturer/reservations" className="bg-white border border-gray-200 rounded-lg p-5 hover:border-gray-300 transition-colors cursor-pointer group">
                 <div className="flex items-center justify-between">
                   <div>
                     <h4 className="font-medium text-gray-900 group-hover:text-gray-700">Review Reservations</h4>

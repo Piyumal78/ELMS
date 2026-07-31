@@ -41,14 +41,14 @@ const Sidebar = () => {
 
   // Menu items configuration
   const menuItems = [
-    { path: '/', icon: <DashboardIcon sx={{ fontSize: 20 }} />, label: 'Dashboard', section: 'MAIN' },
-    { path: '/courses', icon: <SchoolIcon sx={{ fontSize: 20 }} />, label: 'Courses', section: 'MAIN' },
-    { path: '/labsessions', icon: <ScienceIcon sx={{ fontSize: 20 }} />, label: 'Lab Sessions', section: 'MAIN' },
-    { path: '/reservations', icon: <CalendarMonthIcon sx={{ fontSize: 20 }} />, label: 'Reservations', section: 'MAIN' },
-    { path: '/announcements', icon: <CampaignIcon sx={{ fontSize: 20 }} />, label: 'Announcements', section: 'MAIN' },
-    { path: '/students', icon: <PeopleIcon sx={{ fontSize: 20 }} />, label: 'Students', section: 'OTHER' },
-    { path: '/resources', icon: <FolderIcon sx={{ fontSize: 20 }} />, label: 'Resources', section: 'RESOURCES' },
-    { path: '/profile', icon: <PersonIcon sx={{ fontSize: 20 }} />, label: 'Settings', section: 'USER' },
+    { path: '/lecturer', icon: <DashboardIcon sx={{ fontSize: 20 }} />, label: 'Dashboard', section: 'MAIN' },
+    { path: '/lecturer/courses', icon: <SchoolIcon sx={{ fontSize: 20 }} />, label: 'Courses', section: 'MAIN' },
+    { path: '/lecturer/labsessions', icon: <ScienceIcon sx={{ fontSize: 20 }} />, label: 'Lab Sessions', section: 'MAIN' },
+    { path: '/lecturer/reservations', icon: <CalendarMonthIcon sx={{ fontSize: 20 }} />, label: 'Reservations', section: 'MAIN' },
+    { path: '/lecturer/announcements', icon: <CampaignIcon sx={{ fontSize: 20 }} />, label: 'Announcements', section: 'MAIN' },
+    { path: '/lecturer/students', icon: <PeopleIcon sx={{ fontSize: 20 }} />, label: 'Students', section: 'OTHER' },
+    { path: '/lecturer/resources', icon: <FolderIcon sx={{ fontSize: 20 }} />, label: 'Resources', section: 'RESOURCES' },
+    { path: '/lecturer/profile', icon: <PersonIcon sx={{ fontSize: 20 }} />, label: 'Settings', section: 'USER' },
   ];
 
   return (

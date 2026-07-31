@@ -17,7 +17,7 @@ const Login = () => {
   // Redirect if already authenticated
   useEffect(() => {
     if (isAuthenticated()) {
-      navigate('/');
+      navigate('/lecturer');
     }
   }, [isAuthenticated, navigate]);
 
@@ -46,7 +46,7 @@ const Login = () => {
         localStorage.setItem('token', response.token);
         localStorage.setItem('user', JSON.stringify(response.user));
         setUser(response.user);
-        navigate('/');
+        navigate('/lecturer');
       } else {
         setError(response.message || 'Invalid credentials');
       }

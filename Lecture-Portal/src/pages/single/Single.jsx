@@ -32,7 +32,7 @@ const Single = () => {
     if (window.confirm('Are you sure you want to delete this student?')) {
       try {
         await StudentService.delete(studentId);
-        navigate('/students');
+        navigate('/lecturer/students');
       } catch (error) {
         console.error('Error deleting student:', error);
       }
@@ -67,7 +67,7 @@ const Single = () => {
             <div className="text-center">
               <h2 className="text-xl font-semibold text-gray-800">Student Not Found</h2>
               <button 
-                onClick={() => navigate('/students')}
+                onClick={() => navigate('/lecturer/students')}
                 className="mt-4 px-4 py-2 bg-indigo-600 text-white rounded-lg"
               >
                 Back to Students

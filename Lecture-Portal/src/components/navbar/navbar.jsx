@@ -39,7 +39,7 @@ const Navbar = () => {
         
           {/* Left Side - Title */}
           <div className="flex items-center">
-            <Link to="/" className="flex items-center gap-2 group">
+            <Link to="/lecturer" className="flex items-center gap-2 group">
               <div className="p-1.5 bg-gradient-to-r from-teal-400 to-blue-500 rounded-lg transition-transform group-hover:scale-110">
                 <CircuitBoard size={28} className="text-white" />
               </div>
@@ -73,8 +73,8 @@ const Navbar = () => {
             </button>
 
             {/* Settings */}
-            <Link 
-              to="/profile" 
+            <Link
+              to="/lecturer/profile"
               className="text-slate-400 hover:text-white transition-colors"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -103,10 +103,10 @@ const Navbar = () => {
                   <p className="text-sm font-medium text-white">{getUserName()}</p>
                   <p className="text-xs text-slate-400">{user?.registrationNumber || 'Lecturer'}</p>
                 </div>
-                <Link to="/profile" className="block px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-700">
+                <Link to="/lecturer/profile" className="block px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-700">
                   My Profile
                 </Link>
-                <Link to="/courses" className="block px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-700">
+                <Link to="/lecturer/courses" className="block px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-700">
                   My Courses
                 </Link>
                 <button 

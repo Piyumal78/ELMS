@@ -80,7 +80,7 @@ const DataTable = () => {
       width: 180,
       renderCell: (params) => (
         <div className="flex items-center gap-2">
-          <Link to={`/students/${params.row.id}`}>
+          <Link to={`/lecturer/students/${params.row.id}`}>
             <button className="px-3 py-1 bg-blue-50 text-blue-600 rounded-lg text-sm font-medium hover:bg-blue-100 transition-colors">
               View
             </button>
@@ -103,7 +103,7 @@ const DataTable = () => {
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-xl font-semibold text-gray-800">Students List</h2>
-        <Link to="/students/new">
+        <Link to="/lecturer/students/new">
           <button className="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors flex items-center gap-2">
             <span>+</span>
             Add New Student
