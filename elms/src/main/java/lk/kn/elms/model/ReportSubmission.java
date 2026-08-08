@@ -1,6 +1,7 @@
 package lk.kn.elms.model;
 
 import jakarta.persistence.*;
+import lk.kn.elms.model.enums.Status;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -14,7 +15,7 @@ import java.time.LocalDateTime;
 @Table(name = "report_submissions")
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString(exclude = {"labReportReview", "session", "student"})
+@ToString(exclude = { "labReportReview", "session", "student" })
 @EntityListeners(AuditingEntityListener.class)
 public class ReportSubmission {
 
@@ -27,6 +28,10 @@ public class ReportSubmission {
 
     @Column(name = "file_public_id")
     private String filePublicId;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    private Status status = Status.PENDING;
 
     @ManyToOne
     @JoinColumn(name = "session_id", nullable = false)
